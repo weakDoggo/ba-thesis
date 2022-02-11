@@ -33,9 +33,9 @@
 	\end{minipage}
 	\hfill
 	\begin{minipage}[t]{4.7cm}
-	\includegraphics[height=1.8cm,width=4.7cm]{gfx/AIML_logo.jpg}\\
+	\includegraphics[height=1.8cm,width=4.7cm]{gfx/aiml-logo-solid-black.pdf}\\
 	\textsf{%Institute of Computer Science\\
-	\hspace*{0.1cm}\small{Artificial Intelligence\\ \hspace*{0.1cm}and Machine Learning}
+	\hspace*{0.1cm}\small{Artificial Intelligence and \\ \hspace*{0.1cm}Machine Learning}
 	}
 	\end{minipage}
 	\end{figure}
@@ -81,6 +81,12 @@
 	\end{minipage} \\[10mm]
 
 	\thesisDate\\
+	
+	\begin{tikzpicture}[remember picture,overlay]
+		\begin{pgfonlayer}{background}
+			\node[anchor=south east,outer sep=0pt,inner sep=0pt] at ($(current page.south east) +(-0in,0in)$) {\includegraphics[trim=0 55 100 00,clip,width=0.2\paperheight,height=0.25\paperheight]{gfx/siegel.pdf}};
+		\end{pgfonlayer}
+	\end{tikzpicture}
 
 \end{titlepage}
 
@@ -88,7 +94,6 @@
 % ------------------------------------  --> lower title back for single page layout
 
 
-\AddToShipoutPictureBG*{\includegraphics[width=0.2\paperheight,height=0.2\paperheight]{gfx/siegel.pdf}}
 
 
 \hfill

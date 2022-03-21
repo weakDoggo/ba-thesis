@@ -4,7 +4,7 @@ Getting started
 ---------------
 
 1. Install an up-to-date LaTeX distribution (e.g. [TeX Live](https://www.tug.org/texlive/))
-2. Clone the repository `git clone https://git.cs.upb.de/ag-intelligentsystems/templates/latex-thesis-template.git`
+2. Clone the repository `git clone https://gitlab.lrz.de/kiml/latex-thesis-template.git`
 3. Build the document using `latexmk` or another build tool of your choice:
 ```latexmk -pdf main.tex```
 4. The finished document will be called `main.pdf`

@@ -11,13 +11,13 @@
 % **************************************************
 % Information and Commands for Reuse
 % **************************************************
-\newcommand{\thesisTitle}{This is my Thesis title}
-\newcommand{\thesisName}{Jimmy Doe}
-\newcommand{\thesisSubject}{Master’s Thesis}
+\newcommand{\thesisTitle}{SerialExperimentsOlga}
+\newcommand{\thesisName}{Olga Yakobson}
+\newcommand{\thesisSubject}{Bachelor’s Thesis}
 \newcommand{\thesisDate}{February 4, 2022}
 \newcommand{\thesisVersion}{My First Draft}
 
-\newcommand{\thesisFirstReviewer}{Jane Doe}
+\newcommand{\thesisFirstReviewer}{Prof.~Dr.~Eyke Hüllermeier}
 \newcommand{\thesisFirstReviewerUniversity}{\protect{LMU Munich}}
 \newcommand{\thesisFirstReviewerDepartment}{Institute of Informatics}
 
@@ -81,7 +81,28 @@
 % **************************************************
 % Other Packages
 % **************************************************
+\usepackage{amsfonts}
 \usepackage{scrhack}
 \usepackage{lipsum}
 \usepackage{tikz}% do not disable this package
 \usetikzlibrary{backgrounds,calc}
+\usepackage{cleveref}
+\usepackage{acro}
+\acsetup{
+    %first-long-format=\slshape,
+    barriers/use=true
+}
+
+
+
+
+
+
+% **************************************************
+% Custom Macros
+% **************************************************
+\newcommand{\dac}[3]{\DeclareAcronym{#1}{short = #2, long = #3}}
+
+
+
+

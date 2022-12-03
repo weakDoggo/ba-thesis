@@ -1,0 +1,49 @@
+\chapter{Intro}
+
+% Inline 
+This is a test chapter
+$\frac{abc}{xyz}$
+
+
+%Out of line 
+
+This is out of line
+%math-block (1) \[\] makro backslash 
+
+\[\frac{abc}{xyz}\]
+
+
+% multiple lines e.g proof 
+\begin{align}
+    \sum\frac{abc}{xyz}      \\
+    \frac{abc}{xyz}\nonumber \\
+    \frac{abc}{xyz}
+\end{align}
+
+% without enum : * <-- generally for deactivating enum 
+\begin{align*}
+    \sum\frac{abc}{xyz} \\
+    \frac{abc}{xyz}     \\
+    \frac{abc}{xyz}
+\end{align*}
+
+
+% \section*{Title} not enum, not in Contents sometimes useful e.g relevance 
+\section{Theoretcal Foundations}
+\label{sec:Theoretical-Foundations} % zugriff auf numerierung der section 
+This is a section \cref{sec:Theoretical-Foundations} %cleverev package in setup
+\Cref{sec:Theoretical-Foundations}This is another section
+
+% referencing acronyms 
+% 1.define acronyms 
+
+\ac{gcn}
+\Ac{gcn}
+
+%doku for variants such as plural etc ... barriers 
+
+
+% **************************************************
+% My chapters 
+% 
+% **************************************************

@@ -1,0 +1,63 @@
+% **************************************************
+% Intro  
+% 
+% **************************************************
+
+\chapter{Introduction}
+\label{sec:intro}
+
+% Basics Graph
+A graph $\mathcal G = (V, E)$ is a structure of vertices and edges.
+
+Let $ X_{v} $ denote the node feature vector for $v\in V$.
+
+
+% Node Classification 
+$y_{v}\rightarrow$ associated label to node $v\in V$\\
+$h_{v}\rightarrow$ representation vector of $v\in V$\\
+
+% Graph Classification 
+
+$\{G_{1},...,G_{N}\} \subset \mathcal{G} \rightarrow$ set of graphs\\
+$\{y_{1},...,y_{N}\} \subset \mathcal{Y}\rightarrow$ set of labels\\
+
+%\text macro inside mathEnvoronment 
+$h_{G}\rightarrow$ representation vector
+$y_{G} = \mathrm{g}(h_{G})$ predicted label of an entire graph
+
+%mathroman inline for not cursive 
+
+\ac{gcn}\\
+\ac{gcn}
+
+$K \rightarrow$ $K$-th layer of a GNN (K-th iteration)\\
+$a^{(l)}_{v}$
+
+
+% **************************************************
+% Intro  
+% 
+% **************************************************
+
+
+
+$({A}^{-1})^{T}$
+
+${({A}^{-1})}^{T}$
+
+
+This is how we cite\\
+\cite{DBLP:journals/corr/abs-2006-04064}
+
+
+
+\subsection{DropOut}
+\cite{Srivastava2014}
+
+Dropout randomly removes output elements of it's previous hidden layer $H^{(l)}$
+based on independant bernoulli random draws with a constant sucess rate at each training iteration.
+
+This can be formulated as follows:
+$H^{(l+1)} = \sigma(\mathfrak{N}(A)(Z^{(l)}\odot H^{(l)}))$
+
+Where $Z^{(l)} $ is

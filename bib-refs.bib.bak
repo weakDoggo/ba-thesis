@@ -1,4 +1,4 @@
-@Article{DBLP:journals/corr/abs-2006-04064,
+@article{DBLP:journals/corr/abs-2006-04064,
   author     = {Arman Hasanzadeh and Ehsan Hajiramezanali and Shahin Boluki and Mingyuan Zhou and Nick Duffield and Krishna Narayanan and Xiaoning Qian},
   journal    = {CoRR},
   title      = {Bayesian Graph Neural Networks with Adaptive Connection Sampling},
@@ -10,10 +10,10 @@
   eprinttype = {arXiv},
   groups     = {PrimaryPapers, primary},
   timestamp  = {Thu, 14 Oct 2021 09:15:29 +0200},
-  url        = {https://arxiv.org/abs/2006.04064},
+  url        = {https://arxiv.org/abs/2006.04064}
 }
 
-@InProceedings{Xie2020,
+@inproceedings{Xie2020,
   author    = {Yiqing Xie and Sha Li and Carl Yang and Raymond Chi{-}Wing Wong and Jiawei Han},
   booktitle = {Proceedings of the Twenty-Ninth International Joint Conference on Artificial Intelligence, {IJCAI} 2020},
   title     = {When Do GNNs Work: Understanding and Improving Neighborhood Aggregation},
@@ -26,10 +26,10 @@
   doi       = {10.24963/ijcai.2020/181},
   groups    = {Basics, DropTech},
   timestamp = {Sun, 02 Oct 2022 16:08:05 +0200},
-  url       = {https://doi.org/10.24963/ijcai.2020/181},
+  url       = {https://doi.org/10.24963/ijcai.2020/181}
 }
 
-@Article{Srivastava2014,
+@article{Srivastava2014,
   author    = {Nitish Srivastava and Geoffrey E. Hinton and Alex Krizhevsky and Ilya Sutskever and Ruslan Salakhutdinov},
   journal   = {J. Mach. Learn. Res.},
   title     = {Dropout: a simple way to prevent neural networks from overfitting},
@@ -42,7 +42,7 @@
   doi       = {10.5555/2627435.2670313},
   groups    = {DropoutTechniques, DropTech},
   timestamp = {Thu, 02 Jun 2022 13:58:57 +0200},
-  url       = {https://dl.acm.org/doi/10.5555/2627435.2670313},
+  url       = {https://dl.acm.org/doi/10.5555/2627435.2670313}
 }
 
 @inproceedings{Hamilton2017,
@@ -59,7 +59,7 @@
   url       = {https://proceedings.neurips.cc/paper/2017/hash/5dd9db5e033da9c6fb5ba83c7a7ebea9-Abstract.html}
 }
 
-@InProceedings{Kipf2017,
+@inproceedings{Kipf2017,
   author    = {Thomas N. Kipf and Max Welling},
   booktitle = {5th International Conference on Learning Representations, {ICLR} 2017, Toulon, France, April 24-26, 2017, Conference Track Proceedings},
   title     = {Semi-Supervised Classification with Graph Convolutional Networks},
@@ -69,10 +69,10 @@
   biburl    = {https://dblp.org/rec/conf/iclr/KipfW17.bib},
   groups    = {PrimaryPapers, primary},
   timestamp = {Thu, 25 Jul 2019 14:25:55 +0200},
-  url       = {https://openreview.net/forum?id=SJU4ayYgl},
+  url       = {https://openreview.net/forum?id=SJU4ayYgl}
 }
 
-@Article{Shuman2013,
+@article{Shuman2013,
   author    = {David I. Shuman and Sunil K. Narang and Pascal Frossard and Antonio Ortega and Pierre Vandergheynst},
   journal   = {{IEEE} Signal Process. Mag.},
   title     = {The Emerging Field of Signal Processing on Graphs: Extending High-Dimensional Data Analysis to Networks and Other Irregular Domains},
@@ -85,10 +85,10 @@
   doi       = {10.1109/MSP.2012.2235192},
   groups    = {PrimaryPapers, primary},
   timestamp = {Wed, 14 Nov 2018 10:43:23 +0100},
-  url       = {https://doi.org/10.1109/MSP.2012.2235192},
+  url       = {https://doi.org/10.1109/MSP.2012.2235192}
 }
 
-@InProceedings{Xu2019,
+@inproceedings{Xu2019,
   author    = {Keyulu Xu and Weihua Hu and Jure Leskovec and Stefanie Jegelka},
   booktitle = {7th International Conference on Learning Representations, {ICLR} 2019, New Orleans, LA, USA, May 6-9, 2019},
   title     = {How Powerful are Graph Neural Networks?},
@@ -98,7 +98,7 @@
   biburl    = {https://dblp.org/rec/conf/iclr/XuHLJ19.bib},
   groups    = {PrimaryPapers, primary},
   timestamp = {Thu, 25 Jul 2019 13:03:15 +0200},
-  url       = {https://openreview.net/forum?id=ryGs6iA5Km},
+  url       = {https://openreview.net/forum?id=ryGs6iA5Km}
 }
 
 @inproceedings{Damke2020,
@@ -118,7 +118,7 @@
   url       = {http://proceedings.mlr.press/v129/damke20a.html}
 }
 
-@Article{Zhou2020,
+@article{Zhou2020,
   author    = {Jie Zhou and Ganqu Cui and Shengding Hu and Zhengyan Zhang and Cheng Yang and Zhiyuan Liu and Lifeng Wang and Changcheng Li and Maosong Sun},
   journal   = {{AI} Open},
   title     = {Graph neural networks: {A} review of methods and applications},
@@ -128,8 +128,22 @@
   bibsource = {dblp computer science bibliography, https://dblp.org},
   biburl    = {https://dblp.org/rec/journals/aiopen/ZhouCHZYLWLS20.bib},
   doi       = {10.1016/j.aiopen.2021.01.001},
+  groups    = {Basics},
   timestamp = {Fri, 13 Aug 2021 14:56:35 +0200},
-  url       = {https://doi.org/10.1016/j.aiopen.2021.01.001},
+  url       = {https://doi.org/10.1016/j.aiopen.2021.01.001}
+}
+
+@inproceedings{Rong2020,
+  author    = {Yu Rong and Wenbing Huang and Tingyang Xu and Junzhou Huang},
+  booktitle = {8th International Conference on Learning Representations, {ICLR} 2020, Addis Ababa, Ethiopia, April 26-30, 2020},
+  title     = {DropEdge: Towards Deep Graph Convolutional Networks on Node Classification},
+  year      = {2020},
+  publisher = {OpenReview.net},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  biburl    = {https://dblp.org/rec/conf/iclr/RongHXH20.bib},
+  groups    = {DropTech},
+  timestamp = {Thu, 29 Jul 2021 17:20:43 +0200},
+  url       = {https://openreview.net/forum?id=Hkx1qkrKPr}
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
@@ -139,5 +153,6 @@
 1 StaticGroup:WL\;0\;1\;0x8a8a8aff\;\;\;;
 1 StaticGroup:primary\;0\;1\;0x8a8a8aff\;\;\;;
 1 StaticGroup:DropTech\;0\;1\;0x8a8a8aff\;\;\;;
-1 StaticGroup:GraphSAGE\;0\;1\;0x8a8a8aff\;\;\;;
+1 StaticGroup:GraphSAGE\;0\;0\;0x8a8a8aff\;\;\;;
+1 StaticGroup:Basics\;0\;1\;0x8a8a8aff\;\;\;;
 }

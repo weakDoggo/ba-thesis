@@ -5,23 +5,112 @@
 
 \cleanchapterquote{Speech 100}{Olga Yakobson}{(Ph.Neutral)}
 
-
-
-\section{Related Work Section 1}
+\section{Intro to GNN}
 \label{sec:related:sec1}
+% Graphs and Graph Neural Networks 
+Unlike images, Graphs by nature are unstructured and have no natural order.
+They can be any size or shape and contain any kind of information.
+Therefore a mechanism is needed to organize them in such a way, that machine learning algorithms
+can make use of them.
+In \ac{gnn} every node v acesses features of it's neighbourhood using a mechanism called message passing.
+Message passing embedds into every node information about it's neighbourhood.
+neighbourhood. A \ac{gcn} one way of classifying \acp{gnn} is by looking at the corresponding message passing
+machanism. e.g convolutional, attentional, message passing.
+Message passing is the most general and the two others can be seen as special cases of message passing.
+In this work the focus will be on \ac{gcn}
+
+% search and cite sources 
 
 
+Message passing \acp{gnn}
+More generally the message passing mechanism  uses two functions,
+AGGREGATE and COMBINE \cite{Xu2019}.
 
-\section{Related Work Section 2}
+$a_{v}^{k} = AGGREGATE^{k}(\{h_{u}^{(k-1)}: u \in \mathcal{N}_{(v)}\})$ , $h_{v}^{(k)} = COMBINE^{(k)}(h_{v}^{(k-1)}, a_{v}^{(k)})$
+
+The AGGREGATE function mixes the hidden representation of the node (feature vector)
+with the hidden vectors of the nodes neighbourhood.
+
+COMBINE then combines the mixed representation togheter with the representation of the node.
+each node uses the information from its neighbors to update its embeddings, thus a natural extension is to use the information
+from the neighbors of its neighbors(or second-hop neighbors )
+to increase its receptive field and become more aware of the
+graph structure. This is what makes the second layer of our GNN
+model.
+
+Therefore by stacking k layers togheter, we can reach the k-hop neighbourhood.
+The combine function then combines the representation of the node with
+Various types of \ac{gnn} have been used for a variety of machine learning tasks.
+Such tasks include
+
+1. Link prediction:\\
+2. Vertex classification \& regression:\\
+3. Graph classification \& regression:\\
+
+
+\acp{gnn} in particular \acp{gcn} tend to suffer from two main obstacles:
+overfitting and obersmoothing
+Over-fitting: weakens the generalization ability on small dataset
+
+Over-smoothing impedes model training by isolating output representations from the input features with the increase in network depth.
+
+To address these issues a variety of regularization techniques have been developed.
+
+
+The aim is to apply \ac{gdc} to two \ac{gnn} architectures, namely \ac{gcn} and
+\ac{gin}
+
+
+\section{Different GNN architectures and 1WL-Test}
 \label{sec:related:sec2}
 
+Graph Isomorphism Network
+$h^{(k)}_{v} = MLP^{(k)} ((1 + \epsilon^{(k)}) *h^{(k-1)}_{v} + \sum_{{u} \in{\mathcal{N}(v)}} \,h^{(k-1)}_{u})$
 
 
-\section{Related Work Section 3}
+
+\section{Regularization techniques}
 \label{sec:related:sec3}
+DropOut
+
+$H^{(l+1)} = \sigma(\mathfrak{R}(A)(Z^{(l)}\odot H^{(l)}) W^{(l)})$
 
 
+DropEdge
 
+$H^{(l+1)} = \sigma(\mathfrak{R}(A \odot Z^{(l)}) H^{(l)} W^{(l)})$
+
+
+Node Sampling
+
+$H^{(l+1)} = \sigma (\mathfrak{R}(A) diag(z^{(l)}) H^{(l)} W^{(l)})$
+
+
+Graph DropConnect
+
+
+$H^{(l+1)}[:,j] = \sigma (\sum_{i=1}^{f_{t}}\mathfrak{R}(A \odot Z_{i,j}^{(l)})H^{(l)}[:,i]W^{(l)}[i,j])$
+
+Graph Convolutional Network \ac{gcn} as proposed by the authors \cite{Kipf2017} has the
+following layer-wise propaation rule
+
+$H^{(l+1)} = \sigma (\tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}} H^{(l)}W^{(l)})$\\
+and is very broadly used for a variety of different tasks, such as for instance node Classification tasks.
+Despite not being as powerful as the \ac{gin} architecture, this architecture is sufficient for a lot
+of tasks, especially when there is no need for distinguishing different structures/ substructures
+of a graph and the prediction can be done with.
+
+The authors claim, the model scales linearly in the number of graph edges and learns hidden layer
+representations that encode both local graph structure and features of nodes.
+\section{typical problems in GNN}
+
+Over-fitting: weakens the generalization ability on small dataset
+
+Over-smoothing impedes model training by isolating output representations from the input features with the increase in network depth.
+
+To address these issues a variety of regularization techniques have been developed.
+
+\section{Regularization}
 \section{Conclusion}
 \label{sec:related:conclusion}
 

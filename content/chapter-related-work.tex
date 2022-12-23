@@ -6,46 +6,112 @@
 \cleanchapterquote{Speech 100}{Olga Yakobson}{(Ph.Neutral)}
 
 \section{Intro to GNN}
-\label{sec:related:sec1}
+\label{sec:related:intro}
 % Graphs and Graph Neural Networks 
 Unlike images, Graphs by nature are unstructured and have no natural order.
 They can be any size or shape and contain any kind of information.
 Therefore a mechanism is needed to organize them in such a way, that machine learning algorithms
 can make use of them.
-In \ac{gnn} every node v acesses features of it's neighbourhood using a mechanism called message passing.
+In a \ac{gnn} every node v acesses features of it's neighbourhood using a mechanism called message passing.
 Message passing embedds into every node information about it's neighbourhood.
-neighbourhood. A \ac{gcn} one way of classifying \acp{gnn} is by looking at the corresponding message passing
+Therefore one way of classifying \acp{gnn} is by looking at the underlying message passing
 machanism. e.g convolutional, attentional, message passing.
 Message passing is the most general and the two others can be seen as special cases of message passing.
-In this work the focus will be on \ac{gcn}
-
-% search and cite sources 
 
 
-Message passing \acp{gnn}
-More generally the message passing mechanism  uses two functions,
-AGGREGATE and COMBINE \cite{Xu2019}.
+% Message passing formally 
+\subsection{Message Passing}
+\label{sec:related:message}
+Formally, message passing in a \ac{gnn} can be described as using two functions:
+AGGREGATE and COMBINE. The expressive and representational power of a \ac{gnn} can
+then be determined by looking at the concrete functions used for aggregation and combination.\cite{Xu2019}.
 
-$a_{v}^{k} = AGGREGATE^{k}(\{h_{u}^{(k-1)}: u \in \mathcal{N}_{(v)}\})$ , $h_{v}^{(k)} = COMBINE^{(k)}(h_{v}^{(k-1)}, a_{v}^{(k)})$
+AGGREGATE mixes in every iteration the hidden representation of the node (feature vector)
+with the hidden vectors of the nodes neighbourhood. COMBINE then combines the mixed representation togheter with the representation of the node.
+Each node uses the information from its neighbors to update its embeddings, thus a natural extension is to use the
+information to increase the receptive field by performing AGGREGATE and COMBINE multiple times.
 
-The AGGREGATE function mixes the hidden representation of the node (feature vector)
-with the hidden vectors of the nodes neighbourhood.
+$a_{v}^{k} = \mathrm{AGGREGATE}^{(k)}(\{h_{u}^{(k-1)}: u \in \mathcal{N}_{(v)}\})$ , $h_{v}^{(k)} = \mathrm{COMBINE}^{(k)}(h_{v}^{(k-1)}, a_{v}^{(k)})$
 
-COMBINE then combines the mixed representation togheter with the representation of the node.
-each node uses the information from its neighbors to update its embeddings, thus a natural extension is to use the information
-from the neighbors of its neighbors(or second-hop neighbors )
-to increase its receptive field and become more aware of the
-graph structure. This is what makes the second layer of our GNN
-model.
+%textbf textit
+%capital except subs, adj, verb
+\subsection{Weisfeiler-Lehman and Expressiveness}
+\label{sec:related:wl}
 
-Therefore by stacking k layers togheter, we can reach the k-hop neighbourhood.
-The combine function then combines the representation of the node with
-Various types of \ac{gnn} have been used for a variety of machine learning tasks.
-Such tasks include
+The way \acp{gnn} operate bears resemblense to how the \ac{wl} algorithm works.
+The \ac{wl} algorithm, in most apart from some edge cases is capable of classifying wheather
+two graphs are isomorphic or not.
 
-1. Link prediction:\\
-2. Vertex classification \& regression:\\
-3. Graph classification \& regression:\\
+The algorithm operates iteratively in two steps:
+
+\begin{enumerate}[label = {(\arabic*)}]
+    \item aggregates labels of nodes and neighbors
+    \item hashes the aggregated lables into unique new labels
+\end{enumerate}
+
+If at some iteration the labels of the nodes between two graphs differ, the
+graphs will be classified as being not isomorphic.
+
+Intuitively one can see, that the node's label at k-th iteration in the \ac{wl}
+represents a subtree structure of height k rooted at the node.
+
+% Question 
+Graph features considered by \ac{wl} subtree kernel are counts of different rooted subtrees
+in the graph.
+
+
+
+\section{GNN Architectures in this Paper}
+\label{sec:related:sec4}
+
+Experiments will be conducted on two types of \acp{gnn}: \ac{gcn} and \ac{gin}
+
+
+Graph Convolutional Network \ac{gcn} as proposed by the authors \cite{Kipf2017} has the
+following layer-wise propaation rule
+
+$H^{(l+1)} = \sigma (\tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}} H^{(l)}W^{(l)})$\\
+and is very broadly used for a variety of different tasks, such as for instance node Classification tasks.
+Despite not being as powerful as the \ac{gin} architecture, this architecture is sufficient for a lot
+of tasks, especially when there is no need for distinguishing different structures/ substructures
+of a graph and the prediction can be done with.
+
+The authors claim, the model scales linearly in the number of graph edges and learns hidden layer
+representations that encode both local graph structure and features of nodes.
+
+
+The second type of network is \ac{gin}, which has the following
+layer-wise propagation rule and is as powerful as the \ac{1wl}. This network, as proposed by \cite{Xu2019}
+uses an injective function, such as Sum to AGGREGATE features representations
+from the neighbourhood of every node.
+
+By choosing an injective function to perform aggregation, it can be
+guaranteed that two different neighbourhoods will never be mapped into the same
+embedding or representation.
+
+$h^{(k)}_{v} = MLP^{(k)} ((1 + \epsilon^{(k)}) *h^{(k-1)}_{v} + \sum_{{u} \in{\mathcal{N}(v)}} \,h^{(k-1)}_{u})$
+
+\cite{Xu2019} also formulated criteria for a \ac{gnn} to have
+the same expressive and representational power as \ac{wl} in thier
+theorem, which abstracts the ....
+
+
+$\mathcal{A}: \mathcal{G} \rightarrow\mathbb{R}^{d}$
+
+Assuming, that the following conditions hold, with a sufficient number
+of \ac{gnn} - layer A is as powerful as the \ac{wl} Test
+
+
+\section{Prediction Tasks and Typical Problems}
+
+
+% cite !!!!!!! 
+\begin{enumerate}
+    \item Link prediction
+    \item Vertex classification/regression
+    \item Graph classification/regression
+\end{enumerate}
+
 
 
 \acp{gnn} in particular \acp{gcn} tend to suffer from two main obstacles:
@@ -61,16 +127,8 @@ The aim is to apply \ac{gdc} to two \ac{gnn} architectures, namely \ac{gcn} and
 \ac{gin}
 
 
-\section{Different GNN architectures and 1WL-Test}
-\label{sec:related:sec2}
-
-Graph Isomorphism Network
-$h^{(k)}_{v} = MLP^{(k)} ((1 + \epsilon^{(k)}) *h^{(k-1)}_{v} + \sum_{{u} \in{\mathcal{N}(v)}} \,h^{(k-1)}_{u})$
-
-
-
-\section{Regularization techniques}
-\label{sec:related:sec3}
+\section{Regularization Techniques}
+\label{sec:related:sec5}
 DropOut
 
 $H^{(l+1)} = \sigma(\mathfrak{R}(A)(Z^{(l)}\odot H^{(l)}) W^{(l)})$
@@ -91,18 +149,7 @@ Graph DropConnect
 
 $H^{(l+1)}[:,j] = \sigma (\sum_{i=1}^{f_{t}}\mathfrak{R}(A \odot Z_{i,j}^{(l)})H^{(l)}[:,i]W^{(l)}[i,j])$
 
-Graph Convolutional Network \ac{gcn} as proposed by the authors \cite{Kipf2017} has the
-following layer-wise propaation rule
 
-$H^{(l+1)} = \sigma (\tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}} H^{(l)}W^{(l)})$\\
-and is very broadly used for a variety of different tasks, such as for instance node Classification tasks.
-Despite not being as powerful as the \ac{gin} architecture, this architecture is sufficient for a lot
-of tasks, especially when there is no need for distinguishing different structures/ substructures
-of a graph and the prediction can be done with.
-
-The authors claim, the model scales linearly in the number of graph edges and learns hidden layer
-representations that encode both local graph structure and features of nodes.
-\section{typical problems in GNN}
 
 Over-fitting: weakens the generalization ability on small dataset
 
@@ -111,6 +158,13 @@ Over-smoothing impedes model training by isolating output representations from t
 To address these issues a variety of regularization techniques have been developed.
 
 \section{Regularization}
+
+
+
 \section{Conclusion}
 \label{sec:related:conclusion}
-
+% this is for me for now 
+\acp{gnn} are widely used. They make use of a mechanism called message passing, which
+is done specifically by using two functions AGGREGATE and COMBINE.
+The concrete choice of these functions determines the type of \ac{gnn}
+and it's expressive power.

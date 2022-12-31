@@ -63,8 +63,24 @@
     bibsorting=nty,%
 }{cleanthesis}
 \usepackage{cleanthesis}
-
+\usepackage[nottoc]{tocbibind}
 \usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{bm}
+\usepackage{bbm}
+\usepackage{dsfont}
+\usepackage{centernot}
+\usepackage{breqn}
+\usepackage{nicefrac}
+\usepackage{wasysym}
+\usepackage{arydshln}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand*{\dblbrace}[2][]{#1{#2}\ifthenelse{\equal{#1}{}}{\mskip-6mu}{\mskip-8mu}#1{#2}}
+\newcommand*{\ldblbrace}[1][]{\dblbrace[#1]{\{}}
+\newcommand*{\rdblbrace}[1][]{\dblbrace[#1]{\}}}
+\newcommand*\dif{\mathop{}\!\mathrm{d}}
 
 \hypersetup{% setup the hyperref-package options
     pdftitle={\thesisTitle},    %   - title (PDF meta)
@@ -88,20 +104,91 @@
 \usetikzlibrary{backgrounds,calc}
 \usepackage{cleveref}
 \usepackage{acro}
+\usepackage{amsthm}
 \acsetup{
     %first-long-format=\slshape,
     barriers/use=true
 }
 
 
-
-
-
+% Colors:
+\definecolor{t_blue}{HTML}{355fb3}
+\definecolor{t_red}{HTML}{b33535}
+\definecolor{t_green}{HTML}{3bb335}
+\definecolor{t_yellow}{HTML}{b39735}
+\definecolor{t_darkblue}{HTML}{1e3666}
+\definecolor{t_darkgreen}{HTML}{22661e}
+\definecolor{t_darkred}{HTML}{661e1e}
+\definecolor{t_darkyellow}{HTML}{66571e}
+\definecolor{t_lightblue}{HTML}{8ea7d7}
+\definecolor{t_lightred}{HTML}{dc8989}
+\definecolor{t_lightgreen}{HTML}{8ddc89}
 
 % **************************************************
 % Custom Macros
 % **************************************************
 \newcommand{\dac}[3]{\DeclareAcronym{#1}{short = #2, long = #3}}
+
+% Custom commands:
+\renewcommand{\labelitemi}{\raisebox{.4\height}{\textcolor{t_darkblue}{\scriptsize$\blacktriangleright$}}}
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};} % chktex 1
+\newcommand*\circled[2][1pt]{\tikz[baseline=(char.base)]{ % chktex 36
+        \node[shape=circle,draw,inner sep=#1] (char) {#2};}}
+\newcommand*{\badgeboxinline}[2][black]{\fcolorbox{#1}{white}{\textsf{%
+            \small\,% chktex 21
+            \ifthenelse{\equal{\detokenize{#1}}{\detokenize{t_yellow}}}{\textcolor{t_darkyellow}{#2}}{%
+                \ifthenelse{\equal{\detokenize{#1}}{\detokenize{t_green}}}{\textcolor{t_darkgreen}{#2}}{\textcolor{#1}{#2}}%
+            }\,}}} % chktex 21
+\newcommand*{\badgebox}[2][black]{\hspace*{\fill}\badgeboxinline[#1]{#2}}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\providecommand\rightarrowRHD{\mathrel{\relbar\mathrel{\mkern-8mu\RHD}}}
+\newcommand*\linksym{\includegraphics[height=1.4ex]{gfx/link.pdf}\mkern1mu}
+\newcommand*{\colorlabel}[2]{\textsf{\textbf{\small\textcolor{#1}{#2}}}}
+\newcommand*{\condbold}[3][]{\ifthenelse{\equal{#2}{1}#1}{\mathbf{#3}}{#3}}
+\newcommand*{\evalres}[4][]{%
+    \ifthenelse{\equal{#3}{m}}{\acs*{oom}}{%
+        \ifthenelse{\equal{#3}{t}}{\acs*{oot}}{$\condbold[#1]{#2}{#3} \pm #4$}}%
+}
+
+\newcommand{\sourceinline}[2][source]{{\scriptsize\textsc{#1:~\cite{#2}}}}
+\newcommand{\source}[2][source]{\hspace*{\fill}\sourceinline[#1]{#2}}
+\newcommand{\cfullref}[2][, ]{\cref{#2}#1\cpageref{#2}}
+
+\newcounter{daggerfootnote}
+\newcommand*{\daggerfootnote}[1]{%
+    \setcounter{daggerfootnote}{\value{footnote}}%
+    \renewcommand*{\thefootnote}{\fnsymbol{footnote}}%
+    \footnote[2]{#1}%
+    \setcounter{footnote}{\value{daggerfootnote}}%
+    \renewcommand*{\thefootnote}{\arabic{footnote}}}
+
+\preto\tabular{\setcounter{rownumbercount}{0}}
+\newcounter{rownumbercount}
+\newcommand\rownumber{\stepcounter{rownumbercount}\arabic{rownumbercount}}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\mean}{mean}
+\DeclareMathOperator{\wmean}{wmean}
+\DeclareMathOperator{\wmaj}{wmaj}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\set}{set}
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39} % chktex 18
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[chapter]
+\newtheorem{prop}[thm]{Proposition}
+\crefname{prop}{proposition}{propositions}
+\Crefname{prop}{Proposition}{Propositions}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{fact}[thm]{Fact}
+\newtheorem{cor}[thm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+
+
+
 
 
 

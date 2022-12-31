@@ -24,6 +24,7 @@
 % **************************************************
 \input{my-thesis-setup}
 \input{content/acronyms}
+\bibliography{bib-refs.bib}
 
 % **************************************************
 % Document CONTENT
@@ -65,24 +66,27 @@
 \setcounter{page}{1}			% set page counter
 \pagestyle{scrheadings} 	% fancy header and footer
 
-\input{content/intro}                  % INCLUDE my_intro
+\input{content/chapter-introduction}   % INCLUDE my_intro
 \input{content/chapter-related-work}   % INCLUDE: related work
-\input{content/chapter-system}         % INCLUDE: system
-\input{content/chapter-concepts}       % INCLUDE: concepts
+\input{content/chapter-problemdescription}
+\input{content/chapter-implementation}
 \input{content/chapter-conclusion}     % INCLUDE: conclusion
 % --------------------------
 % Back matter
 % --------------------------
-\appendix\cleardoublepage
-\input{content/chapter-appendix}       % INCLUDE: appendix
+\appendix\cleardoublepage\
+\input{content/chapter-appendix}
+\cleardoublepage\
+%
 {%
-    \setstretch{1.1}
-    \renewcommand{\bibfont}{\normalfont\small}
-    \setlength{\biblabelsep}{0pt}
-    \setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip}
-    \printbibliography[nottype=online]
-    \newrefcontext[labelprefix={@}]
-    \printbibliography[heading=subbibliography,title={Webpages},type=online]
+\setstretch{1.1}
+\renewcommand{\bibfont}{\normalfont\small}
+\setlength{\biblabelsep}{0pt}
+\setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip} % chktex 1
+\setcounter{biburllcpenalty}{9000}
+\setcounter{biburlucpenalty}{9999}
+\printbibliography[nottype=online]
+\printbibliography[heading=subbibliography,title={Websites},type=online]
 }
 \cleardoublepage
 

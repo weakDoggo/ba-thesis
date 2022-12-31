@@ -1,49 +1,31 @@
-% !TEX root = ../my-thesis.tex
-%
-\chapter{Introduction}
+% !TEX root = ../main.tex
+% chktex-file 46
+\chapter{Introduction}%
 \label{sec:intro}
 
-\cleanchapterquote{You can’t do better design with a computer, but you can speed up your work enormously.}{Wim Crouwel}{(Graphic designer and typographer)}
+\pagenumbering{arabic}			% arabic page numbering
+\setcounter{page}{1}			% set page counter
 
-\Blindtext[2][2]
-
-\section{Postcards: My Address}
-\label{sec:intro:address}
-
-\textbf{Ricardo Langner} \\
-Alfred-Schrapel-Str. 7 \\
-01307 Dresden \\
-Germany
+The field of \acs{ml} on graph-structured data has recently become an active topic of research.
+One reason for this is the wide range of domains and problems that are expressible in terms of graphs.
 
 
-\section{Motivation and Problem Statement}
+\section{Motivation}%
 \label{sec:intro:motivation}
 
-% Problem statement for my concrete work !!!! 
-% Concerning my seed paper and the concrete implementation && implementation
 
-\section{Results}
-\label{sec:intro:results}
+\section{Research Questions}%
+\label{sec:intro:questions}
 
 
-\subsection{Some References}
-\label{sec:intro:results:refs}
-\cite{WEB:GNU:GPL:2010,WEB:Miede:2011}
-
-\section{Thesis Structure}
+\section{Structure}%
 \label{sec:intro:structure}
 
-\textbf{Chapter \ref{sec:related}} \\[0.2em]
-\blindtext
+\paragraph{\Cref{sec:related}: \nameref{sec:related}}
+Some text
+\paragraph{\Cref{sec:problem}: \nameref{sec:problem}}
+\paragraph{\Cref{sec:implement}: \nameref{sec:implement}}
+Some text
 
-\textbf{Chapter \ref{sec:system}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:concepts}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:concepts}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:conclusion}} \\[0.2em]
-\blindtext
+\paragraph{\Cref{sec:conclusion}: \nameref{sec:conclusion}}
+Finally, the results of this thesis are summarized and a brief outline of promising directions for future research is given.

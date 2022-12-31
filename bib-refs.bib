@@ -1,3 +1,5 @@
+% Encoding: UTF-8
+
 @article{DBLP:journals/corr/abs-2006-04064,
   author     = {Arman Hasanzadeh and Ehsan Hajiramezanali and Shahin Boluki and Mingyuan Zhou and Nick Duffield and Krishna Narayanan and Xiaoning Qian},
   journal    = {CoRR},
@@ -13,7 +15,7 @@
   url        = {https://arxiv.org/abs/2006.04064}
 }
 
-@inproceedings{Xie2020,
+@InProceedings{Xie2020,
   author    = {Yiqing Xie and Sha Li and Carl Yang and Raymond Chi{-}Wing Wong and Jiawei Han},
   booktitle = {Proceedings of the Twenty-Ninth International Joint Conference on Artificial Intelligence, {IJCAI} 2020},
   title     = {When Do GNNs Work: Understanding and Improving Neighborhood Aggregation},
@@ -24,9 +26,9 @@
   bibsource = {dblp computer science bibliography, https://dblp.org},
   biburl    = {https://dblp.org/rec/conf/ijcai/XieLYW020.bib},
   doi       = {10.24963/ijcai.2020/181},
-  groups    = {Basics, DropTech},
+  groups    = {Basics, Regularization, GeneralOverviewGNN},
   timestamp = {Sun, 02 Oct 2022 16:08:05 +0200},
-  url       = {https://doi.org/10.24963/ijcai.2020/181}
+  url       = {https://doi.org/10.24963/ijcai.2020/181},
 }
 
 @article{Srivastava2014,
@@ -40,7 +42,7 @@
   bibsource = {dblp computer science bibliography, https://dblp.org},
   biburl    = {https://dblp.org/rec/journals/jmlr/SrivastavaHKSS14.bib},
   doi       = {10.5555/2627435.2670313},
-  groups    = {DropoutTechniques, DropTech},
+  groups    = {DropoutTechniques, Regularization},
   timestamp = {Thu, 02 Jun 2022 13:58:57 +0200},
   url       = {https://dl.acm.org/doi/10.5555/2627435.2670313}
 }
@@ -118,21 +120,6 @@
   url       = {http://proceedings.mlr.press/v129/damke20a.html}
 }
 
-@article{Zhou2020,
-  author    = {Jie Zhou and Ganqu Cui and Shengding Hu and Zhengyan Zhang and Cheng Yang and Zhiyuan Liu and Lifeng Wang and Changcheng Li and Maosong Sun},
-  journal   = {{AI} Open},
-  title     = {Graph neural networks: {A} review of methods and applications},
-  year      = {2020},
-  pages     = {57--81},
-  volume    = {1},
-  bibsource = {dblp computer science bibliography, https://dblp.org},
-  biburl    = {https://dblp.org/rec/journals/aiopen/ZhouCHZYLWLS20.bib},
-  doi       = {10.1016/j.aiopen.2021.01.001},
-  groups    = {Basics},
-  timestamp = {Fri, 13 Aug 2021 14:56:35 +0200},
-  url       = {https://doi.org/10.1016/j.aiopen.2021.01.001}
-}
-
 @inproceedings{Rong2020,
   author    = {Yu Rong and Wenbing Huang and Tingyang Xu and Junzhou Huang},
   booktitle = {8th International Conference on Learning Representations, {ICLR} 2020, Addis Ababa, Ethiopia, April 26-30, 2020},
@@ -141,7 +128,7 @@
   publisher = {OpenReview.net},
   bibsource = {dblp computer science bibliography, https://dblp.org},
   biburl    = {https://dblp.org/rec/conf/iclr/RongHXH20.bib},
-  groups    = {DropTech},
+  groups    = {Regularization},
   timestamp = {Thu, 29 Jul 2021 17:20:43 +0200},
   url       = {https://openreview.net/forum?id=Hkx1qkrKPr}
 }
@@ -161,7 +148,7 @@
   url           = {https://arxiv.org/abs/2005.00687}
 }
 
-@TechReport{DanieleGrattarola2006,
+@techreport{DanieleGrattarola2006,
   author   = {Daniele Grattarola, Cesare Alippi},
   title    = {Graph Neural Networks in TensorFlow and Keras with Spektral},
   year     = {2006},
@@ -170,7 +157,142 @@
   doi      = {ng},
   file     = {:C\:/Users/dnepr/OneDrive/Desktop/Bachelor/bib_references/Graph Neural Networks in TensorFlow and Keras with Spektral.pdf:PDF},
   groups   = {frameworks},
-  keywords = {Graph Neural Networks, Graph Deep Learning, TensorFlow, Keras},
+  keywords = {Graph Neural Networks, Graph Deep Learning, TensorFlow, Keras}
+}
+
+@Article{Zhou2020a,
+  author    = {Jie Zhou and Ganqu Cui and Shengding Hu and Zhengyan Zhang and Cheng Yang and Zhiyuan Liu and Lifeng Wang and Changcheng Li and Maosong Sun},
+  journal   = {{AI} Open},
+  title     = {Graph neural networks: {A} review of methods and applications},
+  year      = {2020},
+  pages     = {57--81},
+  volume    = {1},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  biburl    = {https://dblp.org/rec/journals/aiopen/ZhouCHZYLWLS20.bib},
+  doi       = {10.1016/j.aiopen.2021.01.001},
+  groups    = {GeneralOverviewGNN},
+  timestamp = {Fri, 13 Aug 2021 14:56:35 +0200},
+  url       = {https://doi.org/10.1016/j.aiopen.2021.01.001},
+}
+
+@article{Zhang2018,
+  author        = {Muhan Zhang and Yixin Chen},
+  journal       = {CoRR},
+  title         = {Link Prediction Based on Graph Neural Networks},
+  year          = {2018},
+  volume        = {abs/1802.09691},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, https://dblp.org},
+  biburl        = {https://dblp.org/rec/journals/corr/abs-1802-09691.bib},
+  eprint        = {1802.09691},
+  groups        = {useful-not-directly},
+  timestamp     = {Mon, 13 Aug 2018 16:49:05 +0200},
+  url           = {http://arxiv.org/abs/1802.09691}
+}
+
+@article{Wu2021,
+  author    = {Zonghan Wu and Shirui Pan and Fengwen Chen and Guodong Long and Chengqi Zhang and Philip S. Yu},
+  journal   = {{IEEE} Trans. Neural Networks Learn. Syst.},
+  title     = {A Comprehensive Survey on Graph Neural Networks},
+  year      = {2021},
+  number    = {1},
+  pages     = {4--24},
+  volume    = {32},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  biburl    = {https://dblp.org/rec/journals/tnn/WuPCLZY21.bib},
+  doi       = {10.1109/TNNLS.2020.2978386},
+  groups    = {GeneralOverviewGNN},
+  timestamp = {Tue, 01 Jun 2021 09:59:58 +0200},
+  url       = {https://doi.org/10.1109/TNNLS.2020.2978386}
+}
+
+@article{Kukacka2017,
+  author        = {Jan Kukacka and Vladimir Golkov and Daniel Cremers},
+  journal       = {CoRR},
+  title         = {Regularization for Deep Learning: {A} Taxonomy},
+  year          = {2017},
+  volume        = {abs/1710.10686},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, https://dblp.org},
+  biburl        = {https://dblp.org/rec/journals/corr/abs-1710-10686.bib},
+  eprint        = {1710.10686},
+  groups        = {Regularization},
+  timestamp     = {Sat, 23 Jan 2021 01:20:25 +0100},
+  url           = {http://arxiv.org/abs/1710.10686}
+}
+
+@InProceedings{Chen2020,
+  author    = {Deli Chen and Yankai Lin and Wei Li and Peng Li and Jie Zhou and Xu Sun},
+  booktitle = {The Thirty-Fourth {AAAI} Conference on Artificial Intelligence, {AAAI} 2020, The Thirty-Second Innovative Applications of Artificial Intelligence Conference, {IAAI} 2020, The Tenth {AAAI} Symposium on Educational Advances in Artificial Intelligence, {EAAI} 2020, New York, NY, USA, February 7-12, 2020},
+  title     = {Measuring and Relieving the Over-Smoothing Problem for Graph Neural Networks from the Topological View},
+  year      = {2020},
+  pages     = {3438--3445},
+  publisher = {{AAAI} Press},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  biburl    = {https://dblp.org/rec/conf/aaai/ChenLLLZS20.bib},
+  groups    = {Oversmoothing},
+  timestamp = {Mon, 07 Mar 2022 16:58:13 +0100},
+  url       = {https://ojs.aaai.org/index.php/AAAI/article/view/5747},
+}
+
+@InProceedings{Zhou2020,
+  author    = {Kaixiong Zhou and Xiao Huang and Yuening Li and Daochen Zha and Rui Chen and Xia Hu},
+  booktitle = {Advances in Neural Information Processing Systems 33: Annual Conference on Neural Information Processing Systems 2020, NeurIPS 2020, December 6-12, 2020, virtual},
+  title     = {Towards Deeper Graph Neural Networks with Differentiable Group Normalization},
+  year      = {2020},
+  editor    = {Hugo Larochelle and Marc'Aurelio Ranzato and Raia Hadsell and Maria{-}Florina Balcan and Hsuan{-}Tien Lin},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  biburl    = {https://dblp.org/rec/conf/nips/Zhou0LZCH20.bib},
+  groups    = {Oversmoothing},
+  timestamp = {Tue, 19 Jan 2021 15:57:23 +0100},
+  url       = {https://proceedings.neurips.cc/paper/2020/hash/33dd6dba1d56e826aac1cbf23cdcca87-Abstract.html},
+}
+
+@Article{Hamilton2017a,
+  author    = {William L. Hamilton and Rex Ying and Jure Leskovec},
+  journal   = {{IEEE} Data Eng. Bull.},
+  title     = {Representation Learning on Graphs: Methods and Applications},
+  year      = {2017},
+  number    = {3},
+  pages     = {52--74},
+  volume    = {40},
+  bibsource = {dblp computer science bibliography, https://dblp.org},
+  biburl    = {https://dblp.org/rec/journals/debu/HamiltonYL17.bib},
+  timestamp = {Tue, 10 Mar 2020 16:23:49 +0100},
+  url       = {http://sites.computer.org/debull/A17sept/p52.pdf},
+}
+
+@Article{Zhang19,
+  author  = {Si Zhang and Hanghang Tong and Jiejun Xu and Ross Maciejewski},
+  journal = {Computational Social Networks},
+  title   = {Graph Convolutional Networks: A Comprehensive Revew},
+  year    = {2019},
+}
+
+@Article{Weisfeiler1968,
+  author  = {Weisfeiler, Boris and Lehman, Andrei A.},
+  journal = {Nauchno-Technicheskaya Informatsia},
+  title   = {A reduction of a graph to a canonical form and an algebra arising during this reduction},
+  year    = {1968},
+  number  = {9},
+  pages   = {12--16},
+  volume  = {2},
+  groups  = {WL},
+}
+
+@Article{Huang2022,
+  author        = {Ningyuan Huang and Soledad Villar},
+  journal       = {CoRR},
+  title         = {A Short Tutorial on The Weisfeiler-Lehman Test And Its Variants},
+  year          = {2022},
+  volume        = {abs/2201.07083},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, https://dblp.org},
+  biburl        = {https://dblp.org/rec/journals/corr/abs-2201-07083.bib},
+  eprint        = {2201.07083},
+  groups        = {WL},
+  timestamp     = {Fri, 21 Jan 2022 13:57:15 +0100},
+  url           = {https://arxiv.org/abs/2201.07083},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
@@ -179,9 +301,11 @@
 0 AllEntriesGroup:;
 1 StaticGroup:WL\;0\;1\;0x8a8a8aff\;\;\;;
 1 StaticGroup:primary\;0\;1\;0x8a8a8aff\;\;\;;
-1 StaticGroup:DropTech\;0\;1\;0x8a8a8aff\;\;\;;
+1 StaticGroup:Regularization\;0\;0\;0x8a8a8aff\;\;Taxonomy and regularization techniques\;;
 1 StaticGroup:GraphSAGE\;0\;0\;0x8a8a8aff\;\;\;;
-1 StaticGroup:Basics\;0\;1\;0x8a8a8aff\;\;\;;
 1 StaticGroup:datasets\;0\;1\;0x8a8a8aff\;\;\;;
 1 StaticGroup:frameworks\;0\;1\;0x8a8a8aff\;\;\;;
+1 StaticGroup:useful-not-directly\;0\;1\;0x8a8a8aff\;\;\;;
+1 StaticGroup:GeneralOverviewGNN\;0\;0\;0x8a8a8aff\;\;\;;
+1 StaticGroup:Oversmoothing\;0\;1\;0x8a8a8aff\;\;Oversmoothing Issue generally. The reasons it happens\;;
 }

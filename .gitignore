@@ -12,3 +12,5 @@
 *.bcf
 *.fdb_latexmk
 *.fls
+*.tmp
+*.bak

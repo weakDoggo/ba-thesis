@@ -52,14 +52,11 @@ In this work the main focus will be on the latter two, \ac{nc}\ \ac{nr} and \ac{
 Graphs, by nature are unstructured. Vertices in graphs have no natural order and can
 contatin any type of information. In order for machine learning algorithms to be able
 to make use of graph structured data, a mechanism is needed to organize them in a
-suitable way.
-\cite{Zhou2020a}
-\cite{Hamilton2017a}
-\cite{Zhang19}
+suitable way~\cite{Zhou2020a,Hamilton2017a,Zhang19}.
 
 
 % Message Passing in general (free-by-me) READY
-Message passing is a mechanism~\cite{Xu2019}~\cite{Zhou2020a}, which embedds into every node information about it's neighbourhood.
+Message passing is a mechanism~\cite{Xu2019,Zhou2020a}, which embedds into every node information about it's neighbourhood.
 This can be done in several ways and one way of classifying a \ac{gnn} is by looking at the
 underlying message passing machanism. In this paper we will look at a network, where message passing is done
 via convolutions (\acf{gcn}). We will however ocasionally use the more general term message passing, as
@@ -77,6 +74,11 @@ times.
 
 \begin{align*}
     a_{v}^{k} = \mathrm{AGGREGATE}^{(k)}(\{h_{u}^{(k-1)}: u \in \mathcal{N}_{(v)}\}) , h_{v}^{(k)} = \mathrm{COMBINE}^{(k)}(h_{v}^{(k-1)}, a_{v}^{(k)})
+\end{align*}
+
+For graph-level predictions an additional READOUT- operation is used:
+\begin{align*}
+    h_{G} =\mathrm{READOUT}(\{h_{v}^{(K)}| v \in G\})
 \end{align*}
 
 % Message passing framework and local graph structure (free-by-me) READY
@@ -99,93 +101,152 @@ composition by stacking multiple layers togheter and increase the receptive fiel
 \subsection{\acl{wl} Graph Colorings}
 \label{sec:related:character:wl}
 % What is the Weisfeiler lehman test 
-% Definition and relation to neural networks 
+% Definition and relation to neural networks (free-by-me) READY
 The Message passing mechanism has a close relation, to the way the \acf{wl} test ~\cite{Weisfeiler1968}
 ~\cite{Damke2020}~\cite{Huang2022}, an algorithm for deciding wheather two graphs are isomorphic works.
-
+Before describing the algorithm, we introduce notations and preliminaries.\\
 % Intro of Notations 
-Before describing the \ac{wl} algorithm, we define preliminaries and introduce some notations.
-% graph is defined in \sec 2.1 
-\begin{defn}
-    Let $G = (V,E)$ denote a graph where $V =\{v_{1},...,v_{n}\}$ is a set of $ N = |V|$
-    nodes and $E \subseteq V\times V $ a set of edges between those nodes.
+%---------------
+% Table 
+%---------------
+% Graph definition --> Your neighbors are communicating 
+Let $G = (V,E, X)$ denote an undirected graph where $V =\{v_{1},...,v_{n}\}$ is a set of $ N = |V|$
+nodes and $E \subseteq V\times V $ a set of edges between those nodes. For simplicity we
+represent an edge ${v,u}$ by $(v,u) \in E$ or $(u,v)$.$X= [x_{1},...,x_{n}]^{T} \in \mathbb{R}^{n \times d}$
+is the node feature matrix, where $n = |V|$ is the number of nodes and $x_{v} \in \mathbb{R}^{d}$
+represents the \textit{d}-dimensional feature of node $v$. $\mathcal{N}_{v}= \{u \in V|(v,u) \in E\}$
+is the set of neighboring nodes of node $v$. A multiset is denoted
+as $\ldblbrace...\rdblbrace$ and formally defined as follows.
+% Multiset --> Your neighbors are communicating 
+\begin{defn}[Multiset]
+    A multiset is a generalized concept of set allowing repeating elements. A multiset $X$
+    can be formally represented by a 2-tuple as $X = (S_{X}, m_{X})$, where $S_{X}$ is the
+    underlying set formed by the distinct elements in the multiset and $m_{X}:S_{X} \rightarrow
+        \mathbb{Z}^{+}$ gives the multiplicity (i.e, the number of occurrences) of the elements.
+    If the elements in the multiset are generally drawn from a set $X$ (i.e., $S_{X} \subseteq X$),
+    then $\mathcal{X}$ is the universe of X and we denote it as $X \subseteq \mathcal{X}$ for ease
+    of notation.
 \end{defn}
+% Isomorphism --> Your neighbors are communicating 
+\begin{defn}[Isomorphism]
+    Two Graphs $\mathcal{G}= (V,E,X)$ and $\mathcal{H}= (P,F,Y)$ are \textit{isomorphic}, denoted as
+    $\mathcal{G} \simeq \mathcal{H}$, if there exists a \textit{bijective} mapping $g: V \rightarrow P$
+    such that $x_{v}= y_{g(v)}$, $\forall v \in V$ and $(v,u) \in E$ iff $(g(v),g(u)) \in F$. Graph
+    Isomorphism is still an open problem without a known polynomial-time solution.
+\end{defn}
+% Define notations 
 
-% The 1-WL in it's one-dimensional form 
+
+
+% The 1-WL in it's one-dimensional form (free-by-me) ok? 
 \subsubsection{The 1-dimensional \acs{wl} algorithm (color refinement)}
-In the 1-dimensional \ac{wl} algorithm (1-WL), a color is assigned to each vertex of a graph.
-If the vertices $v \in \mathcal{V}_G$ of the input graph $G$ are labeled, those labels $l_G[v] \in L_{\mathcal{V}} \subseteq \mathcal{C}$ can be used as the initial graph coloring $\chi_{G,1}^{(0)}(v) \coloneqq l_G[v]$.
-Since \ac{wl} colors are inherently discrete, continuous vertex feature vectors $x_G[v]$ are not considered here.
-For unlabeled graphs a constant coloring is used, e.g.\ $\forall v \in \mathcal{V}_G: \chi_{G,1}^{(0)}(v) = \colorlabel{t_blue}{A}$ for some initial color $\colorlabel{t_blue}{A} \in \mathcal{C}$. % chktex 25
-In each iteration of the 1-\acs{wl} color refinement algorithm, the following neighborhood aggregation scheme is used to compute a new color for each vertex:
-\begin{defn}\label{defn:related:wl1-refine}
-    $\chi_{G,1}^{(i+1)}(v) \coloneqq h\left(\chi_{G,1}^{(i)}(v), \ldblbrace \chi_{G,1}^{(i)}(u)\, |\, u \in \Gamma_{G}(v) \rdblbrace\right)$,
-    with $\Gamma_G(v)$ denoting the set of adjacent vertices of $v \in \mathcal{V}_G$ and $h: \mathcal{C}^* \to \mathcal{C}$ denoting an injective hash function that assigns a unique color to each finite combination of colors.
-\end{defn}
+In the 1-dimensional \ac{wl} algorithm (1-WL), a label, called color $c_{v}^{0}$ is assigned to each
+vertex of a graph. Then, in every iteration the colors get updated based on the multiset representation
+of the neighborhood of the node until convergence. If at some iteration the colorings of the graphs
+differ, 1-\ac{wl} decides, that the graphs are not isorprphic.
+\begin{align*}
+    c_{v}^{l} \leftarrow \mathrm{HASH}(c_{v}^{l-1}, \ldblbrace c_{u}^(l-1)| u \in \mathcal{N}_{v} \rdblbrace)
+\end{align*}
+
+Algorithmically this can be expressed as follows:
+% 1-WL algorithm 
+\begin{algorithm}
+    \caption{1-dim.\ \ac{wl} (color refinement)}
+    \begin{algorithmic}[1]
+        \Require $G = (V,E,X_{V})$
+        \State $c_{v}^{0} \gets \mathit{hash}(X_{v})$ for all $v \in V$
+        \Repeat
+        \State $c_{v}^{l} \gets \mathit{hash}(c_{v}^{l-1}, \ldblbrace c_{w}^{l-1}: w \in \mathcal N_{G}(v)\rdblbrace)$ forall $v \in V$
+        \Until{$(c_{v}^l)_{v \in V} = (c_{v}^{l-1})_{v \in V}$}
+        \State \Return $\ldblbrace c_{v}^l : v \in V \rdblbrace$
+    \end{algorithmic}
+\end{algorithm}
+
+The 1-\ac{wl} is a heuristic method, which can efficiently distinguish a broad class of non-isomorphic
+graphs~\cite{Babai1979}.
+However there exist some corner cases, where the algorithm fails to classify
+simple shapes as non-isomorphic.
+
+% graphics isomorpc - distinguishable 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.72\linewidth]{gfx/related-work/wl1-refine.pdf}
-    \caption[Example 1-WL color refinement steps.]{
-        Example 1-WL color refinement steps.
-        After two iterations the coloring stabilizes.
-        Each vertex $v$ is labeled with its current color and has its previous color and the colors of the hashed neighbors $\Gamma_G(v)$ written next to it (see \cref{defn:related:wl1-refine}).
-    }\label{fig:related:wl1-refine}
+    \includegraphics[width= 0.90\linewidth]{gfx/related-work/1wl-isomorph}
+    \caption{1-\ac{wl}Two isomorphic graphs. 1-\ac{wl}assigns same
+        representation}\label{fig:related:1-wl-indistinguishable}
 \end{figure}
 
-% How does the WL test perform 
-The \acf{wl} algorithm characterizes a graph $G$ by assigning discrete labels $c \in \mathcal{C}$, called \textit{colors}, to vertex $k$-tuples $(v_1, \dots, v_k) \in \mathcal{V}_G^k$, where $k \in \mathbb{N}_0$ is the freely choosable \textit{\ac{wl}-dimension}.
-A mapping $\chi_{G, k}: \mathcal{V}_G^k \to \mathcal{C}$ is called a \textit{$k$-coloring} of $G$.
-\begin{defn}
-    A coloring $\chi'$ \textit{refines} $\chi$ ($\chi' \preceq \chi$) iff.\ $\forall a, b \in \mathcal{V}_G^k: \chi(a) \neq \chi(b) \rightarrow \chi'(a) \neq \chi'(b)$, i.e.\ $\chi'$ distinguishes at least those tuples that are distinguished by $\chi$.
-\end{defn}
-\begin{defn}
-    Two colorings $\chi$ and $\chi'$ are \textit{equivalent} ($\chi \equiv \chi'$) iff.\ $\chi \preceq \chi' \land \chi \succeq \chi'$, i.e.\ $\chi$ is identical to $\chi'$ up to color substitutions.
-\end{defn}
-The $k$-dimensional \ac{wl} algorithm ($k$-\acs{wl}) works by iteratively refining $k$-colorings $\chi_{G, k}^{(0)} \succeq \chi_{G, k}^{(1)} \succeq \dots$ of a given graph $G$ until the convergence criterion $\chi_{G, k}^{(i)} \equiv \chi_{G, k}^{(i+1)}$ is satisfied.
-We denote the final, maximally refined $k$-\acs{wl} coloring with $\chi^{*}_{G, k}$.
-\begin{defn}
-    The color distribution $\mathit{dist}_{\chi_{G, k}}: \mathcal{C} \to \mathbb{N}_0$ of a $k$-coloring $\chi_{G, k}$ counts each color $c \in \mathcal{C}$ in the coloring, i.e.\ $\mathit{dist}_{\chi_{G, k}}(c) \coloneqq \left|\left\{ v \in \mathcal{V}_G^k\, |\, \chi_{G, k}(v) = c \right\}\right|$. % chktex 21
-\end{defn}
-\begin{defn}\label{defn:related:wl-distinguishable}
-    Two graphs $G$ and $H$ are $k$-\acs{wl} \textit{distinguishable} ($G \mathrel{{\not\simeq}_k} H$) iff.\ there exists a color $c \in \mathcal{C}$ s.t.\ $\mathit{dist}_{\chi^{*}_{G, k}}(c) \neq \mathit{dist}_{\chi^{*}_{H, k}}(c)$.
-\end{defn}
-As we will see, the way in which \ac{wl} colorings are refined is vertex order invariant;
-thus any difference in the final coloring of two graphs always implies the non-isomorphism of the colored graphs, i.e.\ $G \mathrel{{\not\simeq}_k} H \implies G \not\simeq H$.
-The opposite does however not necessarily hold;
-two $k$-\acs{wl} indistinguishable graphs are not always isomorphic, i.e.\ $\exists\, G, H: G \mathrel{{\simeq}_k} H \land G \not\simeq H$. % chktex 21
-
-In addition to the binary aspect of \ac{wl} distinguishability and its relation to the \ac{gi} problem, \ac{wl} colorings are also useful for more fuzzy graph similarity comparisons as we will see in \cref{sec:related:pred:regularization} when we look at graph kernels.
-Before that however, the details of the \ac{wl} color refinement strategy have to be described.
-We begin with the color refinement algorithm for the most simple case of $k = 1$.
-Then the definitions and intuitions from the 1-dimensional case are extended to its higher-dimensional generalization.
-Lastly we will discuss the discriminative power of the \acs{wl} algorithm and its relation to the \acs{wl}-dimension $k$.
+% graphics isomorpc - indistinguishable 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width= 0.90\linewidth]{gfx/related-work/1wl-indistinguishable}
+    \caption{1-\ac{wl} assigned one and the same labeling to two non-isomorphic graphs~\cite{Liu2022}}\label{fig:related:1-wl-indistinguishable}
+\end{figure}
 
 
 \subsection{GNN Architectures in this Paper}
 \label{sec:related:architectures}
 
-Experiments will be conducted on two types of \acp{gnn}: \ac{gcn} and \ac{gin}
+% Intro and motivation of the choice 
+% Exploration of important properties 
+% Where those networks achieve state of the art results 
 
+% --> Convolutional network --> Image Processing 
+% --> GIN, a powerful architecture ---> ecpecially in: 
+% Motivation in Conclusion  
+In the following section we briefly introduce and
+motivate the choice of two types of networks, which we have
+chosen to experiementally verify the efficacy of several regularization techniques, which will be
+discussed in section \cref{sec:related:pred:regularization}.
 
-
+% Explain why these architectures are a promising choice 
+Since all of \ac{gnn} encorporate meaasge passing in a way, we decided to chose two interesting
+architectures for our experiments, which in our view are promising.
 \subsubsection{Graph Convolutional Network (GCN)}
 \label{sec:related:architectures:gcn}
-Graph Convolutional Network \ac{gcn} as proposed by the authors \cite{Kipf2017} has the
-following layer-wise propaation rule
+% History and Motivation 
+Graph Convolutional Network \ac{gcn} was originally proposed by \citeauthor{Kipf2017}~\cite{Kipf2017} to tackle
+the problem of semi-supervised node classification, where lables are available for a small subset of
+nodes. \ac{gnn}is a simple, but powerful architecture, that scales linearly in the number of graph
+edges and learns hidden layer representations that encode both local graph structure and features of nodes.
+
+% How does it operate formally 
+A \acf{gcn} can formally be expressed via the following layer-wise propagation rule:
 
 \begin{align*}
     H^{(l+1)} = \sigma (\tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}} H^{(l)}W^{(l)})
 \end{align*}
+Where $\tilde{A} = A + I_{N}$ is the adjacency matrix of the undirected graph $\mathcal{G}$
+with added self-connections. $I_{N}$ is the identity matrix. $\tilde{D}_{ii} = \sum_{j}\tilde{A}_{ij}$and
+$W^{l}$ is a layer-specific trainable weight-matrix.$\sigma(\cdot)$ denotes an activation function, such
+as $ReLU(\cdot) = max(0, \cdot)$. $ H^{l}\in  \mathbb^{N \times D}$ is the matrix of activations in the
+$l^{\mathrm{th}}$ layer; $H^{0}= X$
 
+% How does it operate intuition --> relation to implementation 
+An application of a two-layer \ac{gcn} is given by:
 
-% \cref eq 
-and is very broadly used for a variety of different tasks, such as for instance node Classification tasks.
-Despite not being as powerful as the \ac{gin} architecture, this architecture is sufficient for a lot
-of tasks, especially when there is no need for distinguishing different structures/ substructures
-of a graph and the prediction can be done with.
+\begin{align*}
+    Z = f(X,A) = \mathrm{softmax} (\hat{A}\ \mathrm{ReLU}(\hat{A}XW^{0})W^{l})
+\end{align*}
 
-The authors claim, the model scales linearly in the number of graph edges and learns hidden layer
-representations that encode both local graph structure and features of nodes.
+where $\hat{A} = \tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D^{-\frac{1}{2}}}$
+is calculated in a preprocessing step. The model uses a single weight matrix per layer and
+deals with varying node degrees through an appropriate normalization of the adjacency matrix.
+% Experimental results and where it was expecially useful and why 
+This model consisted of a 2-layer \ac{gcn} performed well in a series of experimental tasks,
+including semi-supervised document classification, semi-superwised node classification in citation
+networks and semi-supervised entity classification in a bipartite graph extracted from a knowledge
+graph.The prediction accuracy was evaluated on a set of 1000 examples and additional experiments on
+deeper models with up to 10 layers have been also provided. \ac{gcn} outperformed related methods
+like ManiReg, SemiEmb, LP, DeepWalk, ICA and Platenoid by a significant margin on all of the datasets, which suggests, that the proposed
+network is capable of encoding both graph structure and node features.
+
+Furthermore it overcame known limitations of existing approaches such as methods based on
+graph-laplacian regularization, which are limited due to their assumption that edges encode
+mere similarity of nodes and Skip-gram based methods, that are limited by being based on a
+multi-step pipeline, which is difficult to optimize.
+
+Overall \acf{gcn} are widely and successfully used today in many fiels due to thier simplicity
+and scalability.
 
 \subsubsection{Graph Isomorphism Network (GIN)}
 \label{sec:related:architectures:gin}
@@ -200,19 +261,12 @@ neighbourhoods to the same representations. \cite{Xu2019}
 The following layer- wise propagation rule shows a forward pass in a \ac{gin}
 
 \begin{align*}
-    h^{(k)}_{v} & = \mathrm{MLP}^{(k)} ((1 + \epsilon^{(k)}) *h^{(k-1)}_{v} + \sum_{{u} \in{\mathcal{N}(v)}} \,h^{(k-1)}_{u} \\
+    h^{(k)}_{v} & = \mathrm{MLP}^{(k)} (1 + \epsilon^{(k)}) *h^{(k-1)}_{v} + \sum_{{u} \in{\mathcal{N}(v)}} \,h^{(k-1)}_{u} \\
     x           & = \mathcal{A}: \mathcal{G} \rightarrow\mathbb{R}^{d}
 \end{align*}
 
-
-
-
-
 Assuming, that the following conditions hold, with a sufficient number
 of \ac{gnn} - layer A is as powerful as the \ac{wl} Test
-
-
-
 
 \subsection{Weaknesses and Obstacles in \ac{gnn} Architectures}
 \label{sec:related:pred:typical}
@@ -297,7 +351,6 @@ test time, it is easy to approximate the effect of averaging the predictions of 
 by simply using a single unthinned network that has smaller weights. This signifcantly
 reduces overftting and gives major improvements over other regularization methods.
 
-
 Exspecially when working with small datasets we have much noize, which then leads the model
 to overfit.
 \ac{de}
@@ -306,14 +359,10 @@ to overfit.
     H^{(l+1)} = \sigma(\mathfrak{R}(A \odot Z^{(l)}) H^{(l)} W^{(l)})
 \end{align*}
 
-
-
 \ac{ns}
 \begin{align*}
     H^{(l+1)} = \sigma (\mathfrak{R}(A) diag(z^{(l)}) H^{(l)} W^{(l)})
 \end{align*}
-
-
 
 \ac{gdc}
 \begin{align*}
@@ -321,7 +370,6 @@ to overfit.
 \end{align*}
 
 % Intuition and pittfalls 
-
 \section{Conclusion}
 \label{sec:related:conclusion}
 % this is for me for now 
@@ -334,8 +382,6 @@ to map different neighbourhoods to different representations.
 
 Also, since graphs have no natural order, the functions need to be permutation
 invariant.
-
-
 There are three typeical prediction tasks in \acp{gnn}, two of which we will concider
 in this work. (We focus on node classification\ regression as well as
 graph classification\ regression)

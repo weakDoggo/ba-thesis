@@ -60,8 +60,8 @@ Message passing is a mechanism~\cite{Xu2019,Zhou2020a}, which embedds into every
 This can be done in several ways and one way of classifying a \ac{gnn} is by looking at the
 underlying message passing machanism. In this paper we will look at a network, where message passing is done
 via convolutions (\acf{gcn}). We will however ocasionally use the more general term message passing, as
-the separation is rather blurred and message passing is seen as a generalization of
-other, more specific mechanisms
+the separation is rather blurred and message passing describes a neighborhood aggregation scheme and
+is seen as a generalization of other, more specific mechanisms.
 
 Formally, message passing in a \ac{gnn} can be described as using two functions:
 AGGREGATE and COMBINE. The expressive and representational power of a \ac{gnn} can
@@ -94,7 +94,8 @@ composition by stacking multiple layers togheter and increase the receptive fiel
     \centering
     \includegraphics[width=0.35\linewidth]{gfx/related-work/1hop}\hspace{1cm}
     \includegraphics[width=0.35\linewidth]{gfx/related-work/2hop}
-    \caption{By performing aggregation k-times we can reach the k-hop neighborhood}\label{fig:related:1hop}
+    \caption{By performing aggregation k-times we can reach and capture the
+        structural information of the k-hop neighborhood}\label{fig:related:1hop}
 \end{figure}
 
 
@@ -204,7 +205,7 @@ architectures for our experiments, which in our view are promising.
 \subsubsection{Graph Convolutional Network (GCN)}
 \label{sec:related:architectures:gcn}
 % History and Motivation 
-Graph Convolutional Network \ac{gcn} was originally proposed by \citeauthor{Kipf2017}~\cite{Kipf2017} to tackle
+Graph Convolutional Network \ac{gcn} was originally proposed by \citet{Kipf2017} to tackle
 the problem of semi-supervised node classification, where lables are available for a small subset of
 nodes. \ac{gnn}is a simple, but powerful architecture, that scales linearly in the number of graph
 edges and learns hidden layer representations that encode both local graph structure and features of nodes.
@@ -222,6 +223,12 @@ as $ReLU(\cdot) = max(0, \cdot)$. $ H^{l}\in  \mathbb^{N \times D}$ is the matri
 $l^{\mathrm{th}}$ layer; $H^{0}= X$
 
 % How does it operate intuition --> relation to implementation 
+Because we consider every neighbor to be of equal importance and therefore normalization is accomplished
+by dividing by the number of neighbours, one can view this operation as performing an element-wise
+mean-pooling~\cite{Xu2019}.
+\begin{align*}
+    h_{v}^{(k)} = \mathrm{ReLU}(\mathrm{W} \cdot\mathrm{MEAN} \{h_{u}^{k-1},\ \forall{u} \in \mathcal{N}_{(v)} \cup \{v\}\})
+\end{align*}
 An application of a two-layer \ac{gcn} is given by:
 
 \begin{align*}
@@ -250,23 +257,62 @@ and scalability.
 
 \subsubsection{Graph Isomorphism Network (GIN)}
 \label{sec:related:architectures:gin}
-To overcome the lack of expressivity of popular GNN architectures,
-Xu et al. designed a new type of \ac{gnn}, the graph isomorphism network \ac{gin}. They proved that
-\acp{gin} are strictly more expressive than a variety of previous GNNs and that they are in fact
-as powerful as the commonly used Weisfeiler-Lehman graph isomorphism test.
+% Overview 
+To overcome the lack of expressivity of popular GNN architectures,~\cite{Xu2019} designed a new
+type of \ac{gnn}, the graph isomorphism network \ac{gin}. They proved that \acp{gin} are strictly
+more expressive than a variety of previous \ac{gnn}-architectures and that they are in fact as
+powerful as the commonly used 1-dimensional \acf{wl}.
 
-The key idea is to use injective functions, so that the function would never map two different
-neighbourhoods to the same representations. \cite{Xu2019}
+% Requirements and condition 
+Two requirements must be met for a network to have the same expressive and representational
+power as the \ac{wl}- Isomorphism test:
+\begin{enumerate}
+    \item The framework must be able to represent the set of feature vectors of a given nodes
+          neighbors as a multiset.
+    \item Choosing an injective function for the aggregation step. Such a function would never
+          map two different neighborhoods to the same representation.
+\end{enumerate}
+The more discriminative the multiset function is, the more powerful the representational power
+of the underlying \ac{gnn}.
 
-The following layer- wise propagation rule shows a forward pass in a \ac{gin}
 
+% Subtree kernel graphic and explanation 
+
+% Comparison of the discriminative power of three functions 
+A comparison of three possible aggregation functions shows their power and limitations.
+Maximally powerful \acp{gnn} would map two nodes to the same embedding space \textit{only if}
+they have the same subtree structures with identical features on the corresponding nodes.
+
+% graphics and reasoning about the functions 
+
+
+% Formal definition and explanation 
+Formally a \acf{gin} can be expressed as follows:
 \begin{align*}
-    h^{(k)}_{v} & = \mathrm{MLP}^{(k)} (1 + \epsilon^{(k)}) *h^{(k-1)}_{v} + \sum_{{u} \in{\mathcal{N}(v)}} \,h^{(k-1)}_{u} \\
-    x           & = \mathcal{A}: \mathcal{G} \rightarrow\mathbb{R}^{d}
+    h^{(k)}_{v}  = \mathrm{MLP}^{(k)} \left((1 + \epsilon^{(k)}) \cdot h^{(k-1)}_{v} + \smashoperator{\sum_{{u} \in{\mathcal{N}(v)}}} \,h^{(k-1)}_{u}\right) \\
 \end{align*}
 
-Assuming, that the following conditions hold, with a sufficient number
-of \ac{gnn} - layer A is as powerful as the \ac{wl} Test
+The choice of such an architecture, is motivated by the necessity to learn two functions with certain properties,
+$f$ and $\phi$. This task can be accomplished using a \ac{mlp}.
+The following lemma and corollary, proven by~\citet{Xu2019} show the properties and application of the functions:
+
+\begin{lem}
+    Assume $\mathcal{X}$ is countable. There exists a function $f:\mathcal{X} \rightarrow \mathbb{R}^n$
+    so that $h(X) = \sum_{x \in X}f(x)$ is unique for each multiset $X \subseteq \mathcal{X}$ of
+    bounded size. Moreover, any multiset function g can be decomposed as $g(X) = \phi(\sum_{x \in X}f(x))$
+    for some function $\phi$
+\end{lem}
+
+\begin{cor}
+    Assume $\mathcal{X}$ is countable. There exists a function $f:\ \mathcal{X} \rightarrow \mathbb{R}^n$
+    so that for infinetly many choices of $\epsilon$, including all irrational numbers, $h(c,X) = (1+ \epsilon)\cdot f(c) + \sum_{x \in X}f(x)$
+    is unique for each pair (c,X), where $c \in \mathcal{X}$ and $X \subseteq \mathcal{X}$ is a multiset of bounded
+    size. Moreover, any function g over such pairs can be decomposed as $g(c,X) = \varphi((1+\epsilon)\dot f(c) +\sum_{x \in X}f(x)$
+    for some function $\varphi$
+\end{cor}
+
+
+
 
 \subsection{Weaknesses and Obstacles in \ac{gnn} Architectures}
 \label{sec:related:pred:typical}
@@ -288,7 +334,7 @@ This way, the representation of a node is being smoothed - mixed with features o
 very distant, possibly unrelated nodes. Oversmoothing is a problem mainly for node classification
 tasks. There is a trade-off between the expressivness of the model (capturing) graph structure by
 applying multiple layers and oversmoothing, which leads to a model where nodes have the same representation,
-because they all converge to indistinguishable vectors.\cite{Zhou2020}\cite{DBLP:journals/corr/abs-2006-04064}
+because they all converge to indistinguishable vectors.\cite{Zhou2020,Hasanzadeh2020}
 (In spatial \acp{gnn} we make the assumption of relatedness by proximity)
 
 
@@ -315,61 +361,129 @@ therefore be considered as a benchmark for improvement.
 % What is Ragularization generally? 
 \cite{Kukacka2017} define Regularization as any supplementary technique that aims at making the
 model generalize better, i.e. produce better results on the test set, which can include various
-properties of the loss function, the loss optimization algorithm, or
-other techniques.
+properties of the loss function, the loss optimization algorithm, or other techniques.
 
 % Classification of reg.t -> stochastic regularization 
-
 One subgroup of regularization is via data, where the training set $\mathcal{D}$ is
 transformed into a new set $\mathcal{D}_{R}$ using some stochastic parameter
-$\theta$, which can be used in various ways, including to manipulate the feature space,
+$\pi$, which can be used in various ways, including to manipulate the feature space,
 create a new, augmented dataset or to change (e.g, thin out the hidden layers of
 the \ac{nn})
 
-% What types of problems does it solve? Relation ty my specific subset (overfitting, oversmoothing in GNNs)
+An example of such a transformation would is corruption of inputs by Gaussian noise.
+\begin{align}
+    \tau_{0}(x) = x + \pi, \pi \backsim \mathcal{N}(0, \sum)
+\end{align}
 
-In the scope of this work we will look at various regularization techniques
-and thier efficacy in terms of dealing with the issues of overfitting and oversmoothing
-The four regularization approaches, as described by \cite{DBLP:journals/corr/abs-2006-04064} are:
+% Stochastic regularization techniques, data augmentation
+In this work we focus on stochastic regularization techniques, which perform
+data augmentation in one way or another and whose main benefits lie in the alliviation
+of overfitting and oversmoothing\cite{Hasanzadeh2020}.\
+We will use the following notations: \
 
-% Detailed description of techniques 
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        $H^{(l)}= [h_{0}^{(l)},...h_{n}^{(l)}]^T \in \mathbb{R}^{n \times f_{t}}$ & output of the $l-th$ hidden layer in \ac{gnn}            \\
+        n                                                                         & number of nodes                                          \\
+        $f_{t}$                                                                   & the number of output features at the \textit{l}-th layer \\
+        $H^{0}= X \in \mathbb{R}^{n \times f^{0}}$                                & input matrix of node attributes                          \\
+        $f_{0}$                                                                   & number of nodes features                                 \\
+        $W^{l} \in \mathbb{R}^{f_{t} \times f_{t+1}}$                             & the \ac{gnn} parameters at the \textit{l}-th layer       \\
+        $\sigma (\cdot)$                                                          & corresponding activation function                        \\
+        $\mathcal{N}(v)$                                                          & neighborhood of node v                                   \\
+        $\tilde{\mathcal{N}}(v) = \mathcal{N}(v) \cup {v}$                        & neighbourhood of node v with added self-connection       \\
+        $\mathfrak{N}(\cdot)$                                                     & normalizing operator                                     \\
+        $\odot$                                                                   & Hadamard product                                         \\
+        \hline
+    \end{tabular}
+\end{center}
 
+First, we introduce some notations:
+Denote the output of the $l-th$ hidden layer in \ac{gnn} by $H^{(l)}= [h_{0}^{(l)},...h_{n}^{(l)}]^T \in \mathbb{R}^{n \times f_{t}}$
+with n being the number of nodes and $f_{t}$ being the number of output features at the \textit{l}-th
+layer. Assume $H^{0}= X \in \mathbb{R}^{n \times f^{0}}$ is the input matrix of node attributes where
+f_{0} is the number of nodes features. Also assume that $W^{l} \in \mathbb{R}^{f_{t} \times f_{t+1}}$
+and $\sigma (\cdot)$ are the \ac{gnn} parameters at the \textit{l}-th layer and the corresponding
+activation function respectively. Moreover $\mathcal{N}(v)$ denotes the neighbourhood of the
+node v; $\tilde{\mathcal{N}}(v) = \mathcal{N}(v) \cup {v}$; and $\mathfrak{N}(\cdot)$ is the
+normalizing operator, i.e, $\mathfrak{N}(A) = I_{N} + D^{-\frak{1/2}}A D^{-\frak{1/2}}$
+finally $\odot$ represents the Hadamard product\\
+
+
+% Regularization 4 Methods 
+% DropOut
 \ac{do}\\
-\ac{do} randomly removes elements of its previous hidden
-layer $H^{(l)}$ based on independent Bernoulli random draws
-with a constant success rate at each training iteraration: \cite{DBLP:journals/corr/abs-2006-04064}
+\ac{do}~\cite{Srivastava2014} randomly removes elements of its previous hidden
+layer $H^{(l)}$ based on independent Bernoulli random draws with a constant success rate at each
+training iteraration:
 \begin{align*}
     H^{(l+1)} = \sigma(\mathfrak{R}(A)(Z^{(l)}\odot H^{(l)}) W^{(l)})
 \end{align*}
+where $Z^{l}$ is a ramdom binary matrix, with the same dimensions as $H^{l}$, whose
+elements are samples of Bernoulli$(\pi)$
 
+% Description and Intuition 
+The random drop of units (along with their connections) from the neural
+network during training prevents units from co-adapting too much.
+A neural net with n units can be seen as a collection of $2^{n}$ possible networks.
+Applying dropout with a certain probability $p$ can be interpreted as sampling
+"thinned" networks from all possible $2^{n}$ networks. In the end, since averaging over
+all the epossible networks is computationally expensive, an approximation for
+combining the prediction is used. This averaging method entails using
+a single neural net with weights, which are scaled-down weights obtained during
+training time. Since a feature is present with probability p at training time,
+we can average by multiplying the outgoing weights of that unit by p at test time.
 
-Originally this method was proposed by \cite{Srivastava2014}, who proposed to
-randomly drop units (along with their connections) from the neural
-network during training and thus prevent units from co-adapting too much.
-During training dropout samples from an exponential number of different "thinned" networks.At
-test time, it is easy to approximate the effect of averaging the predictions of all these thinned networks
-by simply using a single unthinned network that has smaller weights. This signifcantly
-reduces overftting and gives major improvements over other regularization methods.
-
-Exspecially when working with small datasets we have much noize, which then leads the model
-to overfit.
+% DropEdge
 \ac{de}
 
+\ac{de}\cite{Rong2020} randomly removes a
+certain number of edges from the input graph at each training epoch, acting like a
+data augmenter and also a message passing reducer.
 \begin{align*}
     H^{(l+1)} = \sigma(\mathfrak{R}(A \odot Z^{(l)}) H^{(l)} W^{(l)})
 \end{align*}
+The random binary mask $Z^{l}$ has the same dimensions as $A$.
+Its elements are the random samples of Bernoulli$(\pi)$ where their
+corresponding elements in $A$ are non-zero and zero everywhere else.
+% Description and Intuition 
+Message passing in \acp{gnn} happens along the edges between neighbours.
+Randomly removng edges makes the connections more sparse, which
+leads to slower convergence time and thus prevents the
+network from oversmoothing and allows for a deeper architecture.
+The random deformation of the graph, resulting from \ac{de} is why this
+method can also be seen as data augmentation, which prevents over-fitting.
+The combination of DropOut and DropEdge reaches the best performance in
+terms of mitigating overfitting in \acp{gnn} \
 
 \ac{ns}
+\ac{ns}\cite{Chen2018}, also known as FastGCN is a regularization technique
+developed to improve the \ac{gcn}\cite{Kipf2017} architecture and adress the bottleneck issues
+of \ac{gcn} caused by recursive expansion of neighborhoods.
+
+Formally, this can be expressed the following way:
 \begin{align*}
     H^{(l+1)} = \sigma (\mathfrak{R}(A) diag(z^{(l)}) H^{(l)} W^{(l)})
 \end{align*}
 
+
+
 \ac{gdc}
+\ac{gdc}\cite{Hasanzadeh2020}
 \begin{align*}
     H^{(l+1)}[:,j] = \sigma (\sum_{i=1}^{f_{t}}\mathfrak{R}(A \odot Z_{i,j}^{(l)})H^{(l)}[:,i]W^{(l)}[i,j])
 \end{align*}
 
-% Intuition and pittfalls 
+
+
+
+% Quick Comparison on all the above methods and intuition behind the "why" 
+\acf{do} has been successful in alleviating overfitting, but rather on architectures, which
+do not use shared weights, such as convolutional neural networks and SVMs (support vector machines).
+\acf{de} achieved great results in reducing both overfitting as well as oversmoothing. Intuitively this
+makes sence, bacause smoothing comes from the aggr
+
 \section{Conclusion}
 \label{sec:related:conclusion}
 % this is for me for now 

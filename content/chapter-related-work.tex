@@ -12,6 +12,7 @@ Before describing the problem, and later on the experimental setup, we first
           inspecting wheather two graphs are isomorph.
     \item Give an formal definition and description of two \ac{gnn}
           architectures, which will be used in our experiments.
+    \item Discuss typical issues, which occur in \acp{gnn} and methods for adressing those issues
 \end{enumerate}
 
 
@@ -239,29 +240,20 @@ where $\hat{A} = \tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D^{-\frac{1}{2}}}$
 is calculated in a preprocessing step. The model uses a single weight matrix per layer and
 deals with varying node degrees through an appropriate normalization of the adjacency matrix.
 % Experimental results and where it was expecially useful and why 
-This model consisted of a 2-layer \ac{gcn} performed well in a series of experimental tasks,
-including semi-supervised document classification, semi-superwised node classification in citation
-networks and semi-supervised entity classification in a bipartite graph extracted from a knowledge
-graph.The prediction accuracy was evaluated on a set of 1000 examples and additional experiments on
-deeper models with up to 10 layers have been also provided. \ac{gcn} outperformed related methods
-like ManiReg, SemiEmb, LP, DeepWalk, ICA and Platenoid by a significant margin on all of the datasets, which suggests, that the proposed
+This model consisted of a 2-layer \ac{gcn} performed well in a series of experimental tasks, including semi-supervised document classification, semi-superwised node classification in citation networks and semi-supervised entity classification in a bipartite graph extracted from a knowledge graph.
+The prediction accuracy was evaluated on a set of 1000 examples and additional experiments on deeper models with up to 10 layers have been also provided. \ac{gcn} outperformed related methodslike ManiReg, SemiEmb, LP, DeepWalk, ICA and Platenoid by a significant margin on all of the datasets, which suggests, that the proposed
 network is capable of encoding both graph structure and node features.
 
 Furthermore it overcame known limitations of existing approaches such as methods based on
-graph-laplacian regularization, which are limited due to their assumption that edges encode
-mere similarity of nodes and Skip-gram based methods, that are limited by being based on a
-multi-step pipeline, which is difficult to optimize.
+graph-laplacian regularization, which are limited due to their assumption that edges encode mere similarity of nodes and Skip-gram based methods, that are limited by being based on a multi-step pipeline, which is difficult to optimize.
 
-Overall \acf{gcn} are widely and successfully used today in many fiels due to thier simplicity
-and scalability.
+Overall \acf{gcn} are widely and successfully used today in many fiels due to thier simplicity and scalability.
 
 \subsubsection{Graph Isomorphism Network (GIN)}
 \label{sec:related:architectures:gin}
 % Overview 
-To overcome the lack of expressivity of popular GNN architectures,~\cite{Xu2019} designed a new
-type of \ac{gnn}, the graph isomorphism network \ac{gin}. They proved that \acp{gin} are strictly
-more expressive than a variety of previous \ac{gnn}-architectures and that they are in fact as
-powerful as the commonly used 1-dimensional \acf{wl}.
+To overcome the lack of expressivity of popular GNN architectures,~\cite{Xu2019} designed a new type of \ac{gnn}, the graph isomorphism network \ac{gin}. They proved that \acp{gin} are strictly
+more expressive than a variety of previous \ac{gnn}-architectures and that they are in fact as powerful as the commonly used 1-dimensional \acf{wl}.
 
 % Requirements and condition 
 Two requirements must be met for a network to have the same expressive and representational
@@ -272,16 +264,14 @@ power as the \ac{wl}- Isomorphism test:
     \item Choosing an injective function for the aggregation step. Such a function would never
           map two different neighborhoods to the same representation.
 \end{enumerate}
-The more discriminative the multiset function is, the more powerful the representational power
-of the underlying \ac{gnn}.
+The more discriminative the multiset function is, the more powerful the representational power of the underlying \ac{gnn}.
 
 
 % Subtree kernel graphic and explanation 
 
 % Comparison of the discriminative power of three functions 
 A comparison of three possible aggregation functions shows their power and limitations.
-Maximally powerful \acp{gnn} would map two nodes to the same embedding space \textit{only if}
-they have the same subtree structures with identical features on the corresponding nodes.
+Maximally powerful \acp{gnn} would map two nodes to the same embedding space \textit{only if} they have the same subtree structures with identical features on the corresponding nodes.
 
 % graphics and reasoning about the functions 
 
@@ -307,12 +297,9 @@ The following lemma and corollary, proven by~\citet{Xu2019} show the properties 
     Assume $\mathcal{X}$ is countable. There exists a function $f:\ \mathcal{X} \rightarrow \mathbb{R}^n$
     so that for infinetly many choices of $\epsilon$, including all irrational numbers, $h(c,X) = (1+ \epsilon)\cdot f(c) + \sum_{x \in X}f(x)$
     is unique for each pair (c,X), where $c \in \mathcal{X}$ and $X \subseteq \mathcal{X}$ is a multiset of bounded
-    size. Moreover, any function g over such pairs can be decomposed as $g(c,X) = \varphi((1+\epsilon)\dot f(c) +\sum_{x \in X}f(x)$
+    size. Moreover, any function g over such pairs can be decomposed as $g(c,X) = \varphi(1+\epsilon)\dot f(c) +\sum_{x \in X}f(x)$
     for some function $\varphi$
 \end{cor}
-
-
-
 
 \subsection{Weaknesses and Obstacles in \ac{gnn} Architectures}
 \label{sec:related:pred:typical}
@@ -325,30 +312,19 @@ Overfitting hinders the generalization ability of a \acf{nn}, making it perform 
 on previously unseen data. This problematic occurs expecially when using small datasets,
 since the model thends to 'memorize' instead of learn the pattern.
 
-
 % Oversmoothing description and intuition (free-by-me) READY 
 Oversmoothing is a condition, where the performance and predictive power of a \ac{nn}
 does not imporve of even gets worse when more layers are added. This happens because
 by stacking multiple layers  togheter togheter aggregation is being performed over and over again.
 This way, the representation of a node is being smoothed - mixed with features of
-very distant, possibly unrelated nodes. Oversmoothing is a problem mainly for node classification
-tasks. There is a trade-off between the expressivness of the model (capturing) graph structure by
-applying multiple layers and oversmoothing, which leads to a model where nodes have the same representation,
-because they all converge to indistinguishable vectors.\cite{Zhou2020,Hasanzadeh2020}
-(In spatial \acp{gnn} we make the assumption of relatedness by proximity)
-
+very distant, possibly unrelated nodes. Oversmoothing is a problem mainly for node classification tasks. There is a trade-off between the expressivness of the model (capturing) graph structure by applying multiple layers and oversmoothing, which leads
+to a model where nodes have the same representation,
+because they all converge to indistinguishable vectors~\cite{Zhou2020,Hasanzadeh2020}.%
+\footnote{In spatial \acp{gnn} we make the assumption of relatedness by proximity.}
 
 % Why is this happening (free-by-me) READY 
-A closer examination of underlying causes of oversmoothing was conducted by \cite{Chen2020},
-who suggested, that not message passing itself, but the type of interacting nodes cause this issue.
-For \acf{nc} tasks, intra-class communication (interaction between two nodes sharing the same class)
-is useful (signal), whereas inter-class communication (the communication between two nodes sharing
-different lables) is considered harmful, because it brings interference noise into the
-feature-representations by mixing unrelated features and therefore making unrelated nodes more similar
-to each other. Because of that, the the quality of shared information is essencial and should
-therefore be considered as a benchmark for improvement.
-
-
+A closer examination of underlying causes of oversmoothing was conducted by \citet{Chen2020}, who suggested, that not message passing itself, but the type of interacting nodes cause this issue.
+For \acf{nc} tasks, intra-class communication (interaction between two nodes sharing the same class) is useful (signal), whereas inter-class communication (the communication between two nodes sharing different lables) is considered harmful, because it brings interference noise into the feature-representations by mixing unrelated features and therefore making unrelated nodes more similar to each other. Because of that, the the quality of shared information is essencial and should therefore be considered as a benchmark for improvement.
 
 % THOSRE ARE MAIN TWO OBSTACLES I WILL FOCUS ON 
 % HERE ARE SOME OTHER THINGS POSSIBLY TO CONSIDER LATER 
@@ -359,7 +335,7 @@ therefore be considered as a benchmark for improvement.
 \label{sec:related:pred:regularization}
 
 % What is Ragularization generally? 
-\cite{Kukacka2017} define Regularization as any supplementary technique that aims at making the
+\citet{Kukacka2017} define Regularization as any supplementary technique that aims at making the
 model generalize better, i.e. produce better results on the test set, which can include various
 properties of the loss function, the loss optimization algorithm, or other techniques.
 
@@ -372,7 +348,7 @@ the \ac{nn})
 
 An example of such a transformation would is corruption of inputs by Gaussian noise.
 \begin{align}
-    \tau_{0}(x) = x + \pi, \pi \backsim \mathcal{N}(0, \sum)
+    \tau_{0}(x) = x + \theta, \theta \backsim \mathcal{N}(0, \Sigma)
 \end{align}
 
 % Stochastic regularization techniques, data augmentation
@@ -382,39 +358,44 @@ of overfitting and oversmoothing\cite{Hasanzadeh2020}.\
 We will use the following notations: \
 
 \begin{center}
-    \begin{tabular}{|c|c|}
-        \hline
-        $H^{(l)}= [h_{0}^{(l)},...h_{n}^{(l)}]^T \in \mathbb{R}^{n \times f_{t}}$ & output of the $l-th$ hidden layer in \ac{gnn}            \\
-        n                                                                         & number of nodes                                          \\
-        $f_{t}$                                                                   & the number of output features at the \textit{l}-th layer \\
-        $H^{0}= X \in \mathbb{R}^{n \times f^{0}}$                                & input matrix of node attributes                          \\
-        $f_{0}$                                                                   & number of nodes features                                 \\
-        $W^{l} \in \mathbb{R}^{f_{t} \times f_{t+1}}$                             & the \ac{gnn} parameters at the \textit{l}-th layer       \\
-        $\sigma (\cdot)$                                                          & corresponding activation function                        \\
-        $\mathcal{N}(v)$                                                          & neighborhood of node v                                   \\
-        $\tilde{\mathcal{N}}(v) = \mathcal{N}(v) \cup {v}$                        & neighbourhood of node v with added self-connection       \\
-        $\mathfrak{N}(\cdot)$                                                     & normalizing operator                                     \\
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Notation}                                                         & \textbf{Description}                                     \\
+        \midrule
+        $H^{(l)}= [h_{0}^{(l)},...h_{n}^{(l)}]^T \in \mathbb{R}^{n \times f_{t}}$ & Output of the $l-th$ hidden layer in \ac{gnn}            \\
+        $n$                                                                       & Number of nodes                                          \\
+        $f_{t}$                                                                   & The number of output features at the \textit{l}-th layer \\
+        $H^{0}= X \in \mathbb{R}^{n \times f^{0}}$                                & Input matrix of node attributes                          \\
+        $f_{0}$                                                                   & Number of nodes features                                 \\
+        $W^{l} \in \mathbb{R}^{f_{t} \times f_{t+1}}$                             & The \ac{gnn} parameters at the \textit{l}-th layer       \\
+        $\sigma (\cdot)$                                                          & Corresponding activation function                        \\
+        $\mathcal{N}(v)$                                                          & Neighborhood of node $v$                                 \\
+        $\tilde{\mathcal{N}}(v) = \mathcal{N}(v) \cup {v}$                        & $\mathcal{N}(v)$  with added self-connection             \\
+        $\mathfrak{N}(\cdot)$                                                     & Normalizing operator                                     \\
         $\odot$                                                                   & Hadamard product                                         \\
-        \hline
+        \bottomrule
     \end{tabular}
 \end{center}
 
-First, we introduce some notations:
-Denote the output of the $l-th$ hidden layer in \ac{gnn} by $H^{(l)}= [h_{0}^{(l)},...h_{n}^{(l)}]^T \in \mathbb{R}^{n \times f_{t}}$
-with n being the number of nodes and $f_{t}$ being the number of output features at the \textit{l}-th
-layer. Assume $H^{0}= X \in \mathbb{R}^{n \times f^{0}}$ is the input matrix of node attributes where
-f_{0} is the number of nodes features. Also assume that $W^{l} \in \mathbb{R}^{f_{t} \times f_{t+1}}$
-and $\sigma (\cdot)$ are the \ac{gnn} parameters at the \textit{l}-th layer and the corresponding
-activation function respectively. Moreover $\mathcal{N}(v)$ denotes the neighbourhood of the
-node v; $\tilde{\mathcal{N}}(v) = \mathcal{N}(v) \cup {v}$; and $\mathfrak{N}(\cdot)$ is the
-normalizing operator, i.e, $\mathfrak{N}(A) = I_{N} + D^{-\frak{1/2}}A D^{-\frak{1/2}}$
-finally $\odot$ represents the Hadamard product\\
+% First, we introduce some notations:
+% Denote the output of the \textit{l}-th hidden layer in \ac{gnn} by $H^{(l)}= [h_{0}^{(l)},...h_{n}^{(l)}]^T \in \mathbb{R}^{n \times f_{t}}$
+% with n being the number of nodes and $f_{t}$ being the number of output features at the \textit{l}-th
+% layer. Assume $H^{0}= X \in \mathbb{R}^{n \times f^{0}}$ is the input matrix of node attributes where
+% f_{0} is the number of nodes features. Also assume that $W^{l} \in \mathbb{R}^{f_{t} \times f_{t+1}}$
+% and $\sigma (\cdot)$ are the \ac{gnn} parameters at the \textit{l}-th layer and the corresponding
+% activation function respectively. Moreover $\mathcal{N}(v)$ denotes the neighbourhood of the
+% node v; $\tilde{\mathcal{N}}(v) = \mathcal{N}(v) \cup {v}$; and $\mathfrak{N}(\cdot)$ is the
+% normalizing operator, i.e., $\mathfrak{N}(A) = I_{N} + D^{-\frak{1/2}}A D^{-\frak{1/2}}$
+% finally $\odot$ represents the Hadamard product\\
 
 
 % Regularization 4 Methods 
 % DropOut
-\ac{do}\\
-\ac{do}~\cite{Srivastava2014} randomly removes elements of its previous hidden
+
+\subsubsection{\acl*{do}~(\citeauthor{Srivastava2014})}
+\label{sec:related:pred:regularization:do}
+
+\ac{do} randomly removes elements of its previous hidden
 layer $H^{(l)}$ based on independent Bernoulli random draws with a constant success rate at each
 training iteraration:
 \begin{align*}
@@ -429,16 +410,24 @@ network during training prevents units from co-adapting too much.
 A neural net with n units can be seen as a collection of $2^{n}$ possible networks.
 Applying dropout with a certain probability $p$ can be interpreted as sampling
 "thinned" networks from all possible $2^{n}$ networks. In the end, since averaging over
-all the epossible networks is computationally expensive, an approximation for
+all possible networks is computationally expensive, an approximation for
 combining the prediction is used. This averaging method entails using
 a single neural net with weights, which are scaled-down weights obtained during
 training time. Since a feature is present with probability p at training time,
 we can average by multiplying the outgoing weights of that unit by p at test time.
-
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width= 0.90\linewidth]{gfx/related-work/DropOut}
+    \caption{\acf{do} preserves connections between nodes as well as the
+        nodes itself, unless we chose a large probability p, which drops all of the nodes
+        features}\label{fig:related:DropOut}
+\end{figure}
 % DropEdge
-\ac{de}
+\subsubsection{\acl*{de}~(\citeauthor{Rong2020})}
+\label{sec:related:pred:regularization:de}
 
-\ac{de}\cite{Rong2020} randomly removes a
+
+\ac{de} randomly removes a
 certain number of edges from the input graph at each training epoch, acting like a
 data augmenter and also a message passing reducer.
 \begin{align*}
@@ -452,50 +441,63 @@ Message passing in \acp{gnn} happens along the edges between neighbours.
 Randomly removng edges makes the connections more sparse, which
 leads to slower convergence time and thus prevents the
 network from oversmoothing and allows for a deeper architecture.
-The random deformation of the graph, resulting from \ac{de} is why this
-method can also be seen as data augmentation, which prevents over-fitting.
+The random deformation of the graph, resulting from \ac{de} acts as
+data augmentation, which prevents over-fitting.
 The combination of DropOut and DropEdge reaches the best performance in
-terms of mitigating overfitting in \acp{gnn} \
+terms of mitigating overfitting in \acp{gnn}
 
-\ac{ns}
-\ac{ns}\cite{Chen2018}, also known as FastGCN is a regularization technique
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width= 0.90\linewidth]{gfx/related-work/DropEdge}
+    \caption{\acf{de} preserves nodes and all of nodes featurs, but randomly removes
+        edges, leading to a smaller number of neighbors, which results in slower conversion
+        times and allowes for architectures with more hidden layers.}\label{fig:related:DropEdge}
+\end{figure}
+\subsubsection{\acl*{ns}~(\citeauthor{Chen2018})}
+\label{sec:related:pred:regularization:ns}
+
+This method of regularization, also known as FastGCN was
 developed to improve the \ac{gcn}\cite{Kipf2017} architecture and adress the bottleneck issues
 of \ac{gcn} caused by recursive expansion of neighborhoods.
+It reduces the expensive computation in batch training of \ac{gnn} by relaxing the
+requirement of simultaneous availability of test data.
 
-Formally, this can be expressed the following way:
 \begin{align*}
     H^{(l+1)} = \sigma (\mathfrak{R}(A) diag(z^{(l)}) H^{(l)} W^{(l)})
 \end{align*}
+where $z^{(l)}$ is a random vector whose elements are drawn from Bernoulli$(\pi)$.
+This is a special case of \ac{do}, since all of the output features are either kept or
+completely dropped.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width= 0.90\linewidth]{gfx/related-work/NodeSampling}
+    \caption{In \acf{ns}, a node is either removed or preserved along with the whole feature
+        vector with a certain probability p.}\label{fig:related:NodeSampling}
+\end{figure}
+\subsubsection{\acl*{gdc}~(\citeauthor{Hasanzadeh2020})}
+\label{sec:related:pred:regularization:gdc}
+Finally \ac{gdc}, which can be seen as a generalization of all the above proposed methods,
+is a stochastic regularization approach, which has been shown to be the most effective among all the above and
+even more effective than the combination of \ac{do} and \ac{de}.
+The regularization is done via adaptive connection sampling and can be interpreted as an approximation
+of Bayesian \acp{gnn}.
 
-
-
-\ac{gdc} \\
-\ac{gdc}\cite{Hasanzadeh2020}
 \begin{align*}
-    H^{(l+1)}[:,j] = \sigma (\sum_{i=1}^{f_{t}}\mathfrak{R}(A \odot Z_{i,j}^{(l)})H^{(l)}[:,i]W^{(l)}[i,j])
+    H^{(l+1)}[:,j] & = \sigma \left(\sum_{i=1}^{f_{t}}\mathfrak{R}\left(A \odot Z_{i,j}^{(l)}\right)H^{(l)}[:,i]W^{(l)}[i,j]\right) \\
+    \text{for } j  & = 1,..., f_{t+1}
 \end{align*}
 
+where $f_{t}$ and $f_{t+1}$ are the number of features at layers \textit{l} and \textit{l}+1, respectively, and
+$Z_{i,j}^{(l)}$ is a sparse random matrix (with the same sparcity as A), whose non-zero
+elements are randomly drawn by Bernoulli($\pi_{l}$), where $\pi_{l}$can be different for each layer.
+% Illustration for GDC 
 
 
+%--------------------------------------------------------------------------------------------------
+% Recap
+All the methods are somewhat related and share some similarities~\cite{Rong2020}.
+\acf{do} has been successful in alleviating overfitting by preturbing the feature matrix and setting some entries to zero. The issue of over-smoothing is not affected by this measure.
+\acf{de} achieved great results in reducing both overfitting as well as oversmoothing. Intuitively this makes sence, bacause smoothing comes from the aggrgation of the neighbours of a certain node and by dropping the connections to some neighbours, the feature- vectors of those neighbours are no longer smoothed in.
+\ac{ns} has been proven to be effective in addressing the memory bottleneck issue of GCN caused by recursive expansion of neighborhoods.\ac{ns} is a special case of DropOut, as all of the output features for a node are either completely kept or dropped while DropOut randomly removes some of these related output elements associated with the node. Also, along with the dropped node the edges of this node are dropped. The method itself, however is node-oriented and the edge-drop is a "side-effect".
 
-% Quick Comparison on all the above methods and intuition behind the "why" 
-\acf{do} has been successful in alleviating overfitting, but rather on architectures, which
-do not use shared weights, such as convolutional neural networks and SVMs (support vector machines).
-\acf{de} achieved great results in reducing both overfitting as well as oversmoothing. Intuitively this
-makes sence, bacause smoothing comes from the aggr
-
-\section{Conclusion}
-\label{sec:related:conclusion}
-% this is for me for now 
-\acp{gnn} are widely used. They make use of a mechanism called message passing, which
-is done specifically by using two functions AGGREGATE and COMBINE.
-The concrete choice of these functions determines the type of \ac{gnn}
-and it's expressive power. If we want the network to have the same expressive
-and representational as the \ac{wl}, the functions need to be injective in order
-to map different neighbourhoods to different representations.
-
-Also, since graphs have no natural order, the functions need to be permutation
-invariant.
-There are three typeical prediction tasks in \acp{gnn}, two of which we will concider
-in this work. (We focus on node classification\ regression as well as
-graph classification\ regression)
+Lastly \ac{gdc} is a regularization tchnique, that combines all of the above by drawing different random masks for each channel and edge independently, which yield better performance results then all of the previous methods or even combinations of them.

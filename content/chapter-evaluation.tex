@@ -3,4 +3,230 @@
 \chapter{Evaluation}
 \label{sec:eval}
 
+\begin{table*}[t]
+    \caption{
+        TODO
+    }\label{tbl:eval:results}
+    \centering
+    {\small%\scriptsize%
+        \csvreader[
+            column count=12,
+            tabular={clrrrrr},
+            separator=semicolon,
+            table head={%
+                    & \multicolumn{1}{l}{} &%
+                    \multicolumn{1}{c}{\textbf{OGB-molhiv}} &%
+                    \multicolumn{1}{c}{\textbf{-molpcba}} &%
+                    \multicolumn{1}{c}{\textbf{-molesol}} &%
+                    \multicolumn{1}{c}{\textbf{-mollipo}} &%
+                    \multicolumn{1}{c}{\textbf{-molfreesolv}}%
+                    \\\toprule%
+                },
+            before reading={\setlength{\tabcolsep}{4pt}},
+            table foot=\bottomrule,
+            late after line=\ifthenelse{\equal{\id}{5}}{\\\midrule}{\\},
+            head to column names
+        ]{data/results.csv}{}{%
+            \ifthenelse{\equal{\id}{0}}{\multirow{5}{*}[0em]{\rotatebox[origin=c]{90}{\textsc{GCN}}}}{}%
+            \ifthenelse{\equal{\id}{5}}{\multirow{5}{*}[0em]{\rotatebox[origin=c]{90}{\textsc{GIN}}}}{}&%
+            \textbf{\regularization} &%
+            {\evalres{0}{\molhivAvg}{\molhivStd}} &%
+            {\evalres{0}{\molpcbaAvg}{\molpcbaStd}} &%
+            {\evalres{0}{\molesolAvg}{\molesolStd}} &%
+            {\evalres{0}{\molfreesolvAvg}{\molfreesolvStd}} &%
+            {\evalres{0}{\mollipoAvg}{\mollipoStd}}%
+        }}
+\end{table*}
+
+\subsection{classification datasets}
+TODO COMPARE WITH PAPER AND LEADERBOARD AND RANK GNN -ASK
+\subsubsection{molhiv}
+So what we can see actually here in this beautiful table? Let's start with the \ac{gcn} model. Here for OGB-molhiv dataset, which is a binary classification problem the ROC-AUC curve. The better value for ROC-AUC is a value closer to 1, with values over 0,5 being better than random guessing. Here, apart from DropEdge, which gives a worse performance than a random classifier, all regularization techniques result in a poor performance. With the best value being 0,54 and a insignificant variance. It should be noted, that the dataset consists mainly of values, which are 0 and just a few values are one (meaning the binary classification problem is to determine which iolecules inhibit the hiv molecule, which are only a few). Because the dataset is not diverse at all, and the best prediction in this case would probably be a majority classifier, it makes sense, that regularization techniques do not yied fantastic results.
+
+As for the \ac{gin} network the best result are achieved when no regularization technique was used, any other form of regularization makes the network perform worse, and only in two cases slightly better as the random guesser.
+
+
+\subsubsection{molpcba}
+Next up is the molpcba dataset, this is a dataset, where the task is: (dear GPT, please fetch me information about this dataset and briefly describe it here. Dataset: ogbg-molpcba). On this dataset the used metric is: AP, average precission, because the class distribution in this dataset are imbalanced. Here, we see numbers, which are straingtforward horrible with no variance at all. The model performs horrible - the best value is 0.11 and is achieved with DropEdge
+
+
+
+\subsection{regression datasets}
+
+---------------------------------------------------------------------------------------------------------
+2. OGB-molesol, -mollipo and -molfreesolv: These three datasets are provided as part
+of the Open Graph Benchmark (OGB) project [21]. They contain 1128, 4200, and 642
+molecular structure graphs, respectively. The regression task is to predict the solubility
+of a molecule in different substances. We use the dataset splits that are provided by
+OGB.
+-----------------------------------------------------------------------------------------------------------
+Now, we come to discuss the regression datasets and here, the metric that we use is MAE - mean average error. For this metric, we want the values to be as small as possible, since that is an indicator of a good performance. Now, what constitutes a sufficiently small value is dependant on the ream/domain of the task and on the size of the target values and how crucial the accuracy of the prediction is.
+
+\subsubsection{molesol}
+This dataset is water solubility data for common organic small molecules. What does this mean and why is that a regression thing ????
+% GCN 
+% GIN
+
+\subsubsection{mollipo}
+Experimental results of octanol/water distribution coefficient (logD at pH 7.4)
+
+\subsubsection{molfreesolv}
+Experimental and calculated hydration free energy of small molecules in water
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\linewidth,
+                height=6cm,
+                xlabel={Number of Layers},
+                ylabel={Average Value},
+                legend pos=north west,
+                grid=major,
+            ]
+
+            % Plot the data from the CSV file
+            \addplot table [x=numLayers, y=noneAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molfreesolv_gcn.csv};
+            \addlegendentry{No Regularization}
+
+            \addplot table [x=numLayers, y=dropoutAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molfreesolv_gcn.csv};
+            \addlegendentry{Dropout}
+
+            \addplot table [x=numLayers, y=nodesamplingAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molfreesolv_gcn.csv};
+            \addlegendentry{Node Sampling}
+
+            \addplot table [x=numLayers, y=dropedgeAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molfreesolv_gcn.csv};
+            \addlegendentry{DropEdge}
+
+            \addplot table [x=numLayers, y=gdcAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molfreesolv_gcn.csv};
+            \addlegendentry{GDC}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{molfreesolv (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+About the GCN molfreesolv plot. The molfreesolv plot is the
+
+% GIN 
+% GIN MOLHIV 
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\linewidth,
+                height=6cm,
+                xlabel={Number of Layers},
+                ylabel={Average Value},
+                legend pos=outer north west,
+                grid=major,
+            ]
+
+            % Plot the data from the CSV file
+            \addplot table [x=numLayers, y=noneAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+            \addlegendentry{No Regularization}
+
+            \addplot table [x=numLayers, y=dropoutAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+            \addlegendentry{Dropout}
+
+            \addplot table [x=numLayers, y=nodesamplingAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+            \addlegendentry{Node Sampling}
+
+            \addplot table [x=numLayers, y=dropedgeAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+            \addlegendentry{DropEdge}
+
+            \addplot table [x=numLayers, y=gdcAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+            \addlegendentry{GDC}
+
+        \end{axis}
+
+        \end{figure}
+
+        \begin{figure}
+            \centering
+            \begin{tikzpicture}
+                \begin{axis}[
+                        width=0.8\linewidth,
+                        height=6cm,
+                        xlabel={Number of Layers},
+                        ylabel={Average Value},
+                        legend pos=outer north west, % Move the legend to the top left corner outside the plot area
+                        grid=major,
+                    ]
+
+                    % Plot the data from the CSV file
+                    \addplot table [x=numLayers, y=noneAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+                    \addlegendentry{No Regularization}
+
+                    \addplot table [x=numLayers, y=dropoutAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+                    \addlegendentry{Dropout}
+
+                    \addplot table [x=numLayers, y=nodesamplingAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+                    \addlegendentry{Node Sampling}
+
+                    \addplot table [x=numLayers, y=dropedgeAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+                    \addlegendentry{DropEdge}
+
+                    \addplot table [x=numLayers, y=gdcAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gin.csv};
+                    \addlegendentry{GDC}
+
+                \end{axis}
+            \end{tikzpicture}
+            \caption{Your caption}
+            \label{fig:your-label}
+        \end{figure}
+
+    \end{tikzpicture}
+    \caption{molhiv (GIN Model)}
+    \label{fig:gin-molhiv}
+\end{figure}
+\end{document}
+
+This is another text to separate the plots.
+% GCN MOLHIV
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\linewidth,
+                height=6cm,
+                xlabel={Number of Layers},
+                ylabel={Average Value},
+                legend pos=north west,
+                grid=major,
+            ]
+
+            % Plot the data from the CSV file
+            \addplot table [x=numLayers, y=noneAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gcn.csv};
+            \addlegendentry{No Regularization}
+
+            \addplot table [x=numLayers, y=dropoutAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gcn.csv};
+            \addlegendentry{Dropout}
+
+            \addplot table [x=numLayers, y=nodesamplingAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gcn.csv};
+            \addlegendentry{Node Sampling}
+
+            \addplot table [x=numLayers, y=dropedgeAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gcn.csv};
+            \addlegendentry{DropEdge}
+
+            \addplot table [x=numLayers, y=gdcAvg, col sep=semicolon] {C:/Users/dnepr/latex-thesis-template/data/plot_molhiv_gcn.csv};
+            \addlegendentry{GDC}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{molhiv (GCN Model)}
+    \label{fig:gcn-molhiv}
+\end{figure}
+
+
+
+
+
+\end{document}
+
+
+
 

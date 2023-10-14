@@ -37,8 +37,7 @@ tasks. Typically, one is interested in one of the following three tasks:
           the entire graph, e.g., predicting a property of a molecule.
 \end{enumerate}
 
-In this work the main focus will be on the latter two, \ac{nc}\ \ac{nr} and \ac{gc}\
-\ac{gr} for small- as well as large-sized graphs.
+In this work the main focus will be on \ac{nc}, \ac{gc} and \ac{gr} for small- as well as medium-sized graphs.
 
 % Message passing formally
 \section{Passing Messages in \Acsp*{gnn}}
@@ -46,7 +45,7 @@ In this work the main focus will be on the latter two, \ac{nc}\ \ac{nr} and \ac{
 
 % Intro to GNNs, State-description (free-by-me) READY
 Graphs, by nature, are unstructured. Vertices in graphs have no natural order and can
-contatin any type of information. In order for machine learning algorithms to be able
+contain any type of information. In order for machine learning algorithms to be able
 to make use of graph structured data, a mechanism is needed to organize them in a
 suitable way~\cite{Zhou2020a,Hamilton2017a,Zhang19}.
 
@@ -82,34 +81,34 @@ composition by stacking multiple layers togheter increasing the receptive field.
     \centering
     \includegraphics[width=0.35\linewidth]{gfx/related-work/1hop}\hspace{1cm}
     \includegraphics[width=0.35\linewidth]{gfx/related-work/2hop}
-    \caption{By performing aggregation k-times we can reach and capture the
-        structural information of the k-hop neighborhood}\label{fig:related:1hop}
+    \caption{By performing aggregation $k$-times, we can reach and capture the
+        structural information of the $k$-hop neighborhood}\label{fig:related:1hop}
 \end{figure}
 
 
 \subsection{\acl{wl} Graph Colorings}
 \label{sec:related:character:wl}
-% What is the Weisfeiler lehman test 
+% What is the Weisfeiler Lehman test 
 % Definition and relation to neural networks (free-by-me) READY
-The Message passing mechanism has a close relation, to the way the \acf{wl} test ~\cite{Weisfeiler1968,Damke2020,Huang2022} works, an algorithm for deciding if two graphs are isomorphic.
+The Message passing mechanism is closely related to the way the \acf{wl} test ~\cite{Weisfeiler1968,Damke2020,Huang2022} works, an algorithm for deciding if two graphs are isomorphic.
 Before describing the algorithm, we introduce notations and preliminaries.\\
 
 % Intro of Notations 
 % Graph definition --> Your neighbors are communicating 
-Let $G = (V,E, X)$ denote an undirected graph, where $V =\{v_{1},...,v_{n}\}$ is a set of $ N = |V|$ nodes and $E \subseteq V\times V $ a set of edges between those nodes. For simplicity, we represent an edge $\{v,u\} in E$ by $(v,u) \in E$ or $(u,v)\in E$. $X= [x_{1},...,x_{n}]^{T} \in \mathbb{R}^{n \times d}$ is the node feature matrix, where $n = |V|$ is the number of nodes and $x_{v} \in \mathbb{R}^{d}$ represents the \textit{d}-dimensional feature of node $v$. $\mathcal{N}_{v}= \{u \in V\ \mid \ (v,u) \in E\}$ is the set of neighboring nodes of node $v$. A multiset is denoted
+Let $G = (V,E, X)$ denote an undirected graph, where $V =\{v_{1},...,v_{n}\}$ is a set of $ N = |V|$ nodes and $E \subseteq V\times V $ a set of edges between those nodes. For simplicity, we represent an edge $\{v,u\} \in E$ by $(v,u) \in E$ or $(u,v)\in E$. $X= [x_{1},...,x_{n}]^{T} \in \mathbb{R}^{n \times d}$ is the node feature matrix, where $n = |V|$ is the number of nodes and $x_{v} \in \mathbb{R}^{d}$ represents the \textit{d}-dimensional feature of node $v$. $\mathcal{N}_{v}= \{u \in V\ \mid \ (v,u) \in E\}$ is the set of neighboring nodes of node $v$. A multiset is denoted
 as $\ldblbrace...\rdblbrace$ and formally defined as follows.
 % Multiset --> Your neighbors are communicating 
 \begin{defn}[Multiset]
-    A multiset is a generalisation of a set allowing repeating elements. A multiset $\mathcal{X}$ can be formally represented by a 2-tuple as $X = (S_{X}, m_{X})$, where $S_{X}$ is the
+    A multiset is a generalization of a set allowing repeating elements. A multiset $\mathcal{X}$ can be formally represented by a 2-tuple as $X = (S_{X}, m_{X})$, where $S_{X}$ is the
     underlying set formed by the distinct elements in the multiset and $m_{X}:S_{X} \rightarrow
-        \mathbb{Z}^{+}$ gives the multiplicity (i.e, the number of occurrences) of the elements.
+        \mathbb{Z}^{+}$ gives the multiplicity (i.e., the number of occurrences) of the elements.
     If the elements in the multiset are generally drawn from a set $X$ (i.e., $S_{X} \subseteq \mathcal{X}$), then $\mathcal{X}$ is the universe of X and we denote it as $X \subseteq \mathcal{X}$ for ease of notation.
 \end{defn}
 % Isomorphism --> Your neighbors are communicating 
 \begin{defn}[Isomorphism]
     Two Graphs $\mathcal{G}= (V,E,X)$ and $\mathcal{H}= (P,F,Y)$ are \textit{isomorphic}, denoted as $\mathcal{G} \simeq \mathcal{H}$, if there exists a \textit{bijective} mapping $g: V \rightarrow P$ such that $x_{v}= y_{g(v)}$, $\forall v \in V$ and $(v,u) \in E$ iff $(g(v),g(u)) \in F$.
 \end{defn}
-% The 1-WL in it's one-dimensional form (free-by-me) ok? 
+% The 1-WL in its one-dimensional form (free-by-me)
 \subsubsection{The 1-dimensional \acs{wl} algorithm (color refinement)}
 In the 1-dimensional \ac{wl} algorithm (1-WL), a label, called \emph{color}, $c_{v}^{0}$ is assigned to each vertex of a graph. Then, in every iteration, the colors get updated based on the multiset representation of the neighborhood of the node until convergence. If at some iteration the colorings of the graphs differ, 1-\ac{wl} decides that the graphs are not isomorphic.
 \begin{align*}
@@ -117,7 +116,7 @@ In the 1-dimensional \ac{wl} algorithm (1-WL), a label, called \emph{color}, $c_
 \end{align*}
 \\
 
-Algorithmically this can be expressed as follows:
+Algorithmically, this can be expressed as follows:
 % 1-WL algorithm 
 \begin{algorithm}[H]
     \caption{1-dim.\ \ac{wl} (color refinement)}
@@ -131,7 +130,7 @@ Algorithmically this can be expressed as follows:
     \end{algorithmic}
 \end{algorithm}
 
-The 1-\ac{wl} is a heuristic method, which can efficiently distinguish a broad class of non-isomorphic
+The 1-\ac{wl} is a heuristic method which can efficiently distinguish a broad class of non-isomorphic
 graphs~\cite{Babai1979}.
 However, there exist some corner cases, where the algorithm fails to classify
 simple shapes as non-isomorphic. This is the case for non-isomorphic graphs with the same number of nodes and equivalent sets of node-degrees, as shown in \cref*{fig:related:1-wl-indistinguishable}.
@@ -258,6 +257,9 @@ The following lemma and corollary, proven by~\citet{Xu2019} show the properties 
     for some function $\varphi$.
 \end{cor}
 
+\subsubsection{\ac{gin} is as powerful as 1-dimensional\ac{wl}}
+% NEW AND UNAPPROVED
+\Ac{gin} is a neural network-based approach designed to handle graph data and detect graph isomorphisms. It operates on each vertex and updates its representation based on its own features and the aggregated features of its neighbors. There exists a fundamental similarity between the \ac{gin} and the way the 1-\ac{wl} algorithm works
 \subsection{Weaknesses and Obstacles in \acp{gnn}}
 \label{sec:related:pred:typical}
 % What are the typical problems in GNNs
@@ -337,7 +339,7 @@ training iteraration:
 \begin{align*}
     H^{(l+1)} = \sigma(\mathfrak{R}(A)(Z^{(l)}\odot H^{(l)}) W^{(l)})
 \end{align*}
-where $Z^{l}$ is a ramdom binary matrix, with the same dimensions as $H^{l}$, whose
+where $Z^{l}$ is a random binary matrix, with the same dimensions as $H^{l}$, whose
 elements are samples of Bernoulli$(\pi)$.
 
 % Description and Intuition 
@@ -376,7 +378,7 @@ leads to slower convergence time and thus prevents the
 network from oversmoothing and allows for a deeper architecture.
 Intuitively this makes sence, since removing an edge means, that the node, previosely connected by that edge stops being a neighbor. Consequently the representation of this former neighbor does not get mixed with the representation of the node.
 
-\Ac{de} also acts like a data augmenter, since by randomly dropping edges we manipulate/change the underlying graph data. Since the data is now augmented with noise, it is harder for the network to overfit the data by ``memorising`` rather than learning complex relationships.
+\Ac{de} also acts like a data augmenter, since by randomly dropping edges we manipulate/change the underlying graph data. Since the data is now augmented with noise, it is harder for the network to overfit the data by ``memorising'' rather than learning complex relationships.
 The combination of \ac{do} and \ac{de} reaches a better performance in
 terms of mitigating overfitting in \acp{gnn} than \ac{de} on it's own.
 
@@ -408,11 +410,11 @@ completely dropped.
 Finally, \ac{gdc} \cite{Hasanzadeh2020}, which can be seen as a generalization of all the above proposed methods, is a stochastic regularization approach, which has been shown to be the most effective among all the above and even more effective than the combination of \ac{do} and \ac{de}. The regularization is done via adaptive connection sampling and can be interpreted as an approximation of Bayesian \acp{gnn}.
 
 \begin{align*}
-    H^{(l+1)}[:,j] & = \sigma \left(\sum_{i=1}^{f_{t}}\mathfrak{R}\left(A \odot Z_{i,j}^{(l)}\right)H^{(l)}[:,i]W^{(l)}[i,j]\right) \\
-    \text{for } j  & = 1,..., f_{t+1}
+    H^{(l+1)}[:,j] & = \sigma \left(\sum_{i=1}^{f_{l}}\mathfrak{R}\left(A \odot Z_{i,j}^{(l)}\right)H^{(l)}[:,i]W^{(l)}[i,j]\right) \\
+    \text{for } j  & = 1,..., f_{l+1}
 \end{align*}
 
-where $f_{t}$ and $f_{t+1}$ are the number of features at layers \textit{l} and \textit{l}+1, respectively, and
+where $f_{l}$ and $f_{l+1}$ are the number of features at layers \textit{l} and \textit{l}+1, respectively, and
 $Z_{i,j}^{(l)}$ is a sparse random matrix (with the same sparsity as A), whose non-zero
 elements are randomly drawn from Bernoulli($\pi_{l}$), where $\pi_{l}$ can be different for each layer. \ac{gdc} is a regularization technique, that combines all of the above by drawing different random masks for each channel and edge independently, which yield better performance results then all of the previous methods or even combinations of them.
 \ac{gdc}, as it is expressed in the formula above has not been implemented and evaluated yet. Instead, a special case of \ac{gdc} has been implemented:

@@ -13,19 +13,37 @@ This section provides a brief overview of the experimental setup and aims to mot
 
 \section{Experimental Setup}
 \label{sec:implement:setup}
-% Gather, scatter in tensorflow 
-Usually neighbourhood relationships between nodes are represented with adjacency matrices. In this paper, however we choose to work with adjacency lists, as it brings some benefits. Since the experiments are conducted on \ac{ogb} datasets, where adjacency is represented as a list, we make use of tensorflow's tensorflow~\cite{tensorflow} gather and scatter operations.
+\subsubsection{\Ac{gdc}}
+Before we describe our implementation in Python, we look at the two proposed variants of \ac{gdc} and provide an intuition for them.
+As stated previously, this version of \ac{gdc} allows drawing different random masks for each channel and edge independently, giving more flexibility and increasing the time and space complexity.
+\begin{align*}
+    H^{(l+1)}[:,j] & = \sigma \left(\sum_{i=1}^{f_{l}}\mathfrak{R}\left(A \odot Z_{i,j}^{(l)}\right)H^{(l)}[:,i]W^{(l)}[i,j]\right) \\
+    \text{for } j  & = 1,..., f_{l+1}
+\end{align*}
+% Description and Intuition for GDC-eq4
+Here, we calculate the new feature matrix $H^{(l+1)}$ by stacking the column vectors of each iteration. One can think of the calculations that are being performed as a $4$-dimensional matrix with the dimensions $n\times n\times f_{l}\times f_{l+1}$
 
-% Description gather, scatter 
-gather fetches data at the indexed locations and scatter updates the output data at the indexed loacations. This is used to realize the convolution
+To understand what is being done, we can look at what is being performed when calculating one column of the resulting matrix. First, a random mask is applied to the connection from the $i$-th to the $j$-th. Regarding node features communicating with each other, we look at the edge between the $i$-th and $j$-th features between connected nodes. By applying the random mask, we drop those connections selectively. Because we sample the random binary mask $Z$ $f_{l+1}$ times, one time for every feature in the $l+1$-th iteration, we differentiate between the connection $i \rightarrow j$ between two nodes and the connection $j \rightarrow i$ between the same two nodes. Thus, the same edge can be dropped as a connection and remain as a connection in the opposite direction. The masked adjacency is then multiplied by the corresponding column and weight.
+One may think of it as performing a random sampling across each channel since in each iteration from $i=1$ to $f_{l+1}$, we perform multiplication with the $i-th$ column of $H$.
 
-% Formula --> Code 
-% Implementation of regularization techniques 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width= 0.90\linewidth]{gfx/implementation/GDC-eq4.pdf}
+    \caption{\Ac{gdc}Note: self connection are assumed}\label{fig:implementaion:GDC-eq4}
+\end{figure}
 
 
+As for the implementation of \ac{gdc}, we decided to implement the less complex version, as shown below, since this implementation reduces the runtime completely and is also the one that was originally implemented for testing the efficacy of \ac{gdc}
+\begin{align}
+    H^{(l+1)} = \sigma(\sum_{i= 1}^{f_{l}}\mathfrak{N}(A \odot Z_{i}^{(l)})H^{(l)}[:,i] W^{(l)}[i,:])
+\end{align}
 
-% HERE ABOUT DESCREPANCY BETWEEN PAPER AND CODE ! --> cite github for seed paper 
-
+Here, we compute the new feature matrix in one go, instead of doing $f_{l}$ iterations for all $f_{l}$ columns.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width= 0.90\linewidth]{gfx/implementation/GDC-eq5.pdf}
+    \caption{Originally proposed \ac{gdc}Note: self connection are assumed}\label{fig:implementaion:GDC-eq5}
+\end{figure}
 
 \subsection{Choice of Frameworks}
 \label{sec:implement:setup:choice}
@@ -35,7 +53,7 @@ Below we give a quick overview of used daasets and frameworks and motivate the c
 \subsubsection{Datasets}
 \label{sec:implement:setup:choice:data}
 % Datasets - OGB 
-Despite the fact, that machine learning on graph structured data is carried out in many areas and has many interesting use cases ranging from social networks, to molecular graphs, to manifolds, to source code~\cite{Hu2020},
+Despite the fact, that machine learning on graph-structured data is carried out in many areas and has many interesting use cases ranging from social networks, to molecular graphs, to manifolds, to source code~\cite{Hu2020},
 there does not exist and unified framework for working with graph-structured data. Furthermore commonly-used datasets and evaluation procedures suffer from multiple issues, that negatively affect the quality of predictions and the reliability of evaluations of models.
 Machine learning algorithms rely heavily on data. In order for a \ac{gnn} to be able to make accurate predictions, there is need for a sufficient amount of properly prepared training data. To be able to compare different models against each other there is need of standardized splitting and evaluation methods.
 
@@ -65,18 +83,7 @@ Working with \ac{ogb} consists of following steps:
     \includegraphics[width= 0.90\linewidth]{gfx/implementation/OGB_pipeline}
     \caption{\textbf{Overview of the standardized OGB pipeline} adapted from \cite{Hu2020}}\label{fig:implement:pipeline}
 \end{figure}
-% Agnostic choica av. 
-% ----------------------------------------------------------------------------
-% Choice of metrics for my tasks 
 
-% Node classification 
-
-% Node regression 
-
-% Graph classification 
-
-% Graph regression 
-%-----------------------------------------------------------------------------
 
 % Introduction of MAD 
 \subsubsection{Metrics}
@@ -103,7 +110,7 @@ computing the cosine distance between each node pair.
 \end{align*}
 
 where $H_{k}$ is the $k$-th row of $H$. The reason to use cosine distance is that cosine distance is not affected by the absolute value of the node vector,
-thus better reflecting the smoothness of graph representation. Then we filter the target node pairs by element-wise mutliplication $D$ with a mask matrix $M^{tgt}$
+thus better reflecting the smoothness of graph representation. Then we filter the target node pairs by element-wise multiplication $D$ with a mask matrix $M^{tgt}$
 
 \begin{align*}
     D^{tgt} = D \odot M^{tgt},
@@ -114,9 +121,81 @@ Next we access the average distance $\bar{D}^{tgt}$ for non-zero values along ea
 \begin{align*}
     \bar{D}_{t}^{tgt} = \frac{\sum_{j=0}^{n}D_{i,j}^{tgt}}{\sum_{j=0}^{n}\mathds{1}(D_{i,j}^{tgt})}
 \end{align*}
-
+where where 1(x) = 1 if x > 0 otherwise 0. Finally, the MAD
+value given the target node pairs is calculated by averaging
+the non-zero values in
+tgt
 % Intuition behind all this 
 
-\Ac{mad} gives acess to the smoothness of a node and pairs of nodes troughout iterations, which makes it easy to "track down" oversmoothing.
+\Ac{mad} gives acess to the smoothness of a node and pairs of nodes throughout iterations, which makes it easy to "track down" over smoothing.
+
+First, the cosine similarity is calculated, which shows us how similar the corresponding feature vectors are. By subtracting the cosine similarity from one, we get the cosine distance, which tells us about the difference of the nodes.
+
 
 % graphic signal/ information & noise 
+\subsection{Implementation of regularization techniques}
+\label{sec:implement:setup: regularization}
+
+% Descrepancy between Paper 
+
+
+% Implementation of Regularization 
+The for regularization techniques as described in (*)
+% reference to related work
+can be described using two parameters/ answering two questions: Is the regularization happening row-wise and do we gather the values before applying the regularization?
+
+The table below shows the possible combinations and the corresponding regulrization technique.
+\begin{center}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Regularization} & \textbf{row-wise?} & \textbf{gather first?} \\
+        \midrule
+        \acf{do}                & false              & false                  \\
+        \acf{de}                & true               & true                   \\
+        \acf{ns}                & true               & false                  \\
+        \acf{gdc}               & false              & true                   \\
+
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+
+We use this insight and implement the regularization techniques as they are described in \cref{sec:related:pred:regularization}.
+
+\subsubsection{DropOut}
+
+The implementaion of dropout is rather straightforward. The method takes in a probability $p$ as a parameter and a shape and creates a mask by randomly sampling from an uniform distribution.
+
+This mask is then applied to the batch-matrix and by this multiplication \ac{do} is performed.
+
+
+
+def dropout_mask(p, shape):
+p_list = (tf.random.uniform(
+shape=shape, minval=0, maxval=1, dtype=tf.dtypes.float32))
+mask = p_list >= p
+return tf.cast(mask, dtype=tf.dtypes.float32)
+
+
+
+\subsection{Finding the best set of hyperparameters}
+\label{sec:implement:setup: gridsearch}
+
+For hyperparameter optimization we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhausive serch.
+
+Despite its two mjor drawbacks
+
+\begin{enumerate}
+    \item Poor scalability for large configuration spaces due to it's complexity being exponential in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$
+    \item Lack of consideration of the hierarchical hyperparameter structure, which leads to many redundant configurations. % In the traditional version, grid search does not exploit knowledge of well performingregions. This drawback is partially eliminated by contracting grid search
+\end{enumerate}
+
+\ac{gs} is well suitable for small search spaces and can easily be implemented and parallelized.
+
+
+% 1. Start with a large search space and step size.
+% 2. Narrow the search space and step size based on the previous results of
+% well-performing hyper-parameter configurations.
+% 3. Repeat step 2 multiple times until an optimum is reached.
+% GS can be easily implemented and parallelized
+

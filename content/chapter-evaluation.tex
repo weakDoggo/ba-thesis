@@ -16,7 +16,7 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
 
 \begin{table*}[t]
     \caption{
-        Experimental results for graph-level prediction tasks. With ROC-AUC metric for OGB-molhiv, AP for -molpcba and MSE for three remaining datasets.
+        Experimental results for graph-level prediction tasks. With ROC-AUC metric for OGB-molhiv, AP for -molpcba and MSE for the three remaining regression datasets.
     }\label{tbl:eval:results}
     \centering
     {\small%\scriptsize%
@@ -49,9 +49,20 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
         }}
 \end{table*}
 
+Some insights we can gather from the results table.
+% Basic first view insights: 
+% GCN 
+Starting with the \ac{gdc} network, we see, that the best results are always achieved when using no regularization techniques at all. This holds true for all classification as well as all the regression datasets, with the overall variance of the model performance being rather small, except on the molesol and the mmolfreesolv datasets. As all the result s are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods as they performance varies depending on the dataset with different methods performing better on certain datasets.
+
+% GIN 
+
+
+
+
+
 \subsection{datasets and metrics overview}
 
-Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used fife datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
+Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
 
 The other three, OGB-molesol, -mollipo and -molfreesolv are regression datasets. They contain 1128, 4200, and 642
 molecular structure graphs, respectively. The regression task is to predict the solubility
@@ -63,6 +74,11 @@ To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used 
 % AP (when class distribution on a dataset are imbalanced): Bigger values of AP are better
 % MAE: The smaller the better.
 
+\newcommand*{\addstd}[4]{
+    \addplot[name path=#3upper, draw=none] table[x=#2, y expr=\thisrow{#3Avg}+\thisrow{#3Std}, col sep=semicolon] {#1};
+    \addplot[name path=#3lower, draw=none] table[x=#2, y expr=\thisrow{#3Avg}-\thisrow{#3Std}, col sep=semicolon] {#1};
+    \addplot[fill=#4, fill opacity=0.1] fill between[of=#3upper and #3lower];
+}
 \newcommand*{\layerplot}[4]{\begin{tikzpicture}
         \begin{axis}[
                 width=0.8\linewidth,
@@ -75,21 +91,26 @@ To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used 
             ]
 
             % Plot the data from the CSV file
-            \addplot[color= p_red] plot[error bars/.cd, y dir=both, y explicit] table [x=#2, y=noneAvg, col sep=semicolon,  y error=noneStd] {#1};
+            \addplot[color= p_red] table [x=#2, y=noneAvg, col sep=semicolon] {#1};
             \addlegendentry{No Regularization}
 
-            \addplot[color= p_green] plot[error bars/.cd, y dir=both, y explicit] table [x=#2, y=dropoutAvg, col sep=semicolon,  y error=dropoutStd] {#1};
+            \addplot[color= p_green] table [x=#2, y=dropoutAvg, col sep=semicolon] {#1};
             \addlegendentry{Dropout}
 
-            \addplot[color= p_blue] plot[error bars/.cd, y dir=both, y explicit] table [x=#2, y=nodesamplingAvg, col sep=semicolon,  y error=nodesamplingStd] {#1};
+            \addplot[color= p_blue] table [x=#2, y=nodesamplingAvg, col sep=semicolon] {#1};
             \addlegendentry{Node Sampling}
 
-            \addplot[color= p_yellow] plot[error bars/.cd, y dir=both, y explicit] table [x=#2, y=dropedgeAvg, col sep=semicolon,  y error=dropedgeStd] {#1};
+            \addplot[color= p_yellow] table [x=#2, y=dropedgeAvg, col sep=semicolon] {#1};
             \addlegendentry{DropEdge}
 
-            \addplot[color= p_violet] plot[error bars/.cd, y dir=both, y explicit] table [x=#2, y=gdcAvg, col sep=semicolon,  y error=gdcStd] {#1};
+            \addplot[color= p_violet] table [x=#2, y=gdcAvg, col sep=semicolon] {#1};
             \addlegendentry{GDC}
 
+            \addstd{#1}{#2}{none}{p_red}
+            \addstd{#1}{#2}{dropout}{p_green}
+            \addstd{#1}{#2}{nodesampling}{p_blue}
+            \addstd{#1}{#2}{dropedge}{p_yellow}
+            \addstd{#1}{#2}{gdc}{p_violet}
         \end{axis}
     \end{tikzpicture}}
 

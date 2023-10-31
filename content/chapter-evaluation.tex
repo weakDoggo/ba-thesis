@@ -3,8 +3,9 @@
 \chapter{Evaluation}
 \label{sec:eval}
 
+% Is it necessary to quote all the studies here ?? YES
 In this section, we delve into the critical evaluation of the machine learning experiments conducted as part of this research.
-The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing not only for node-level prediction tasks but also for graph-level prediction tasks. Other regularization techniques have also been evaluated for this type of task.
+The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks, as there is already a wide range of conducted studies, which answer the question of various regularization techniques for node level prediction tasks. Other regularization techniques have also been evaluated for this type of task.
 The investigation encompassed classification and regression tasks, with a comprehensive analysis of two types of neural networks, \ac{gcn} and \ac{gin}.
 The datasets of choice were all molecular datasets.
 
@@ -49,18 +50,38 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
         }}
 \end{table*}
 
+% Description of results - Basic overview 
 Some insights we can gather from the results table.
 % Basic first view insights: 
-% GCN 
-Starting with the \ac{gdc} network, we see, that the best results are always achieved when using no regularization techniques at all. This holds true for all classification as well as all the regression datasets, with the overall variance of the model performance being rather small, except on the molesol and the mmolfreesolv datasets. As all the result s are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods as they performance varies depending on the dataset with different methods performing better on certain datasets.
+The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}. This holds for both datasets - classification and regression- indicating that any regularization type is unsuitable for graph-level prediction tasks independently of the network of choice.
 
-% GIN 
-
+For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets. \ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions.
 
 
+% Among the datasets 
+We cannot point out a clear 'winner' among the different regularization methods on both networks and across all datasets.
+As all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods. Their performance varies depending on the dataset, with different methods performing better on certain datasets.
+
+% GCN patterns 
+
+There is an interesting pattern, that we find in the performance of the \ac{gdc} network:
+On the classification datasets, the second best performance is achieved by \ac{de} followed by \ac{gdc} and
 
 
-\subsection{datasets and metrics overview}
+
+
+
+
+% Overall conclusion 
+
+Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types. Regularization techniques are commonly employed in node-prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues. These methods perturb the values and introduce randomness, leading to improved results.
+
+In graph-level tasks, the final output is a readout of aggregated nodes, making over-smoothing less problematic as the focus shifts from distinguishing individual nodes to capturing collective behavior. Consequently, introducing controlled randomness might seem unnecessary for such predictive tasks. This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
+
+Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks. Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions. This unconventional approach enabled a rigorous assessment of current methodologies, providing valuable insights into graph-based machine learning.
+
+
+\section{Datasets and Metrics Overview}
 
 Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
 

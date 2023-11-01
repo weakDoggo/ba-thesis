@@ -68,9 +68,9 @@ The best results are achieved using no regularization techniques for graph-level
 For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets. \ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions. This high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
 
 % Patterns Among the datasets 
-Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.\ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks. (Apart from a few exceptions). However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
+Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.\ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks, apart from one exception on the mollipo dataset where the second best performing regularization is \ac{gdc}. However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
 % Other noteworthy things  
-Despite the \ac{gin} network being more powerful than \ac{gcn} and in fact as powerful as the 1-dim\ac{wl} test, the performance on both networks is very similar, with only significant difference in performance on the molhiv dataset.
+Despite the \ac{gin} network being more powerful than \ac{gcn} and as powerful as the 1-dim\ac{wl} test, the performance on both networks is very similar, with only a significant difference in performance on the molhiv dataset.
 
 % Overall conclusion 
 \section{Conclusion}
@@ -121,11 +121,15 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
         \end{axis}
     \end{tikzpicture}}
 
-\section{Insights from Plots}
-We want to gather some insights about over-smoothing, and for that, we look at how the performance changes when we change the number of layers of the network.
-\subsection{Insights Classification Datasets}
 
-On the molpcba dataset, the \ac{gcn} network there is a steady trend of better performance with increasing number of layers for all types for regularization as well as no regularization at all. 
+\section{Insights from Plots}
+This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
+
+\subsection{Insights from Classification Datasets}
+\subsubsection{Effect of the Number of Layers}
+Upon examining five distinct datasets, notable trends emerge concerning the performance relative to the number of layers in the network. In four out of five datasets, a consistent pattern is observed.
+
+Increasing the number of layers demonstrates a positive correlation with performance in the cases of molpcba, molesol, and molfreesolv datasets. The peak performance is typically attained at layer 5 or 6. It is important to highlight that while there are discernible differences, they tend to be relatively small across layers 3 to 6. Since this trend holds for all regularization techniques, including no regularization at all indiscriminately, there is no evidence in favor of regularization solving the problem of over-smoothing for graph-level classification tasks on the \ac{gcn}, at least for those particular datasets.
 % GCN Network number of layers 
 
 \begin{figure}
@@ -164,7 +168,81 @@ On the molpcba dataset, the \ac{gcn} network there is a steady trend of better p
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
+\subsubsection{Probability Manipulation}
+
+HERE ARE THE DATASETS FOR PROBABLITY ON GCN
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Number of Layers}{ROC-AUC}
+    \caption{molhiv (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}
+    \caption{molpcba (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}
+    \caption{molesol (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}
+    \caption{molfreesolv (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}
+    \caption{mollipo (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
 
 
+% GIN MODELS 
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Nuber of Layers}{ROC-AUC}
+    \caption{molhiv (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Nuber of Layers}{AP}
+    \caption{molpcba (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Nuber of Layers}{MSE}
+    \caption{molesol (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Nuber of Layers}{MSE}
+    \caption{molfreesolv (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Nuber of Layers}{MSE}
+    \caption{mollipo (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+\section{Insights Regression Datasets}
 
 \end{document}

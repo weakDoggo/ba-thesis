@@ -11,10 +11,6 @@ The datasets of choice were all molecular datasets.
 
 In the evaluation, we will mainly focus on two manipulated parameters: the number of layers and the dropout rate, since the number of layers is important in concluding overfitting, especially the issue where additional layers do not make the network perform better. The dropout rate since this parameter indicates the efficacy of various types of dropouts and if higher rates have an impact at all.
 
-
-
-
-
 \begin{table*}[t]
     \caption{
         Experimental results for graph-level prediction tasks. With ROC-AUC metric for OGB-molhiv, AP for -molpcba and MSE for the three remaining regression datasets.
@@ -50,35 +46,9 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
         }}
 \end{table*}
 
-% Description of results - Basic overview 
-Some insights we can gather from the results table.
-% Basic first view insights: 
-The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}. This holds for both datasets - classification and regression- indicating that any regularization type is unsuitable for graph-level prediction tasks independently of the network of choice.
-
-For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets. \ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions.
-
-
-% Among the datasets 
-We cannot point out a clear 'winner' among the different regularization methods on both networks and across all datasets.
-As all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods. Their performance varies depending on the dataset, with different methods performing better on certain datasets.
-
-% GCN patterns 
-
-There is an interesting pattern, that we find in the performance of the \ac{gdc} network:
-On the classification datasets, the second best performance is achieved by \ac{de} followed by \ac{gdc} and
 
 
 
-
-
-
-% Overall conclusion 
-
-Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types. Regularization techniques are commonly employed in node-prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues. These methods perturb the values and introduce randomness, leading to improved results.
-
-In graph-level tasks, the final output is a readout of aggregated nodes, making over-smoothing less problematic as the focus shifts from distinguishing individual nodes to capturing collective behavior. Consequently, introducing controlled randomness might seem unnecessary for such predictive tasks. This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
-
-Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks. Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions. This unconventional approach enabled a rigorous assessment of current methodologies, providing valuable insights into graph-based machine learning.
 
 
 \section{Datasets and Metrics Overview}
@@ -90,10 +60,26 @@ molecular structure graphs, respectively. The regression task is to predict the 
 of a molecule in different substances.
 To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used and we used MAE for all the regression datasets.
 
-% \subsection{metrics and meaning}
-% ROC-AUC: The better value for ROC-AUC is a value closer to 1, with values over 0,5 being better than random guessing.
-% AP (when class distribution on a dataset are imbalanced): Bigger values of AP are better
-% MAE: The smaller the better.
+% Description of results - Basic overview 
+Some insights we can gather from the results table:
+% Basic first view insights: 
+The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}. This holds for both datasets -- classification and regression -- indicating that any regularization type is unsuitable for both graph-level prediction tasks independently of the network of choice.
+
+For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets. \ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions. This high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
+
+% Patterns Among the datasets 
+Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.\ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks. (Apart from a few exceptions). However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
+% Other noteworthy things  
+Despite the \ac{gin} network being more powerful than \ac{gcn} and in fact as powerful as the 1-dim\ac{wl} test, the performance on both networks is very similar, with only significant difference in performance on the molhiv dataset.
+
+% Overall conclusion 
+\section{Conclusion}
+
+Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types. Regularization techniques are commonly employed in node-prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues. These methods perturb the values and introduce randomness, leading to improved results.
+
+In graph-level tasks, the final output is a readout of aggregated nodes, making over-smoothing less problematic as the focus shifts from distinguishing individual nodes to capturing collective behavior. Consequently, introducing controlled randomness might seem unnecessary for such predictive tasks. This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
+
+Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks. Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions. This unconventional approach enabled a rigorous assessment of current methodologies, providing valuable insights into graph-based machine learning.
 
 \newcommand*{\addstd}[4]{
     \addplot[name path=#3upper, draw=none] table[x=#2, y expr=\thisrow{#3Avg}+\thisrow{#3Std}, col sep=semicolon] {#1};
@@ -135,22 +121,50 @@ To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used 
         \end{axis}
     \end{tikzpicture}}
 
+\section{Insights from Plots}
+We want to gather some insights about over-smoothing, and for that, we look at how the performance changes when we change the number of layers of the network.
+\subsection{Insights Classification Datasets}
+
+On the molpcba dataset, the \ac{gcn} network there is a steady trend of better performance with increasing number of layers for all types for regularization as well as no regularization at all. 
+% GCN Network number of layers 
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}
+    \caption{molhiv (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}
+    \caption{molpcba (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}
+    \caption{molesol(GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}
     \caption{molfreesolv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
-About the GCN molfreesolv plot. The molfreesolv plot is the
-
-% GIN 
-% GIN MOLHIV 
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Number of Layers}{MSE}
-    \caption{molhiv (GIN Model)}
+    \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}
+    \caption{mollipo (GCN Model)}
+    \label{fig:gcn-molfreesolv}
 \end{figure}
+
+
 
 
 \end{document}

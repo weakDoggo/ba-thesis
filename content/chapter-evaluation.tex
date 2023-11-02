@@ -81,14 +81,14 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
     \addplot[name path=#3lower, draw=none] table[x=#2, y expr=\thisrow{#3Avg}-\thisrow{#3Std}, col sep=semicolon] {#1};
     \addplot[fill=#4, fill opacity=0.1] fill between[of=#3upper and #3lower];
 }
-\newcommand*{\layerplot}[4]{\begin{tikzpicture}
+\newcommand*{\layerplot}[6]{\begin{tikzpicture}
         \begin{axis}[
                 width=0.8\linewidth,
                 height=6cm,
                 xlabel={#3},
                 ylabel={#4},
-                %xtick distance={#5}, % Set x-axis tick distance
-                %ytick distance={#6}, % Set y-axis tick distance
+                xtick distance={#5}, % Set x-axis tick distance
+                ytick distance={#6}, % Set y-axis tick distance
                 legend pos=outer north east,
                 legend style={nodes={scale=0.6, transform shape}},
                 grid=major,
@@ -142,14 +142,14 @@ good indicator favoring the beneficial connection between over-smoothing and reg
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}
+    \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}{1}{0.1}
     \caption{molhiv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}
+    \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}{1}{0.02}
     \caption{molpcba (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -157,21 +157,21 @@ good indicator favoring the beneficial connection between over-smoothing and reg
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}
+    \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}{1}{1}
     \caption{molesol(GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}
+    \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}{1}{5}
     \caption{molfreesolv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}
+    \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}{1}{0.2}
     \caption{mollipo (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -182,35 +182,35 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Number of Layers}{ROC-AUC}
+    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Number of Layers}{ROC-AUC}{0.2}{0.1}
     \caption{molhiv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}
+    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.2}{0.02}
     \caption{molpcba (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}
+    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.2}{1}
     \caption{molesol (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}
+    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.2}{2}
     \caption{molfreesolv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}
+    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.2}{0.2}
     \caption{mollipo (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -224,14 +224,14 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
 % Classification Datasets Insights 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Nuber of Layers}{ROC-AUC}
+    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Nuber of Layers}{ROC-AUC}{1}{0.1}
     \caption{molhiv (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Nuber of Layers}{AP}
+    \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Nuber of Layers}{AP}{1}{0.95}
     \caption{molpcba (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -239,21 +239,21 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
 % Regression Datasets Insights 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Nuber of Layers}{MSE}
+    \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Nuber of Layers}{MSE}{1}{1}
     \caption{molesol (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Nuber of Layers}{MSE}
+    \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Nuber of Layers}{MSE}{1}{5}
     \caption{molfreesolv (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Nuber of Layers}{MSE}
+    \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Nuber of Layers}{MSE}{1}{0.2}
     \caption{mollipo (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}

@@ -46,11 +46,6 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
         }}
 \end{table*}
 
-
-
-
-
-
 \section{Datasets and Metrics Overview}
 
 Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
@@ -92,6 +87,8 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
                 height=6cm,
                 xlabel={#3},
                 ylabel={#4},
+                %xtick distance={#5}, % Set x-axis tick distance
+                %ytick distance={#6}, % Set y-axis tick distance
                 legend pos=outer north east,
                 legend style={nodes={scale=0.6, transform shape}},
                 grid=major,
@@ -122,15 +119,26 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
     \end{tikzpicture}}
 
 
+
+
 \section{Insights from Plots}
 This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
 
 \subsection{Insights from Classification Datasets}
 \subsubsection{Effect of the Number of Layers}
 Upon examining five distinct datasets, notable trends emerge concerning the performance relative to the number of layers in the network. In four out of five datasets, a consistent pattern is observed.
+% Number of Layers GCN
 
 Increasing the number of layers demonstrates a positive correlation with performance in the cases of molpcba, molesol, and molfreesolv datasets. The peak performance is typically attained at layer 5 or 6. It is important to highlight that while there are discernible differences, they tend to be relatively small across layers 3 to 6. Since this trend holds for all regularization techniques, including no regularization at all indiscriminately, there is no evidence in favor of regularization solving the problem of over-smoothing for graph-level classification tasks on the \ac{gcn}, at least for those particular datasets.
-% GCN Network number of layers 
+
+% Number of Layers GIN 
+On the \ac{gin} network, we cannot see any occurring pattern or trend as to whether various regularization techniques solve the problem of over-smoothing. With a few exceptions, using regularization leads to smaller performance variance. Regularization also seems to smooth the curve, meaning the overall difference from layer to layer is smoother - with a [here comes the trend]. This is slight, but
+good indicator favoring the beneficial connection between over-smoothing and regularization techniques solving this issue.
+
+
+
+
+% GCN Network number of layers PLOTS
 
 \begin{figure}
     \centering
@@ -208,7 +216,12 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
 \end{figure}
 
 
-% GIN MODELS 
+
+
+
+
+
+% Classification Datasets Insights 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Nuber of Layers}{ROC-AUC}
@@ -223,6 +236,7 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
+% Regression Datasets Insights 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Nuber of Layers}{MSE}
@@ -244,5 +258,14 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
     \label{fig:gcn-molfreesolv}
 \end{figure}
 \section{Insights Regression Datasets}
+
+
+
+
+
+% Overall Conclusion for the number of layers/ regularization 
+As mentioned earlier, the results are very close in range, and together with the limited number of datasets- all from the same molecular realm- we cannot draw any general conclusions. However, we can describe some emerging trends from our findings:
+The trends:
+Overall, regularization seems to smoothen the line, i.e., to reduce the differences in performance depending on the number of layers. Also, the performance variance is much higher when we use no regularization.
 
 \end{document}

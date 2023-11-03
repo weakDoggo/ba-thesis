@@ -87,7 +87,7 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
                 height=6cm,
                 xlabel={#3},
                 ylabel={#4},
-                xtick distance={#5}, % Set x-axis tick distance
+                xtick={#5}, % Set x-axis tick distance
                 ytick distance={#6}, % Set y-axis tick distance
                 legend pos=outer north east,
                 legend style={nodes={scale=0.6, transform shape}},
@@ -146,14 +146,14 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}{1}{0.1}
+    \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
     \caption{molhiv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}{1}{0.02}
+    \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}{1,2,3,4,5,6}{0.02}
     \caption{molpcba (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -161,21 +161,21 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}{1}{1}
+    \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{1}
     \caption{molesol(GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}{1}{5}
+    \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{5}
     \caption{molfreesolv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}{1}{0.2}
+    \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{0.2}
     \caption{mollipo (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -186,14 +186,14 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 % Classification Datasets Insights Num Layers 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Nuber of Layers}{ROC-AUC}{1}{0.1}
+    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
     \caption{molhiv (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Nuber of Layers}{AP}{1}{0.95}
+    \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Number of Layers}{AP}{1,2,3,4,5,6}{0.95}
     \caption{molpcba (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -201,21 +201,21 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 % Regression Datasets Insights 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Nuber of Layers}{MSE}{1}{1}
+    \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{1}
     \caption{molesol (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Nuber of Layers}{MSE}{1}{5}
+    \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{5}
     \caption{molfreesolv (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Nuber of Layers}{MSE}{1}{0.2}
+    \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{0.2}
     \caption{mollipo (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -232,35 +232,35 @@ We can present some interesting findings concerning the probability, with which 
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Probability}{ROC-AUC}{0.2}{0.1}
+    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}
     \caption{molhiv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.2}{0.02}
+    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.3, 0.5, 0.7}{0.02}
     \caption{molpcba (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.2}{1}
+    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{1}
     \caption{molesol (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.2}{2}
+    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{2}
     \caption{molfreesolv (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.2}{0.2}
+    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{0.2}
     \caption{mollipo (GCN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
@@ -268,35 +268,35 @@ We can present some interesting findings concerning the probability, with which 
 % HERE ARE THE DATASETS FOR PROBABiLITY ON GIN 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molhiv_gin.csv}{probability}{Probability}{ROC-AUC}{0.2}{0.1}
+    \layerplot{data/probability_plot_molhiv_gin.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}
     \caption{molhiv (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molpcba_gin.csv}{probability}{Probability}{AP}{0.2}{0.02}
+    \layerplot{data/probability_plot_molpcba_gin.csv}{probability}{Probability}{AP}{0.3, 0.5, 0.7}{0.02}
     \caption{molpcba (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molesol_gin.csv}{probability}{Probability}{MSE}{0.2}{1}
+    \layerplot{data/probability_plot_molesol_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{1}
     \caption{molesol (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_molfreesolv_gin.csv}{probability}{Probability}{MSE}{0.2}{2}
+    \layerplot{data/probability_plot_molfreesolv_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{2}
     \caption{molfreesolv (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
 \begin{figure}
     \centering
-    \layerplot{data/probability_plot_mollipo_gin.csv}{probability}{Probability}{MSE}{0.2}{0.2}
+    \layerplot{data/probability_plot_mollipo_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{0.2}
     \caption{mollipo (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}

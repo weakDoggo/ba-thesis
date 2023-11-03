@@ -136,9 +136,13 @@ On the \ac{gin} network, we cannot see any occurring pattern or trend as to whet
 good indicator favoring the beneficial connection between over-smoothing and regularization techniques solving this issue.
 
 
+% Patterns of variance in datasets 
 
+Among the datasets, the classification dataset molhiv and the regression dataset molpcba
 
 % GCN Network number of layers PLOTS
+% NEW PLOTS 
+
 
 \begin{figure}
     \centering
@@ -178,50 +182,8 @@ good indicator favoring the beneficial connection between over-smoothing and reg
 
 \subsubsection{Probability Manipulation}
 
-HERE ARE THE DATASETS FOR PROBABLITY ON GCN
 
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Number of Layers}{ROC-AUC}{0.2}{0.1}
-    \caption{molhiv (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.2}{0.02}
-    \caption{molpcba (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.2}{1}
-    \caption{molesol (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.2}{2}
-    \caption{molfreesolv (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.2}{0.2}
-    \caption{mollipo (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
-
-
-
-
-
-
-
-% Classification Datasets Insights 
+% Classification Datasets Insights Num Layers 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Nuber of Layers}{ROC-AUC}{1}{0.1}
@@ -260,6 +222,84 @@ HERE ARE THE DATASETS FOR PROBABLITY ON GCN
 \section{Insights Regression Datasets}
 
 
+% PROBABILITY 
+% HERE ARE THE DATASETS FOR PROBABILITY ON GCN
+
+
+We can present some interesting findings concerning the probability, with which features are dropped. The probability does not have any effect on the performance. The values are constant for all probabilites 0.3, 0.5 and 0.7. for both types of networks. On the \ac{gcn} network the variance is extremely high on the molhiv as well as the molfreesolv dataset, on all the other datasets we have a rather stable performance. On the \ac{gin} network we have the following results:
+
+
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Probability}{ROC-AUC}{0.2}{0.1}
+    \caption{molhiv (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.2}{0.02}
+    \caption{molpcba (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.2}{1}
+    \caption{molesol (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.2}{2}
+    \caption{molfreesolv (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.2}{0.2}
+    \caption{mollipo (GCN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+% HERE ARE THE DATASETS FOR PROBABiLITY ON GIN 
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molhiv_gin.csv}{probability}{Probability}{ROC-AUC}{0.2}{0.1}
+    \caption{molhiv (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molpcba_gin.csv}{probability}{Probability}{AP}{0.2}{0.02}
+    \caption{molpcba (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molesol_gin.csv}{probability}{Probability}{MSE}{0.2}{1}
+    \caption{molesol (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_molfreesolv_gin.csv}{probability}{Probability}{MSE}{0.2}{2}
+    \caption{molfreesolv (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \layerplot{data/probability_plot_mollipo_gin.csv}{probability}{Probability}{MSE}{0.2}{0.2}
+    \caption{mollipo (GIN Model)}
+    \label{fig:gcn-molfreesolv}
+\end{figure}
 
 
 

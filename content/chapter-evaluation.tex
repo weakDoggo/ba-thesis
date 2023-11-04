@@ -8,7 +8,6 @@ In this section, we delve into the critical evaluation of the machine learning e
 The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks, as there is already a wide range of conducted studies, which answer the question of various regularization techniques for node level prediction tasks. Other regularization techniques have also been evaluated for this type of task.
 The investigation encompassed classification and regression tasks, with a comprehensive analysis of two types of neural networks, \ac{gcn} and \ac{gin}.
 The datasets of choice were all molecular datasets.
-
 In the evaluation, we will mainly focus on two manipulated parameters: the number of layers and the dropout rate, since the number of layers is important in concluding overfitting, especially the issue where additional layers do not make the network perform better. The dropout rate since this parameter indicates the efficacy of various types of dropouts and if higher rates have an impact at all.
 
 \begin{table*}[t]
@@ -49,7 +48,6 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
 \section{Datasets and Metrics Overview}
 
 Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
-
 The other three, OGB-molesol, -mollipo and -molfreesolv are regression datasets. They contain 1128, 4200, and 642
 molecular structure graphs, respectively. The regression task is to predict the solubility
 of a molecule in different substances.
@@ -59,9 +57,7 @@ To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used 
 Some insights we can gather from the results table:
 % Basic first view insights: 
 The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}. This holds for both datasets -- classification and regression -- indicating that any regularization type is unsuitable for both graph-level prediction tasks independently of the network of choice.
-
 For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets. \ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions. This high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
-
 % Patterns Among the datasets 
 Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.\ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks, apart from one exception on the mollipo dataset where the second best performing regularization is \ac{gdc}. However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
 % Other noteworthy things  
@@ -124,26 +120,17 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
 \section{Insights from Plots}
 This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
 
-\subsection{Insights from Classification Datasets}
-\subsubsection{Effect of the Number of Layers}
-Upon examining five distinct datasets, notable trends emerge concerning the performance relative to the number of layers in the network. In four out of five datasets, a consistent pattern is observed.
-% Number of Layers GCN
+\subsection{Effect of the Number of Layers}
 
-Increasing the number of layers demonstrates a positive correlation with performance in the cases of molpcba, molesol, and molfreesolv datasets. The peak performance is typically attained at layer 5 or 6. It is important to highlight that while there are discernible differences, they tend to be relatively small across layers 3 to 6. Since this trend holds for all regularization techniques, including no regularization at all indiscriminately, there is no evidence in favor of regularization solving the problem of over-smoothing for graph-level classification tasks on the \ac{gcn}, at least for those particular datasets.
+Upon analyzing five distinct datasets, discernible patterns in performance relative to the number of network layers become evident. Except for the molhiv and molfreesolv datasets, a weak positive correlation between increased layers and improved performance is observable. This trend is consistent across both \ac{gcn} and \ac{gin} models. Typically, optimal performance is achieved at the 5th or 6th layer. However, it is noteworthy that the overall differences in performance are marginal.
 
-% Number of Layers GIN 
-On the \ac{gin} network, we cannot see any occurring pattern or trend as to whether various regularization techniques solve the problem of over-smoothing. With a few exceptions, using regularization leads to smaller performance variance. Regularization also seems to smooth the curve, meaning the overall difference from layer to layer is smoother - with a [here comes the trend]. This is slight, but
-good indicator favoring the beneficial connection between over-smoothing and regularization techniques solving this issue.
+This observed trend persists across various regularization techniques, including scenarios without regularization. Interestingly, insufficient evidence supports that regularization effectively mitigates over-smoothing for graph-level classification tasks on the \ac{gcn}, specifically concerning these datasets. Additionally, substantial fluctuations are observed in the molhiv dataset, introducing complexity to the observed trends.
 
+In regression datasets, the molfreesolv dataset presents a unique case where optimal performance is attained with a single layer, contrary to the general trend where 5-6 layers yield high performance. Importantly, consistent trends emerge across all regularization techniques and without regularization, suggesting that regularization does not induce unexpected network behavior.
 
-% Patterns of variance in datasets 
+Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization. Overall, higher variance is evident in instances without regularization, whereas regularization techniques tend to stabilize performance, resulting in lower variance. This finding underscores the stabilizing influence of regularization techniques on model performance in the context of graph-level classification tasks.
 
-Among the datasets, the classification dataset molhiv and the regression dataset molpcba
-
-% GCN Network number of layers PLOTS
-% NEW PLOTS try 2 
-
-
+% Classification Datasets Num Layers
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
@@ -183,7 +170,7 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 \subsubsection{Probability Manipulation}
 
 
-% Classification Datasets Insights Num Layers 
+% Regression Datasets Insights Num Layers 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
@@ -222,12 +209,7 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 \section{Insights Regression Datasets}
 
 
-% PROBABILITY 
-% HERE ARE THE DATASETS FOR PROBABILITY ON GCN
-
-
-We can present some interesting findings concerning the probability, with which features are dropped. The probability does not have any effect on the performance. The values are constant for all probabilites 0.3, 0.5 and 0.7. for both types of networks. On the \ac{gcn} network the variance is extremely high on the molhiv as well as the molfreesolv dataset, on all the other datasets we have a rather stable performance. On the \ac{gin} network we have the following results:
-
+\subsection{Effect of the probability of regularization}
 
 
 \begin{figure}
@@ -302,6 +284,9 @@ We can present some interesting findings concerning the probability, with which 
 \end{figure}
 
 
+% Patterns of variance in datasets 
+
+Among the datasets, the classification dataset molhiv and the regression dataset molfreesoolv
 
 % Overall Conclusion for the number of layers/ regularization 
 As mentioned earlier, the results are very close in range, and together with the limited number of datasets- all from the same molecular realm- we cannot draw any general conclusions. However, we can describe some emerging trends from our findings:

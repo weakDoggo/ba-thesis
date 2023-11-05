@@ -6,7 +6,10 @@ This section provides a brief overview of the experimental setup and aims to mot
 
 \section{Scope and Limitations}
 \label{sec:implement:scope}
-% Here an overview of what was implemented and what was left out and why 
+Our research is concerned with graph-level prediction tasks on two types of \ac{gnn}, \ac{gcn} and \ac{gin}.
+We implemented both networks as described in \cite{} and \cite{} respectively.
+The implementation of \ac{gdc}
+
 
 
 
@@ -126,25 +129,20 @@ value given the target node pairs is calculated by averaging
 the non-zero values in
 tgt
 % Intuition behind all this 
-
-\Ac{mad} gives acess to the smoothness of a node and pairs of nodes throughout iterations, which makes it easy to "track down" over smoothing.
-
-First, the cosine similarity is calculated, which shows us how similar the corresponding feature vectors are. By subtracting the cosine similarity from one, we get the cosine distance, which tells us about the difference of the nodes.
+\Ac{mad} gives access to the smoothness of a node and pairs of nodes throughout iterations, which makes it easy to "track down" over smoothing.
+First, the cosine similarity is calculated, showing how similar the corresponding feature vectors are. By subtracting the cosine similarity from one, we get the cosine distance, which tells us the difference between the nodes.
 
 
 % graphic signal/ information & noise 
 \subsection{Implementation of Regularization Techniques}
 \label{sec:implement:setup: regularization}
 
-% Descrepancy between Paper 
+% Descrepancy between Paper and our implementation 
+
 
 
 % Implementation of Regularization 
-The for regularization techniques as described in (*)
-% reference to related work
-can be described using two parameters/ answering two questions: Is the regularization happening row-wise and do we gather the values before applying the regularization?
-
-The table below shows the possible combinations and the corresponding regulrization technique.
+The four regularization techniques, as described in \ref{sec:related:pred:regularization}, can be described using two parameters illustrated in the table below: Is the regularization happening row-wise, and do we gather the values before applying the regularization?
 \begin{center}
     \begin{tabular}{lll}
         \toprule
@@ -158,44 +156,19 @@ The table below shows the possible combinations and the corresponding regulrizat
         \bottomrule
     \end{tabular}
 \end{center}
+\subsubsection{gather, scatter, sparcity}
+In our implementation, we make use of TensorFlow gather and scatter operations:
+The gather operation in TensorFlow extracts specific elements from a tensor along a given axis. Given an input tensor and a list of indices, the gather operation selects elements based on the provided indices from the input tensor. Given a tensor representing node features in a graph and a list of node indices, the gather operation extracts the corresponding node features. The gather operation can extract node features, adjacency information, or other relevant data based on specific graph node indices.
 
+The scatter operation in TensorFlow is the inverse of the gather operation. It updates the elements of an existing tensor based on the provided indices. Given an input tensor, a list of indices, and a tensor containing values, the scatter operation replaces elements in the input tensor at the specified indices with the corresponding values from the values tensor.
+Gather and scatter operations are crucial for tasks involving graph neural networks \acp{gnn} where information aggregation and dissemination across nodes are essential. Information from nodes or subgraphs is gathered and aggregated for graph classification tasks to represent the entire graph.\acp{gnn} can use gather operations to pool information from nodes and perform graph-level predictions.
 
-We use this insight and implement the regularization techniques as they are described in \cref{sec:related:pred:regularization}.
-
-\subsubsection{DropOut}
-
-The implementaion of dropout is rather straightforward. The method takes in a probability $p$ as a parameter and a shape and creates a mask by randomly sampling from an uniform distribution.
-
-This mask is then applied to the batch-matrix and by this multiplication \ac{do} is performed.
-
-
-
-def dropout_mask(p, shape):
-p_list = (tf.random.uniform(
-shape=shape, minval=0, maxval=1, dtype=tf.dtypes.float32))
-mask = p_list >= p
-return tf.cast(mask, dtype=tf.dtypes.float32)
-
-
-
-\subsection{Finding the Best Set of yperparameters}
+\subsection{Finding the Best Set of hyperparameters}
 \label{sec:implement:setup: gridsearch}
 
-For hyperparameter optimization we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhausive serch.
-
-Despite its two mjor drawbacks
-
+For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhaustive search.
 \begin{enumerate}
-    \item Poor scalability for large configuration spaces due to it's complexity being exponential in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$
-    \item Lack of consideration of the hierarchical hyperparameter structure, which leads to many redundant configurations. % In the traditional version, grid search does not exploit knowledge of well performingregions. This drawback is partially eliminated by contracting grid search
+    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$
+    \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
 \end{enumerate}
-
-\ac{gs} is well suitable for small search spaces and can easily be implemented and parallelized.
-
-
-% 1. Start with a large search space and step size.
-% 2. Narrow the search space and step size based on the previous results of
-% well-performing hyper-parameter configurations.
-% 3. Repeat step 2 multiple times until an optimum is reached.
-% GS can be easily implemented and parallelized
-
+Despite its two major drawbacks,\ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.

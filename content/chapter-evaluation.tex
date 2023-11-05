@@ -128,7 +128,7 @@ This observed trend persists across various regularization techniques, including
 
 In regression datasets, the molfreesolv dataset presents a unique case where optimal performance is attained with a single layer, contrary to the general trend where 5-6 layers yield high performance. Importantly, consistent trends emerge across all regularization techniques and without regularization, suggesting that regularization does not induce unexpected network behavior.
 
-Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization. Overall, higher variance is evident in instances without regularization, whereas regularization techniques tend to stabilize performance, resulting in lower variance. This finding underscores the stabilizing influence of regularization techniques on model performance in the context of graph-level classification tasks.
+Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization. Overall, higher variance is evident in instances without regularization, whereas regularization techniques tend to stabilize performance, resulting in lower variance. This finding underscores the stabilizing influence of regularization techniques on model performance in graph-level classification tasks.
 
 % Classification Datasets Num Layers
 \begin{figure}
@@ -210,9 +210,7 @@ Regarding variance, apart from substantial variance and high fluctuations observ
 
 
 \subsection{Effect of the probability of regularization}
-Unfortunately our data does not give any clear insights as to what connection there is between the probability of dropping an entity in a regularization technique and the performance. Intuitive
-
-
+Concerning the dropout probability, we found that a lower dropout probability leads to better performance. This makes sense since the best performance is achieved without regularization. This trend can clearly be observed in the regression datasets on the \ac{gcn} and the \ac{gin}network. This trend also holds for the classification dataset molpcba on both networks. On the molhiv dataset, the dropout probability does not lead to any substantial differences in performance.
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}

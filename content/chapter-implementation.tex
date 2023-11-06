@@ -67,7 +67,7 @@ The four regularization techniques, as described in \ref{sec:related:pred:regula
         \bottomrule
     \end{tabular}
 \end{center}
-\subsubsection{gather, scatter, sparcity}
+\subsection{Extracting Information}
 In our implementation, we make use of TensorFlow gather and scatter operations:
 The gather operation in TensorFlow extracts specific elements from a tensor along a given axis. Given an input tensor and a list of indices, the gather operation selects elements based on the provided indices from the input tensor. Given a tensor representing node features in a graph and a list of node indices, the gather operation extracts the corresponding node features. The gather operation can extract node features, adjacency information, or other relevant data based on specific graph node indices.
 

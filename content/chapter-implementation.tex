@@ -1,16 +1,14 @@
 % Implementation 
 \chapter{Implementation}
 \label{sec:implement}
-This section briefly overviews the experimental setup and aims to motivate the choice of datasets, libraries, and frameworks.
-
+This section briefly overviews the experimental setup and aims to motivate the choice of datasets, libraries, and frameworks. We also deliver an in-depth explanation of the implementation of \ac{gdc}, as it is the main focus of our work.
 \section{Scope and Limitations}
 \label{sec:implement:scope}
 Our research is concerned only with graph-level prediction tasks on two types of \ac{gnn}, \ac{gcn} and \ac{gin}.
 We implemented both networks as described by \citet{Kipf2017} and \citet{Xu2019} respectively.
 \Ac{gdc} is implemented like it is described in \ref{eq:relaxed} as it allows for better time and space complexity, which is the same reason this equation was originally used and evaluated by \citet{Hasanzadeh2020}. We perform our experiments using five datasets, all within the molecular realm. \cite{Hu2020} Two of the datasets are for classification and the rest for regression tasks. Apart from evaluating \ac{gdc}, we also assess the performance of three other regularization techniques: \ac{do}, \ac{ns}, and \ac{de}.
 
-
-\subsection{Implementation of \acf{gdc}}
+\section{Implementation of \acf{gdc}}
 \label{sec:implement:setup:gdc}
 \label{sec:implement:gdc}
 Before we describe our implementation in Python, we look at the two proposed variants of \ac{gdc} and provide an intuition for them.
@@ -67,7 +65,7 @@ The four regularization techniques, as described in \ref{sec:related:pred:regula
         \bottomrule
     \end{tabular}
 \end{center}
-\subsection{Extracting Information}
+\section{Extracting Information}
 In our implementation, we make use of TensorFlow gather and scatter operations:
 The gather operation in TensorFlow extracts specific elements from a tensor along a given axis. Given an input tensor and a list of indices, the gather operation selects elements based on the provided indices from the input tensor. Given a tensor representing node features in a graph and a list of node indices, the gather operation extracts the corresponding node features. The gather operation can extract node features, adjacency information, or other relevant data based on specific graph node indices.
 
@@ -108,12 +106,18 @@ Working with \ac{ogb} consists of following steps:
     \caption{\textbf{Overview of the standardized OGB pipeline} adapted from \cite{Hu2020}}\label{fig:implement:pipeline}
 \end{figure}
 
-\subsection{Finding the Best Set of Hyperparameters}
-\label{sec:implement:setup: gridsearch}
 
-For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhaustive search.
-\begin{enumerate}
-    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$
-    \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
-\end{enumerate}
-Despite its two major drawbacks,\ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.
+
+
+
+
+% - [ ] 3.2.3 Finding the best Set of Hyperparameters: Move to 4.2 (Experimental Setup)
+% - [ ] 4.2 Experimental Setup (first add 3.2.3, see previous task)
+% 	- [ ] Add description of used hyperparams (used grid)
+% 	- [ ] Add general training methodology:
+% 		- [ ] Number of epochs
+% 		- [ ] Number of repeats per param (3)
+% 		- [ ] Mention early stopping (with which `patience` parameter)
+% 		- [ ] Used criterion for selecting the best hp config (val_loss), used optimizer (Adam)
+% 		- [ ] (maybe something else if you think of something we forgot)
+In our experi

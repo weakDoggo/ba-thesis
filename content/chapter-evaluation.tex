@@ -57,6 +57,31 @@ To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used 
 \section{Experimental Setup}
 \label{sec:eval:setup}
 
+
+\subsection{Parameter Grid}
+In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network. The hyperparameter search space was defined through a parameter grid, denoted as param_grid, encompassing various configurations. The param_grid was meticulously designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
+
+This parameter grid contained a number of layers ranging from 1 to 6, representing the depth of the neural network architecture. The learning rate alternated between three different values (0.0001, 0.001, 0.01) for the learning rate optimization of the model. We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks. As mentioned previosly, we looked at four regularization technique described in \ref{}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance, when no regularization was applied.
+
+
+Regularization Technique (regularization): Examining the impact of various regularization methods, including 'None', 'DropOut', 'NodeSampling', 'DropEdge', and 'GDC', to mitigate overfitting and enhance model generalization.
+Dropout Probability (probability): Investigating three dropout probabilities (0.3, 0.5, 0.7) to regulate the dropout rate during training, preventing co-adaptation of feature detectors.
+Activation Function (activation): Considering three activation functions ('relu', 'sigmoid', 'tanh') to introduce non-linearity into the model, capturing complex relationships within the data.
+Number of Units in Hidden Layers (units): Exploring two different configurations (32, 64) for the number of units in the hidden layers, determining the capacity of the neural network.
+Graph Convolution Type (convo_type): Investigating two graph convolution types ('gcn', 'gin') to assess their impact on capturing graph-structured data effectively.
+To comprehensively explore the hyperparameter space, all possible combinations of these parameters were generated, resulting in a list denoted as param_combos. Each configuration within param_combos represented a unique set of hyperparameters for the graph neural network. By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
+
+\subsection{Finding the Best Set of Hyperparameters}
+\label{sec:implement:setup: gridsearch}
+For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhaustive search.
+\begin{enumerate}
+    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$
+    \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
+\end{enumerate}
+Despite its two major drawbacks,\ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.
+
+
+\section{Some Additional Section}
 %
 \section{Experimental Results}
 \label{sec:eval:results}

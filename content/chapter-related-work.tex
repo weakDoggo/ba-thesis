@@ -335,7 +335,7 @@ We will use the following notation: \
 
 \ac{do}\cite{Srivastava2014} randomly removes elements of its previous hidden
 layer $H^{(l)}$ based on independent Bernoulli random draws with a constant success rate at each
-training iteraration:
+training iteration:
 \begin{align*}
     H^{(l+1)} = \sigma(\mathfrak{R}(A)(Z^{(l)}\odot H^{(l)}) W^{(l)})
 \end{align*}
@@ -441,4 +441,45 @@ All the methods are somewhat related and share some similarities~\cite{Rong2020}
 % INTUITION WHY GDC IS THE COMBINATION OF ALL OF THE METHODS LISTED ABOVE !!!! 
 \acf{gdc} generalizes existing stochastic regularization methods for training \acp{gnn} and is effective in dealing with overfitting and oversmoothing.
 \ac{gdc} regularizes neighbourhood aggregation in \acp{gnn} at each chanel separately. This prevents connected nodes in graph from having the same learned representations in \ac{gnn} layers; hence better improvement without serious oversmoothing can be achieved~\cite{Hasanzadeh2020}.
-% Rewrite in own intuition 
+
+
+
+% Introduction of MAD 
+\section{Assesment of Graph regularization approaches}
+\label{sec:related:setup:choice:metrics}
+To make systematic and quantitative statements about the positive effects of over-smoothing by using different regularization techniques, one has to be able to monitor the smoothness of nodes at different execution steps during training. Therefore, choosing a suitable metric is of great importance, as it helps to assess the extent of the effect produced by various regularization techniques and compare them against each other in terms of efficacy.
+% TODO: CITE
+
+\textbf{\Ac{mad}} ~\cite{Chen2020} is a metric for smoothness, the similarity of graph node representations. In that sense, over-smoothness is the similarity of node representations among different classes. While smoothing to some extent is desired (we assume spatial similarity between nodes), mixing features of nodes with different labels over several iterations leads to over-smoothing.
+
+It is therefore important to differentiate between different types of messages between nodes. Signal/information is the messaging of nodes, which share the same class/label, i.e., intra-class communication and noize denotes intra-class comunication. Having too many inter-class edges leads to much noise by encorporating messages from other classes, which results in oversmoothing.
+
+Because of that it is crucial to have a measure of the quality of the recieved messages. A way to do that is to consider the information-to noise ratio i.e., the fraction of intra-class node pairs and all node pairs that have interaction trough \ac{gnn} model. That way it is possible to differentiate between remote and neihbouring nodes and calculate the \textbf{\ac{madg}}, which is strongly positive correlated with a models accuracy.
+
+% Formal definition 
+\ac{mad} is calculated as follows:
+
+Given the graph representation matrix $H \in \mathbb{R}^{n \times h}$ we
+first obtain the distance matrix $D \in \mathbb{R}^{n \times n}$ for $H$ by
+computing the cosine distance between each node pair.
+
+\begin{align*}
+    D_{i,j} = 1 - \frac{H_{i,:} \cdot H_{j,:}}{\mid H_{i,:}\mid  \cdot \mid H_{j,:}\mid} \; \;  i,j \in [1,2, \dots, n],
+\end{align*}
+
+where $H_{k}$ is the $k$-th row of $H$. The reason to use cosine distance is that cosine distance is not affected by the absolute value of the node vector,
+thus better reflecting the smoothness of graph representation. Then we filter the target node pairs by element-wise multiplication $D$ with a mask matrix $M^{tgt}$
+
+\begin{align*}
+    D^{tgt} = D \odot M^{tgt},
+\end{align*}
+where $\odot$ denotes the element-wise mutliplication: $M^{tgt} \in \{0,1\}^{n \times n}; M_{i,j}^{tgt}= 1$ only if node pair $(i,j)$ is the target one.
+Next we access the average distance $\bar{D}^{tgt}$ for non-zero values along each row in $D^{tgt}:$
+
+\begin{align*}
+    \bar{D}_{t}^{tgt} = \frac{\sum_{j=0}^{n}D_{i,j}^{tgt}}{\sum_{j=0}^{n}\mathds{1}(D_{i,j}^{tgt})}
+\end{align*}
+where where 1(x) = 1 if x > 0 otherwise 0. Finally, the MAD value given the target node pairs is calculated by averaging the non-zero values in tgt
+% Intuition behind all this 
+\Ac{mad} gives access to the smoothness of a node and pairs of nodes throughout iterations, which makes it easy to "track down" over smoothing.
+First, the cosine similarity is calculated, showing how similar the corresponding feature vectors are. By subtracting the cosine similarity from one, we get the cosine distance, which tells us the difference between the nodes.

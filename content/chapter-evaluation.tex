@@ -46,12 +46,20 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
 \end{table*}
 
 \section{Datasets and Metrics Overview}
+\label{sec:eval:overvies}
 
 Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
 The other three, OGB-molesol, -mollipo and -molfreesolv are regression datasets. They contain 1128, 4200, and 642
 molecular structure graphs, respectively. The regression task is to predict the solubility
 of a molecule in different substances.
 To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used and we used MAE for all the regression datasets.
+
+\section{Experimental Setup}
+\label{sec:eval:setup}
+
+%
+\section{Experimental Results}
+\label{sec:eval:results}
 
 % Description of results - Basic overview 
 Some insights we can gather from the results table:
@@ -291,5 +299,3 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 As mentioned earlier, the results are very close in range, and together with the limited number of datasets- all from the same molecular realm- we cannot draw any general conclusions. However, we can describe some emerging trends from our findings:
 The trends:
 Overall, regularization seems to smoothen the line, i.e., to reduce the differences in performance depending on the number of layers. Also, the performance variance is much higher when we use no regularization.
-
-\end{document}

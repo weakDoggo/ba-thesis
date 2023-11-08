@@ -1,7 +1,8 @@
 % Implementation 
 \chapter{Implementation}
 \label{sec:implement}
-This section briefly overviews the experimental setup and aims to motivate the choice of datasets, libraries, and frameworks. We also deliver an in-depth explanation of the implementation of \ac{gdc}, as it is the main focus of our work.
+This section overviews the implementation and aims to motivate the choice of libraries and frameworks.
+We also deliver an in-depth explanation of the implementation of \ac{gdc}, as it is the main focus of our work.
 \section{Scope and Limitations}
 \label{sec:implement:scope}
 Our research is concerned only with graph-level prediction tasks on two types of \acp{gnn}, \ac{gcn} and \ac{gin}.
@@ -14,7 +15,9 @@ Two datasets are for classification, and the rest for regression tasks.
 \section{Sparse Implementation of Graph Dropout Layers}
 % TODO: What is this section about? What is its structure?
 
-This section is concerned with implementing our regularization techniques and explaining how those have been embedded into a convolutional step. First, we take a look at TensorFlow gather and scatter operations. For that, an algorithmic description and a text explanation will be presented. We then explain the sparse implementation of the sparse graph convolutions before we explain how regularization is embedded in a convolutional step.
+This section is concerned with implementing our regularization techniques and explaining how those have been embedded into a convolutional step. First, we take a look at TensorFlow's gather and scatter operations.
+Then, we explain how these operations are used to implement sparse graph convolutions.
+For that, an algorithmic description and a text explanation will be presented. We then explain the implementation of the sparse graph convolutions before we explain how regularization is embedded in a convolutional step.
 \label{sec:implement:gnndropout}
 % What was used 
 \subsection{Gather and Scatter}
@@ -25,13 +28,13 @@ For this purpose, we utilize two of TensorFlow's functions $\mathit{gather}$ and
 
 % Formal definition of gather and scatter 
 
-Formally, the $\mathit{gather}$ operator takes two inputs: A list $X$ of $m$ row vectors and a list $R$ of $\gamma$ pointers into $X$.
-It returns a list $X$ of $\gamma$ row vectors $X[i] = Z[R[i]]$ for $i \in [\gamma]$.
+Formally, the $\mathit{gather}$ operator takes two inputs: A list $X$ of $n$ row vectors and a list $R$ of $m$ pointers into $X$.
+It returns a list $X$ of $m$ row vectors $X[i] = Z[R[i]]$ for $i \in [m]$.
 The gather operation in TensorFlow extracts specific elements from a tensor along a given axis. Given an input tensor and a list of indices, the gather operation selects elements based on the provided indices from the input tensor. Given a tensor representing node features in a graph and a list of node indices, the gather operation extracts the corresponding node features. The gather operation can extract node features, adjacency information, or other relevant data based on specific graph node indices.
 
 The $\mathit{scatter}_{\Sigma}$ operator can be understood as the opposite of $\mathit{gather}$.
-$\mathit{scatter}_{\Sigma}$ takes a list $X$ of $\gamma$ row vectors and a list $R$ of $\gamma$ pointers from the range $[m]$.
-It returns a list $Z$ of $m$ row vectors $Z[i] = \sum_{j \in [\gamma] \land R[j] = i} X[j]$ for $i \in [m]$.
+$\mathit{scatter}_{\Sigma}$ takes a list $X$ of $m$ row vectors and a list $R$ of $m$ pointers from the range $[n]$.
+It returns a list $Z$ of $n$ row vectors $Z[i] = \sum_{j \in [m] \land R[j] = i} X[j]$ for $i \in [n]$.
 The scatter operation in TensorFlow is the inverse of the gather operation. It updates the elements of an existing tensor based on the provided indices. Given an input tensor, a list of indices, and a tensor containing values, the scatter operation replaces elements in the input tensor at the specified indices with the corresponding values from the values tensor.
 Gather and scatter operations are crucial for tasks involving graph neural networks \acp{gnn} where information aggregation and dissemination across nodes are essential. Information from nodes or subgraphs is gathered and aggregated for graph classification tasks to represent the entire graph.
 \acp{gnn} can use gather operations to pool information from nodes and perform graph-level predictions.
@@ -41,7 +44,6 @@ Gather and scatter operations are crucial for tasks involving graph neural netwo
 
 \subsection{Sparse Implementation of Graph Convolutions}
 \label{sec:implement:gnndropout:conv}
-% Preamble
 In our study, the fundamental mechanism for information exchange among nodes in both \acp{gnn} is implemented through the message-passing mechanism via graph convolutions.
 \Acp{gnn} capture complex relationships in convolutional steps within graph-structured data. The detailed algorithm for implementing this message-passing mechanism using graph convolutions is described in Algorithm \ref{algo:sparse_graph_convolution}.
 Algorithm \ref{algo:sparse_graph_convolution} outlines the Sparse Graph Convolution operation, where information is efficiently exchanged between nodes utilizing gather and scatter operations.
@@ -49,42 +51,40 @@ In this algorithm, the gather operation extracts feature information from neighb
 The resulting updated node features are the foundation for subsequent graph convolutional layers.
 
 % Pseudocode / reference lines 
-The sparse implementation of graph convolutions can be described as follows:
+The fundamental operation in our \acp{gnn} is the graph convolution operation, which allows nodes to aggregate and exchange information with their neighboring nodes.
+The sparse implementation of graph convolutions can be described algorithmically as follows:
 \begin{algorithm}[H]
-    \caption{Sparse Graph Convolution using Gather and Scatter\label{algo:sparse_graph_convolution}}
+    \caption{Sparse Graph Convolution using Gather and Scatter}\label{algo:sparse_graph_convolution}
     \begin{algorithmic}[1]
-        \Function{$SparseGraphConvolution$}{$Z \in \mathbb{R}^{m \times d}, R \in {[m]}^{\gamma \times k}$}
-        \State{$X_{\text{gather}} \coloneqq \mathit{gather}(Z, R)$} \label{algo:sparse_graph_convolution:line:gather}
-        \Comment{Gather Operation: $\mathbb{R}^{m \times d} \times {[m]}^{\gamma \times k} \to \mathbb{R}^{\gamma \times d}$}
-        \State{$X_{\text{scatter}} \coloneqq \mathit{scatter}_{\Sigma}(X_{\text{gather}}, R)$} \label{algo:sparse_graph_convolution:line:scatter}
-        \Comment{Scatter Operation: $\mathbb{R}^{\gamma \times d} \times {[m]}^{\gamma \times k} \to \mathbb{R}^{m \times d}$}
-        \State{$X_{\text{self}} \coloneqq Z$}
-        \Comment{Feature vector of the node itself}
-        \State{$Z_{\text{conv}} \coloneqq \sigma\left(X_{\text{self}} + X_{\text{scatter}}\right)$}
-        \Comment{Graph Convolution: Element-wise operation}
-        \State{\Return{$Z_{\text{conv}}$}}
+        \Function{$SparseGraphConvolution$}{$X \in \mathbb{R}^{n \times d}, R \in {[n]}^{m \times 2}$}
+        \State{$X_{a} \coloneqq \mathit{gather}(Z, R[:,0])$} \label{line:gather1}
+        \Comment{Gather Operation: $\mathbb{R}^{n \times d} \times {[n]}^{m} \to \mathbb{R}^{m \times d}$}
+        \State{$X_{b} \coloneqq \mathit{gather}(Z, R[:,1])$} \label{line:gather2}
+        \State{$X_{\Sigma a} \coloneqq \mathit{scatter}_{\Sigma}(X_{a}, R[:,1])$}  \label{line:scatter1}
+        \Comment{Scatter Operation: $\mathbb{R}^{m \times d} \times {[n]}^{m} \to \mathbb{R}^{n \times d}$}
+        \State{$X_{\Sigma b} \coloneqq \mathit{scatter}_{\Sigma}(X_{b}, R[:,0])$}  \label{line:scatter2}
+        \State{$X_{\text{conv}} \coloneqq \sigma\left(X + X_{\Sigma a} +X_{\Sigma b} \right)$} \label{line:sum}
+        \Comment{Result with added self-connections}
+        \State{\Return{$X_{\text{conv}}$}} \label{line:res}
+        \Comment{Result with added self-connections}
         \EndFunction{}
     \end{algorithmic}
 \end{algorithm}
-
-% How Graph Convolutions are implemented using gather and scatter 
-The fundamental operation in our \ac{gcn} is the graph convolution operation, which allows nodes to aggregate and exchange information with their neighboring nodes.
+Note that~\cref{algo:sparse_graph_convolution} assumes bidirectional edges. Hence, the gather and scatter operations are performed twice.
 This operation can be efficiently implemented using gather and scatter operations, enabling the network to learn expressive node representations while considering the graph's topology.
 In graph convolutions, the gather operation extracts feature information from neighboring nodes.
-For each target node $v_{i}$, the gather operation assembles feature vectors from its neighboring nodes in the graph~\ref{algo:sparse_graph_convolution:line:gather}.
+For each target node $v_{i}$, the gather operation assembles feature vectors from its neighboring nodes in the graph~\cref{line:gather1, line:gather2}.
 These gathered features are then scattered into the feature vector of each target $v_{i}$.
 The scatter operation aggregates the gathered features by adding them to each target's feature vector.
-It takes the computed features and distributes them back to the corresponding nodes in the graph.
+It takes the computed features and distributes them back to the corresponding nodes in the graph~\cref{line:scatter1, line:scatter2}.
 This step ensures that the updated node representations, enriched with information from neighboring nodes, are propagated throughout the graph.
 
-Lastly, the feature vector of the node itself is added, forming the basis for computation in the subsequent convolutional layer.
+Lastly, the feature vector of the node itself is added, forming the basis for computation in the subsequent convolutional layer~\cref{line:sum}.
 By selecting and aggregating features from neighboring nodes using the gather and scatter operations, the model captures the local neighborhood information critical for graph-based tasks.
 With each convolution, one additional neighborhood can be captured.
 This way, both local and global patterns are captured.
 
 % Implementation of Regularization techniques - general idea 
-% Step 3: Explain how dropout can be integrated into a gather/scatter-based graph convolution by masking out some values from either X (in case of NodeSampling and DropOut) or from X_a/X_b (in the case of DropEdge and GDC) 
-
 % The most important one 
 \subsection{Adding Dropout to Sparse Graph Convolutions}
 \label{sec:implement:gnndropout:dropout}
@@ -102,14 +102,20 @@ This is the case for \acf{ns} and for \acf{de}. \Ac{ns} removes the whole node, 
 So, this type of dropout is also performed row-wise.
 \Acf{do} drops just some features of a gíven node, so the $\mathit{row-wise?}$ parameter is set to false.
 This is also the case for \acp{gdc} as it draws random masks, i.e., performs drops for each channel independently.
-
-The $\mathit{gather-first?}$ parameter tells us if values have already been gathered from the neighboring nodes, meaning that the convolution has already been performed in this step.
+% Write from here + add connections to algorithm 
+% The $\mathit{gather-first?}$ parameter tells us if values have already been gathered from the neighboring nodes, meaning that the convolution has already been performed in this step.
 
 % Conclusion
-The different types of regularization are all performed in each gather/scatter-based convolutional step. It is done by masking out some values from the feature vector $X$ or $X_a$ and $X_b$.
+The different types of regularization are all performed in each gather/scatter-based convolutional step. It is done by masking some values from the feature vector $X$ or $X_a$ and $X_b$.
 In the case of \ac{do} and \ac{gdc}, The $X$ vector is masked.
 The difference is that, unlike in the case of \ac{gdc} for \ac{do}, the masking is performed row-wise.
 
+
+
+% % Step 3: Explain how dropout can be integrated into a gather/scatter-based graph convolution by masking out some values from either X (in case of NodeSampling and DropOut) or from X_a/X_b (in the case of DropEdge and GDC) 
+
+
+We implement regularization by integrating it in each gather/scatter-based convolutional step
 \begin{center}
     \begin{tabular}{lll}
         \toprule

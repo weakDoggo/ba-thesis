@@ -4,13 +4,126 @@
 This section briefly overviews the experimental setup and aims to motivate the choice of datasets, libraries, and frameworks. We also deliver an in-depth explanation of the implementation of \ac{gdc}, as it is the main focus of our work.
 \section{Scope and Limitations}
 \label{sec:implement:scope}
-Our research is concerned only with graph-level prediction tasks on two types of \ac{gnn}, \ac{gcn} and \ac{gin}.
-We implemented both networks as described by \citet{Kipf2017} and \citet{Xu2019} respectively.
-\Ac{gdc} is implemented like it is described in \ref{eq:relaxed} as it allows for better time and space complexity, which is the same reason this equation was originally used and evaluated by \citet{Hasanzadeh2020}. We perform our experiments using five datasets, all within the molecular realm. \cite{Hu2020} Two of the datasets are for classification and the rest for regression tasks. Apart from evaluating \ac{gdc}, we also assess the performance of three other regularization techniques: \ac{do}, \ac{ns}, and \ac{de}.
+Our research is concerned only with graph-level prediction tasks on two types of \acp{gnn}, \ac{gcn} and \ac{gin}.
+We implemented both networks as described by~\citet{Kipf2017} and~\citet{Xu2019} respectively.
+We evaluate five different scenarios, among them four different regularization techniques \ac{do}, \ac{ns}, \ac{de}, and \ac{gdc}, and we also train the networks using no regularization.
+\Ac{gdc} is implemented as described in \cref{eq:relaxed} since this allows for better time and space complexity, which was also done by~\citet{Hasanzadeh2020}.
+We perform our experiments using five datasets from the OGB dataset collection~\cite{Hu2020}, all within the molecular realm.
+Two datasets are for classification, and the rest for regression tasks.
 
-\section{Implementation of \acf{gdc}}
-\label{sec:implement:setup:gdc}
-\label{sec:implement:gdc}
+\section{Sparse Implementation of Graph Dropout Layers}
+% TODO: What is this section about? What is its structure?
+
+This section is concerned with implementing our regularization techniques and explaining how those have been embedded into a convolutional step. First, we take a look at TensorFlow gather and scatter operations. For that, an algorithmic description and a text explanation will be presented. We then explain the sparse implementation of the sparse graph convolutions before we explain how regularization is embedded in a convolutional step.
+\label{sec:implement:gnndropout}
+% What was used 
+\subsection{Gather and Scatter}
+\label{sec:implement:gnndropout:gatherscatter}
+In \acp{gnn}, communication between nodes is achieved via message passing (see \cref{sec:related:message}).
+For messages to be passed along between nodes, we need first to extract and second to pass information on.
+For this purpose, we utilize two of TensorFlow's functions $\mathit{gather}$ and $\mathit{scatter}$~\cite{He2007,Damke2020}.
+
+% Formal definition of gather and scatter 
+
+Formally, the $\mathit{gather}$ operator takes two inputs: A list $X$ of $m$ row vectors and a list $R$ of $\gamma$ pointers into $X$.
+It returns a list $X$ of $\gamma$ row vectors $X[i] = Z[R[i]]$ for $i \in [\gamma]$.
+The gather operation in TensorFlow extracts specific elements from a tensor along a given axis. Given an input tensor and a list of indices, the gather operation selects elements based on the provided indices from the input tensor. Given a tensor representing node features in a graph and a list of node indices, the gather operation extracts the corresponding node features. The gather operation can extract node features, adjacency information, or other relevant data based on specific graph node indices.
+
+The $\mathit{scatter}_{\Sigma}$ operator can be understood as the opposite of $\mathit{gather}$.
+$\mathit{scatter}_{\Sigma}$ takes a list $X$ of $\gamma$ row vectors and a list $R$ of $\gamma$ pointers from the range $[m]$.
+It returns a list $Z$ of $m$ row vectors $Z[i] = \sum_{j \in [\gamma] \land R[j] = i} X[j]$ for $i \in [m]$.
+The scatter operation in TensorFlow is the inverse of the gather operation. It updates the elements of an existing tensor based on the provided indices. Given an input tensor, a list of indices, and a tensor containing values, the scatter operation replaces elements in the input tensor at the specified indices with the corresponding values from the values tensor.
+Gather and scatter operations are crucial for tasks involving graph neural networks \acp{gnn} where information aggregation and dissemination across nodes are essential. Information from nodes or subgraphs is gathered and aggregated for graph classification tasks to represent the entire graph.
+\acp{gnn} can use gather operations to pool information from nodes and perform graph-level predictions.
+% Should write about addition or clear from formula ? 
+
+
+
+\subsection{Sparse Implementation of Graph Convolutions}
+\label{sec:implement:gnndropout:conv}
+% Preamble
+In our study, the fundamental mechanism for information exchange among nodes in both \acp{gnn} is implemented through the message-passing mechanism via graph convolutions.
+\Acp{gnn} capture complex relationships in convolutional steps within graph-structured data. The detailed algorithm for implementing this message-passing mechanism using graph convolutions is described in Algorithm \ref{algo:sparse_graph_convolution}.
+Algorithm \ref{algo:sparse_graph_convolution} outlines the Sparse Graph Convolution operation, where information is efficiently exchanged between nodes utilizing gather and scatter operations.
+In this algorithm, the gather operation extracts feature information from neighboring nodes, while the scatter operation aggregates and updates the node representations.
+The resulting updated node features are the foundation for subsequent graph convolutional layers.
+
+% Pseudocode / reference lines 
+The sparse implementation of graph convolutions can be described as follows:
+\begin{algorithm}[H]
+    \caption{Sparse Graph Convolution using Gather and Scatter\label{algo:sparse_graph_convolution}}
+    \begin{algorithmic}[1]
+        \Function{$SparseGraphConvolution$}{$Z \in \mathbb{R}^{m \times d}, R \in {[m]}^{\gamma \times k}$}
+        \State{$X_{\text{gather}} \coloneqq \mathit{gather}(Z, R)$} \label{algo:sparse_graph_convolution:line:gather}
+        \Comment{Gather Operation: $\mathbb{R}^{m \times d} \times {[m]}^{\gamma \times k} \to \mathbb{R}^{\gamma \times d}$}
+        \State{$X_{\text{scatter}} \coloneqq \mathit{scatter}_{\Sigma}(X_{\text{gather}}, R)$} \label{algo:sparse_graph_convolution:line:scatter}
+        \Comment{Scatter Operation: $\mathbb{R}^{\gamma \times d} \times {[m]}^{\gamma \times k} \to \mathbb{R}^{m \times d}$}
+        \State{$X_{\text{self}} \coloneqq Z$}
+        \Comment{Feature vector of the node itself}
+        \State{$Z_{\text{conv}} \coloneqq \sigma\left(X_{\text{self}} + X_{\text{scatter}}\right)$}
+        \Comment{Graph Convolution: Element-wise operation}
+        \State{\Return{$Z_{\text{conv}}$}}
+        \EndFunction{}
+    \end{algorithmic}
+\end{algorithm}
+
+% How Graph Convolutions are implemented using gather and scatter 
+The fundamental operation in our \ac{gcn} is the graph convolution operation, which allows nodes to aggregate and exchange information with their neighboring nodes.
+This operation can be efficiently implemented using gather and scatter operations, enabling the network to learn expressive node representations while considering the graph's topology.
+In graph convolutions, the gather operation extracts feature information from neighboring nodes.
+For each target node $v_{i}$, the gather operation assembles feature vectors from its neighboring nodes in the graph~\ref{algo:sparse_graph_convolution:line:gather}.
+These gathered features are then scattered into the feature vector of each target $v_{i}$.
+The scatter operation aggregates the gathered features by adding them to each target's feature vector.
+It takes the computed features and distributes them back to the corresponding nodes in the graph.
+This step ensures that the updated node representations, enriched with information from neighboring nodes, are propagated throughout the graph.
+
+Lastly, the feature vector of the node itself is added, forming the basis for computation in the subsequent convolutional layer.
+By selecting and aggregating features from neighboring nodes using the gather and scatter operations, the model captures the local neighborhood information critical for graph-based tasks.
+With each convolution, one additional neighborhood can be captured.
+This way, both local and global patterns are captured.
+
+% Implementation of Regularization techniques - general idea 
+% Step 3: Explain how dropout can be integrated into a gather/scatter-based graph convolution by masking out some values from either X (in case of NodeSampling and DropOut) or from X_a/X_b (in the case of DropEdge and GDC) 
+
+% The most important one 
+\subsection{Adding Dropout to Sparse Graph Convolutions}
+\label{sec:implement:gnndropout:dropout}
+Four of our regularization techniques, described in \cref{sec:related:pred:regularization}, have been integrated into this gather/scatter-based graph convolution.
+To better understand the connection between our implementation, we propose to look at two parameters, $\mathit{row-wise?}$ and $\mathit{gather-first?}$.
+The $\mathit{row-wise?}$ parameter tells us if the dropping of entities on a certain position is done for the whole row of one of two feature vectors.
+The feature matrix $X$, where each row represents a node, and the entry in such a row represents a feature of the node.
+This vector is masked when we perform \ac{do} or \ac{ns}.
+Each row of the gathered matrices $X_a$ and $X_b$ contains the feature vector of the start node of an edge.
+We perform \ac{de} and \ac{gdc} by masking those gathered matrices.
+Masking is implemented as element-wise multiplication with the corresponding vectors.
+
+So, when $\mathit{row-wise?}$ is true, the whole node is dropped.
+This is the case for \acf{ns} and for \acf{de}. \Ac{ns} removes the whole node, along with every feature of this node, and \ac{de} is concerned with dropping edges, i.e., connections to the entire node, not only to some of the features.
+So, this type of dropout is also performed row-wise.
+\Acf{do} drops just some features of a gíven node, so the $\mathit{row-wise?}$ parameter is set to false.
+This is also the case for \acp{gdc} as it draws random masks, i.e., performs drops for each channel independently.
+
+The $\mathit{gather-first?}$ parameter tells us if values have already been gathered from the neighboring nodes, meaning that the convolution has already been performed in this step.
+
+% Conclusion
+The different types of regularization are all performed in each gather/scatter-based convolutional step. It is done by masking out some values from the feature vector $X$ or $X_a$ and $X_b$.
+In the case of \ac{do} and \ac{gdc}, The $X$ vector is masked.
+The difference is that, unlike in the case of \ac{gdc} for \ac{do}, the masking is performed row-wise.
+
+\begin{center}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Regularization} & \textbf{row-wise?} & \textbf{gather-first?} \\
+        \midrule
+        \acf{do}                & false              & false                  \\
+        \acf{de}                & true               & true                   \\
+        \acf{ns}                & true               & false                  \\
+        \acf{gdc}               & false              & true                   \\
+
+        \bottomrule
+    \end{tabular}
+\end{center}
+
 Before we describe our implementation in Python, we look at the two proposed variants of \ac{gdc} and provide an intuition for them.
 As stated previously, this version of \ac{gdc} allows drawing different random masks for each channel and edge independently, giving more flexibility and increasing the time and space complexity.
 \begin{equation}
@@ -47,36 +160,14 @@ Here, we compute the new feature matrix in one go instead of doing $f_{l}$ itera
     \caption{Originally proposed \ac{gdc}Note: self connection are assumed}\label{fig:implementaion:GDC-eq5}
 \end{figure}
 
-
-
-
-% Implementation of Regularization 
-The four regularization techniques, as described in \ref{sec:related:pred:regularization}, can be described using two parameters illustrated in the table below: Is the regularization happening row-wise, and do we gather the values before applying the regularization?
-\begin{center}
-    \begin{tabular}{lll}
-        \toprule
-        \textbf{Regularization} & \textbf{row-wise?} & \textbf{gather first?} \\
-        \midrule
-        \acf{do}                & false              & false                  \\
-        \acf{de}                & true               & true                   \\
-        \acf{ns}                & true               & false                  \\
-        \acf{gdc}               & false              & true                   \\
-
-        \bottomrule
-    \end{tabular}
-\end{center}
-\section{Extracting Information}
-In our implementation, we make use of TensorFlow gather and scatter operations:
-The gather operation in TensorFlow extracts specific elements from a tensor along a given axis. Given an input tensor and a list of indices, the gather operation selects elements based on the provided indices from the input tensor. Given a tensor representing node features in a graph and a list of node indices, the gather operation extracts the corresponding node features. The gather operation can extract node features, adjacency information, or other relevant data based on specific graph node indices.
-
-The scatter operation in TensorFlow is the inverse of the gather operation. It updates the elements of an existing tensor based on the provided indices. Given an input tensor, a list of indices, and a tensor containing values, the scatter operation replaces elements in the input tensor at the specified indices with the corresponding values from the values tensor.
-Gather and scatter operations are crucial for tasks involving graph neural networks \acp{gnn} where information aggregation and dissemination across nodes are essential. Information from nodes or subgraphs is gathered and aggregated for graph classification tasks to represent the entire graph.\acp{gnn} can use gather operations to pool information from nodes and perform graph-level predictions.
-
-\section{Choice of Frameworks}
-\label{sec:implement:setup: frameworks}
+\section{Choice of Libraries and Frameworks}
+\label{sec:implement:frameworks}
 Below, we briefly overview used datasets and frameworks and motivate the choice.
-\subsubsection{Datasets}
-\label{sec:implement:setup:frameworks: choice}
+% TODO: Tensorflow
+% TODO: NetworkX
+
+% \subsection{Datasets}
+% \label{sec:implement:frameworks: datasets}
 % Datasets - OGB 
 Even though machine learning on graph-structured data is carried out in many areas and has many interesting use cases ranging from social networks to molecular graphs, manifolds, and source code~\cite{Hu2020},
 there is no unified framework for working with graph-structured data. Furthermore, commonly used datasets and evaluation procedures suffer from multiple issues that negatively affect the quality of predictions and the reliability of evaluations of models.
@@ -107,17 +198,8 @@ Working with \ac{ogb} consists of following steps:
 \end{figure}
 
 
-
-
-
-
-% - [ ] 3.2.3 Finding the best Set of Hyperparameters: Move to 4.2 (Experimental Setup)
-% - [ ] 4.2 Experimental Setup (first add 3.2.3, see previous task)
-% 	- [ ] Add description of used hyperparams (used grid)
-% 	- [ ] Add general training methodology:
-% 		- [ ] Number of epochs
-% 		- [ ] Number of repeats per param (3)
-% 		- [ ] Mention early stopping (with which `patience` parameter)
-% 		- [ ] Used criterion for selecting the best hp config (val_loss), used optimizer (Adam)
-% 		- [ ] (maybe something else if you think of something we forgot)
-In our experi
+%  3.3 Choice of Libraries and Frameworks (mention TensorFlow and NetworkX)
+For machine learning tasks, TensorFlow, a powerful and versatile open-source machine learning framework, was a fundamental tool for developing and training intricate machine learning models.
+TensorFlow's extensive set of libraries and tools simplifies the process of building, training, and deploying machine learning models, making it a preferred choice.
+The framework's adaptability to various tasks, ranging from image recognition to natural language processing, underscores its universal applicability, positioning it at the forefront of modern machine learning research.
+In addition to TensorFlow, this study leveraged NetworkX, a Python package designed to create, manipulate, and analyze complex networks. NetworkX was used as a tool for graph representation.

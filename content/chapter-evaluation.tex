@@ -59,30 +59,25 @@ To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used 
 % Add general training methodology 
 % Problem definition 
 This section outlines the experimental setup for training the \ac{gcn} and the \ac{gin} network architectures.
-Before this, we did not have to deal with data preprocessing steps and data preparation techniques because we use the \ac{ogb} datasets %~\cref{}.
+We did not have to deal with data preprocessing steps and data preparation techniques because we use the \ac{ogb} datasets~\cite{Hu2020}.
 
 % General training methodology 
-The training of the GCN models followed a systematic methodology to ensure the robustness and reliability of the results. The following key parameters were considered:
-The training process spanned  $N_{epochs}= 100$ to ensure the model can learn the underlying patterns within the data.
-Each configuration was repeated three times to account for variability in the training process.
-Early stopping was implemented to prevent overfitting and enhance the generalization ability of the models. The training process monitored the validation loss, and the training was halted if the validation loss did not improve for a consecutive number of epochs.
-The `patience' parameter was set to 10, indicating that the training process was terminated early if the validation loss did not decrease over 10 consecutive epochs.
+The training of the \ac{gnn} models followed a systematic methodology to ensure the robustness and reliability of the results. The following key parameters were considered:
+The training process spanned  $N_{epochs}= 200$ to ensure the model can learn the underlying patterns within the data.
+Training with each configuration was repeated three times to account for variability in the training process.
+Early stopping was used to prevent overfitting and enhance the generalization ability of the models. The training process monitored the validation loss, and the training was halted if the validation loss did not improve for a consecutive number of epochs.
+The `patience' parameter was set to 50, indicating that the training process was terminated early if the validation loss did not decrease over 50 consecutive epochs.
 The selection of the best hyperparameter configuration was based on the validation loss.
 The configuration yielding the lowest validation loss was chosen as the optimal setting among the evaluated hyperparameter combinations.
 The Adam optimizer was employed during the training process.
 
-
-
-% NetworkX  
-2. Data Preparation:
-Prepare the graph data: Represent the graph as an adjacency matrix and node features matrix.
-Split the data into training, validation, and test sets.
-Optionally, preprocess the data, such as feature normalization or graph normalization techniques (e.g., Laplacian normalization).
-
 \subsection{Parameter Grid}
 In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network. The hyperparameter search space was defined through a parameter grid, denoted as param_grid, encompassing various configurations. The param_grid was meticulously designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
 
-This parameter grid contained a number of layers ranging from 1 to 6, representing the depth of the neural network architecture. The learning rate alternated between three different values (0.0001, 0.001, 0.01) for the learning rate optimization of the model. We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks. As mentioned previosly, we looked at four regularization technique described in \ref{}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance, when no regularization was applied.
+This parameter grid contained a number of layers ranging from 1 to 6, representing the depth of the neural network architecture.
+The learning rate alternated between three different values (0.0001, 0.001, 0.01) for the learning rate optimization of the model.
+We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks.
+As mentioned previously, we looked at four regularization techniques described in \cref{sec:related:pred:regularization}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance when no regularization was applied.
 
 
 Regularization Technique (regularization): Examining the impact of various regularization methods, including 'None', 'DropOut', 'NodeSampling', 'DropEdge', and 'GDC', to mitigate overfitting and enhance model generalization.

@@ -3,23 +3,36 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 
-Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types. Regularization techniques are commonly employed in node-prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues.
-These methods perturb the values and introduce randomness, leading to improved results.
-In graph-level tasks, the final output is a readout of aggregated nodes, making over-smoothing less problematic as the focus shifts from distinguishing individual nodes to capturing collective behavior.
-Consequently, introducing controlled randomness might seem unnecessary for such predictive tasks.
-This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
-Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks.
-Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions.
-This unconventional approach enabled a rigorous assessment of current methodologies, providing valuable insights into graph-based machine learning.
+% Structure
+% Review 
+% Outlook 
+
+% To be placed 
+
+
+\section{Review}
+\label{sec:conclusion:review}
+
+Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types.
+Specifically, we postulated the following three research questions, which we will now answer.
 
 % Here come explicit answers to all the research questions
-We wanted to determine if \ac{gdc} effectively solves over-fitting and over-smoothing for graph-level prediction tasks.
-Specifically, we tried to verify or refute whether any of the four regularization techniques \ac{do}, \ac{ns}, \ac{de}, and \ac{gdc} is effective.
+\paragraph{RQ1: Is regularization, specifically \acs*{gdc}, effective in solving the problem of over-fitting and over-smoothing for graph-level prediction tasks?}
+Since both our networks had no problem with over-fitting, even if no regularization was used, we cannot say anything about the effectiveness of regularization in mitigating this problem.
+We can only say that the model is not negatively affected by regularization in terms of over-smoothing.
 
-The problem of over
+\paragraph{RQ2: Is there a difference in performance between \acs*{gcn} and \acs*{gin} architectures regarding performance with regularization techniques?}
 
-Our examination leads us to the conclusion that regularization does not prove to be effective for graph-level tasks of machine learning.
-The best results for graph-level prediction tasks are always achieved when we use no regularization.
+We found no difference in performance between both network architectures \ac{gcn} and \ac{gin}.
+Both networks perform best when we use no regularization at all, and on both networks, \ac{de} is the second-best performance most of the time.
+This holds for both classification and regression datasets.
+
+
+\paragraph{RQ3: Are there similarities and differences between different regularization techniques in terms of performance?}
+We tried to verify or refute whether any of the four regularization techniques \ac{do}, \ac{ns}, \ac{de}, and \ac{gdc} is more effective.
+In terms of performance, the different regularization techniques are very close.
+\Ac{de} performs best among the different datasets and \ac{gdc} is second-place, hinting at the close relatedness between those two techniques, as already has been described by \citep{Hasanzadeh2020}.
+
 
 \section{Future Work}
 \label{sec:conclusion:future}

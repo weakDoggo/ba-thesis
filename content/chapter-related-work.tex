@@ -86,7 +86,7 @@ composition by stacking multiple layers togheter increasing the receptive field.
 \end{figure}
 
 
-\subsection{\acl{wl} Graph Colorings}
+\subsection{\acl*{wl} Graph Colorings}
 \label{sec:related:character:wl}
 % What is the Weisfeiler Lehman test 
 % Definition and relation to neural networks (free-by-me) READY
@@ -109,7 +109,7 @@ as $\ldblbrace...\rdblbrace$ and formally defined as follows.
     Two Graphs $\mathcal{G}= (V,E,X)$ and $\mathcal{H}= (P,F,Y)$ are \textit{isomorphic}, denoted as $\mathcal{G} \simeq \mathcal{H}$, if there exists a \textit{bijective} mapping $g: V \rightarrow P$ such that $x_{v}= y_{g(v)}$, $\forall v \in V$ and $(v,u) \in E$ iff $(g(v),g(u)) \in F$.
 \end{defn}
 % The 1-WL in its one-dimensional form (free-by-me)
-\subsubsection{The 1-dimensional \acs{wl} algorithm (color refinement)}
+\subsubsection{The 1-dimensional \acs*{wl} Algorithm (Color Refinement)}
 In the 1-dimensional \ac{wl} algorithm (1-WL), a label, called \emph{color}, $c_{v}^{0}$ is assigned to each vertex of a graph. Then, in every iteration, the colors get updated based on the multiset representation of the neighborhood of the node until convergence. If at some iteration the colorings of the graphs differ, 1-\ac{wl} decides that the graphs are not isomorphic.
 \begin{align*}
     c_{v}^{l} \leftarrow \mathrm{HASH}\ (c_{v}^{l-1}, \ldblbrace c_{u}^{l-1}\ \mid \ u \in \mathcal{N}_{v} \rdblbrace)
@@ -130,7 +130,7 @@ Algorithmically, this can be expressed as follows:
     \end{algorithmic}
 \end{algorithm}
 
-The 1-\ac{wl} is a heuristic method that can efficiently distinguish a broad class of non-isomorphic
+The 1-\acs{wl} is a heuristic method that can efficiently distinguish a broad class of non-isomorphic
 graphs~\cite{Babai1979}.
 However, there exist some corner cases, where the algorithm fails to classify
 simple shapes as non-isomorphic. This is the case for non-isomorphic graphs with the same number of nodes and equivalent sets of node-degrees, as shown in \cref*{fig:related:1-wl-indistinguishable}.
@@ -150,7 +150,7 @@ simple shapes as non-isomorphic. This is the case for non-isomorphic graphs with
 \end{figure}
 
 
-\subsection{GNN Architectures in this Paper}
+\subsection{\acs*{gnn} Architectures in this Paper}
 \label{sec:related:architectures}
 
 % Intro and motivation of the choice 
@@ -257,10 +257,10 @@ The following lemma and corollary, proven by~\citet{Xu2019} show the properties 
     for some function $\varphi$.
 \end{cor}
 
-\subsubsection{\ac{gin} is as powerful as 1-dimensional\ac{wl}}
+\subsubsection{\acl*{gin} is as powerful as 1-dimensional \acs*{wl}}
 % NEW AND UNAPPROVED
 \Ac{gin} is a neural network-based approach designed to handle graph data and detect graph isomorphisms. It operates on each vertex and updates its representation based on its own features and the aggregated features of its neighbors. There exists a fundamental similarity between the \ac{gin} and the way the 1-\ac{wl} algorithm works
-\subsection{Weaknesses and Obstacles in \acp{gnn}}
+\subsection{Weaknesses and Obstacles in \acsp*{gnn}}
 \label{sec:related:pred:typical}
 % What are the typical problems in GNNs
 Because of the way \acp{gnn} operate, they tend to suffer from two main obstacles:
@@ -445,7 +445,7 @@ All the methods are somewhat related and share some similarities~\cite{Rong2020}
 
 
 % Introduction of MAD 
-\section{Assesment of Graph regularization approaches}
+\section{Assessment of Graph Regularization Approaches}
 \label{sec:related:setup:choice:metrics}
 To make systematic and quantitative statements about the positive effects of over-smoothing by using different regularization techniques, one has to be able to monitor the smoothness of nodes at different execution steps during training. Therefore, choosing a suitable metric is of great importance, as it helps to assess the extent of the effect produced by various regularization techniques and compare them against each other in terms of efficacy.
 % TODO: CITE

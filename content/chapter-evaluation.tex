@@ -10,7 +10,63 @@ The investigation encompassed classification and regression tasks, with a compre
 The datasets of choice were all molecular datasets.
 In the evaluation, we will mainly focus on two manipulated parameters: the number of layers and the dropout rate, since the number of layers is important in concluding overfitting, especially the issue where additional layers do not make the network perform better. The dropout rate since this parameter indicates the efficacy of various types of dropouts and if higher rates have an impact at all.
 
-\begin{table*}[t]
+
+\section{Datasets and Metrics Overview}
+\label{sec:eval:overvies}
+
+Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
+The other three, OGB-molesol, -mollipo and -molfreesolv are regression datasets. They contain 1128, 4200, and 642
+molecular structure graphs, respectively. The regression task is to predict the solubility
+of a molecule in different substances.
+To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used and we used MAE for all the regression datasets.
+
+\section{Experimental Setup}
+\label{sec:eval:setup}
+% Add general training methodology 
+% Problem definition 
+This section outlines the experimental setup for training the \ac{gcn} and the \ac{gin} network architectures.
+We did not have to deal with data preprocessing steps and data preparation techniques because we use the \ac{ogb} datasets~\cite{Hu2020}.
+
+% General training methodology 
+The training of the \ac{gnn} models followed a systematic methodology to ensure the robustness and reliability of the results. The following key parameters were considered:
+The training process spanned  $N_{epochs}= 200$ to ensure the model can learn the underlying patterns within the data.
+Training with each configuration was repeated three times to account for variability in the training process.
+Early stopping was used to prevent overfitting and enhance the generalization ability of the models. The training process monitored the validation loss, and the training was halted if the validation loss did not improve for a consecutive number of epochs.
+The `patience' parameter was set to 50, indicating that the training process was terminated early if the validation loss did not decrease over 50 consecutive epochs.
+The selection of the best hyperparameter configuration was based on the validation loss.
+The configuration yielding the lowest validation loss was chosen as the optimal setting among the evaluated hyperparameter combinations.
+The Adam optimizer was employed during the training process.
+
+\subsection{Parameter Grid}
+In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network.
+The hyperparameter search space was defined through a parameter grid encompassing various configurations.
+It was designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
+
+This parameter grid contained several layers ranging from 1 to 6, representing the depth of the neural network architecture.
+The learning rate alternated between the three different values $0.0001$, $0.001$, and $0.01$ for the optimization of the model.
+We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks.
+As mentioned previously, we looked at four regularization techniques described in \cref{sec:related:pred:regularization}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance when no regularization was applied.
+The drop probability for each of the performed regularizations was either set to $0.3$, $0.5$, or $0.7$.
+We also considered three activation functions: `relu', `sigmoid', and `tanh'.
+The number of units in the hidden layer units, determining the neural network's capacity, was alternated between $32$ and $64$.
+All this was done for two different network architectures, \ac{gcn} and \ac{gin}.
+All possible combinations of these parameters were generated to comprehensively explore the hyperparameter space, resulting in a list denoted as \texttt{param_combos}.
+Each configuration within \texttt{param_combos} represented a unique set of hyperparameters for the graph neural network. By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
+
+\subsection{Finding the Best Set of Hyperparameters}
+\label{sec:implement:setup: gridsearch}
+For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhaustive search.
+Grid search has tow major drawbacks:
+\begin{enumerate}
+    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$.
+    \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
+\end{enumerate}
+Despite its two major drawbacks, \ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.
+
+\section{Experimental Results}
+\label{sec:eval:results}
+
+\begin{table*}[ht]
     \caption{
         Experimental results for graph-level prediction tasks. With ROC-AUC metric for OGB-molhiv, AP for -molpcba and MSE for the three remaining regression datasets.
     }\label{tbl:eval:results}
@@ -45,73 +101,19 @@ In the evaluation, we will mainly focus on two manipulated parameters: the numbe
         }}
 \end{table*}
 
-\section{Datasets and Metrics Overview}
-\label{sec:eval:overvies}
-
-Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
-The other three, OGB-molesol, -mollipo and -molfreesolv are regression datasets. They contain 1128, 4200, and 642
-molecular structure graphs, respectively. The regression task is to predict the solubility
-of a molecule in different substances.
-To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used and we used MAE for all the regression datasets.
-
-\section{Experimental Setup}
-\label{sec:eval:setup}
-% Add general training methodology 
-% Problem definition 
-This section outlines the experimental setup for training the \ac{gcn} and the \ac{gin} network architectures.
-We did not have to deal with data preprocessing steps and data preparation techniques because we use the \ac{ogb} datasets~\cite{Hu2020}.
-
-% General training methodology 
-The training of the \ac{gnn} models followed a systematic methodology to ensure the robustness and reliability of the results. The following key parameters were considered:
-The training process spanned  $N_{epochs}= 200$ to ensure the model can learn the underlying patterns within the data.
-Training with each configuration was repeated three times to account for variability in the training process.
-Early stopping was used to prevent overfitting and enhance the generalization ability of the models. The training process monitored the validation loss, and the training was halted if the validation loss did not improve for a consecutive number of epochs.
-The `patience' parameter was set to 50, indicating that the training process was terminated early if the validation loss did not decrease over 50 consecutive epochs.
-The selection of the best hyperparameter configuration was based on the validation loss.
-The configuration yielding the lowest validation loss was chosen as the optimal setting among the evaluated hyperparameter combinations.
-The Adam optimizer was employed during the training process.
-
-\subsection{Parameter Grid}
-In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network.
-The hyperparameter search space was defined through a parameter grid encompassing various configurations.
-It was designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
-
-This parameter grid contained several layers ranging from 1 to 6, representing the depth of the neural network architecture.
-The learning rate alternated between the three different values 0.0001, 0.001, and 0.01 for the learning rate optimization of the model.
-We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks.
-As mentioned previously, we looked at four regularization techniques described in \cref{sec:related:pred:regularization}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance when no regularization was applied.
-The drop probability for each of the performed regularizations was either set to $0.3$, $0.5$, or $0.7$.
-We also considered three activation functions: `relu', `sigmoid', and `tanh'.
-The number of units in the hidden layer units, determining the neural network's capacity, was alternated between $32$ and $64$.
-All this was done for two different network architectures, \ac{gcn} and \ac{gin}.
-All possible combinations of these parameters were generated to comprehensively explore the hyperparameter space, resulting in a list denoted as `param_combos'.
-Each configuration within param_combos represented a unique set of hyperparameters for the graph neural network. By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
-
-\subsection{Finding the Best Set of Hyperparameters}
-\label{sec:implement:setup: gridsearch}
-For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhaustive search.
-\begin{enumerate}
-    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$
-    \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
-\end{enumerate}
-Despite its two major drawbacks,\ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.
-
-\section{Experimental Results}
-\label{sec:eval:results}
-
-% Description of results - Basic overview 
-Our experiments produced the following results:
+% % Description of results - Basic overview 
+% Our experiments produced the following results:
 % Basic first view insights: 
-The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}.
+As seen in \cref{tbl:eval:results}, the best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}.
 This holds for both datasets -- classification and regression -- indicating that any regularization type is unsuitable for both graph-level prediction tasks independently of the network of choice.
 For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets.
-\Ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions. This high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
+The high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
 % Patterns Among the datasets 
-Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.
+Despite achieving the best result when using no regularization, we can point out a clear second-place winner among the different regularization methods on both networks and across all datasets.
 \Ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks, apart from one exception on the mollipo dataset where the second best performing regularization is \ac{gdc}.
 However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
 % Other noteworthy things  
-Despite the \ac{gin} network being more powerful than \ac{gcn} and as powerful as the 1-dim\ac{wl} test, the performance on both networks is very similar, with only a significant difference in performance on the molhiv dataset.
+Despite the \ac{gin} network being more powerful than \ac{gcn} and as powerful as the 1-dim.\ \ac{wl} test, the performance on both networks is very similar, with only a significant difference in performance on the molhiv dataset.
 
 \newcommand*{\addstd}[4]{
     \addplot[name path=#3upper, draw=none] table[x=#2, y expr=\thisrow{#3Avg}+\thisrow{#3Std}, col sep=semicolon] {#1};
@@ -157,165 +159,175 @@ Despite the \ac{gin} network being more powerful than \ac{gcn} and as powerful a
 
 
 \section{Detailed Investigation of Change in Number of Layers and Probability}
-This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
-We then take a closer look at how a change in the drop probability affects the performance of the networks.
+Since we could not detect any benefits of using regularization for graph-level prediction tasks, indicating that the potential reduction of over-smoothing shown by \citep{Hasanzadeh2020} is not relevant for graph-level prediction tasks.
+Therefore, we focus on over-fitting and investigate how the model performance changes when we increase the number of layers.
+Also, we want to make sure that our findings are consistent with and can be attributed to the use of regularization, which is why we take a look at the change of performance with regards to drop probability.
 
 \subsection{Effect of the Number of Layers}
+This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
 Upon analyzing five distinct datasets, discernible patterns in performance relative to the number of network layers become evident. Except for the molhiv and molfreesolv datasets, a weak positive correlation between increased layers and improved performance is observable. This trend is consistent across both \ac{gcn} and \ac{gin} models. Typically, optimal performance is achieved at the 5th or 6th layer. However, it is noteworthy that the overall differences in performance are marginal.
 
-This observed trend persists across various regularization techniques, including scenarios without regularization. Interestingly, insufficient evidence supports that regularization effectively mitigates over-smoothing for graph-level classification tasks on the \ac{gcn}, specifically concerning these datasets. Additionally, substantial fluctuations are observed in the molhiv dataset, introducing complexity to the observed trends.
+This observed trend persists across various regularization techniques, including scenarios without regularization.
+Interestingly, there is insufficient evidence for the hypothesis that regularization effectively mitigates over-smoothing for graph-level classification tasks on \acp{gcn}, specifically concerning these datasets.
+Additionally, substantial fluctuations are observed in the molhiv dataset, so no clear trends could be found.
 
 In regression datasets, the molfreesolv dataset presents a unique case where optimal performance is attained with a single layer, contrary to the general trend where 5-6 layers yield high performance. Importantly, consistent trends emerge across all regularization techniques and without regularization, suggesting that regularization does not induce unexpected network behavior.
 
-Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization. Overall, higher variance is evident in instances without regularization, whereas regularization techniques tend to stabilize performance, resulting in lower variance. This finding underscores the stabilizing influence of regularization techniques on model performance in graph-level classification tasks.
+Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization, we can observe somewhat clear trends most of the time.
+Overall, higher variance is evident in instances without regularization, whereas regularization techniques tend to stabilize performance, resulting in lower variance. This finding underscores the stabilizing influence of regularization techniques on model performance in graph-level classification tasks.
 
 % Classification Datasets Num Layers
-\begin{figure}
-    \centering
-    \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
-    \caption{molhiv (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/num_layers_plot_molhiv_gcn.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
+%     \caption{molhiv (GCN Model)}
+% %     \label{fig:layers-gcn-molhiv}
+% \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}{1,2,3,4,5,6}{0.02}
     \caption{molpcba (GCN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:layers-prob-gcn-molpcba}
 \end{figure}
 
 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{1}
-    \caption{molesol(GCN Model)}
-    \label{fig:gcn-molfreesolv}
+    \caption{molesol (GCN Model)}
+    \label{fig:layers-gcn-molesol}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{5}
-    \caption{molfreesolv (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/num_layers_plot_molfreesolv_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{5}
+%     \caption{molfreesolv (GCN Model)}
+%     \label{fig:layers-gcn-molfreesolv}
+% \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{0.2}
     \caption{mollipo (GCN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:layers-gcn-mollipo}
 \end{figure}
 
 % Regression Datasets Insights Num Layers 
-\begin{figure}
-    \centering
-    \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
-    \caption{molhiv (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/num_layers_plot_molhiv_gin.csv}{numLayers}{Number of Layers}{ROC-AUC}{1,2,3,4,5,6}{0.1}
+%     \caption{molhiv (GIN Model)}
+%     \label{fig:layers-gin-molhiv}
+% \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Number of Layers}{AP}{1,2,3,4,5,6}{0.95}
-    \caption{molpcba (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/num_layers_plot_molpcba_gin.csv}{numLayers}{Number of Layers}{AP}{1,2,3,4,5,6}{0.95}
+%     \caption{molpcba (GIN Model)}
+%     \label{fig:layers-gin-molpcba}
+% \end{figure}
 
-% Regression Datasets Insights 
-\begin{figure}
-    \centering
-    \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{1}
-    \caption{molesol (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% % Regression Datasets Insights 
+% \begin{figure}
+%     \centering
+%     \layerplot{data/num_layers_plot_molesol_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{1}
+%     \caption{molesol (GIN Model)}
+%     \label{fig:layers-gin-molesol}
+% \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{5}
     \caption{molfreesolv (GIN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:layers-gin-molfreesolv}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{0.2}
-    \caption{mollipo (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/num_layers_plot_mollipo_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{0.2}
+%     \caption{mollipo (GIN Model)}
+%     \label{fig:layers-gin-mollipo}
+% \end{figure}
 
 % Here are the regression datasets 
-\subsection{Effect of the probability of regularization}
-Concerning the dropout probability, we found that a lower dropout probability leads to better performance. This makes sense since the best performance is achieved without regularization. This trend can clearly be observed in the regression datasets on the \ac{gcn} and the \ac{gin}network. This trend also holds for the classification dataset molpcba on both networks. On the molhiv dataset, the dropout probability does not lead to any substantial differences in performance.
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}
-    \caption{molhiv (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+\subsection{Effect of the Probability of Regularization}
+
+We also take a closer look at how a change in the drop probability affects the performance of the networks.
+Regarding this, we have found that the model performs worse on average as we approach higher probabilities, i.e., a lower dropout probability leads to better performance.
+This makes sense, as the best performance is achieved using no regularization.
+This trend can be observed in the regression datasets on the \ac{gcn} and the \ac{gin}network. This trend also holds for the classification dataset molpcba on both networks. On the molhiv dataset, the dropout probability does not lead to any substantial differences in performance, which is why we do not show it.
+
+% \begin{figure}
+%     \centering
+%     \layerplot{data/probability_plot_molhiv_gcn.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}
+%     \caption{molhiv (GCN Model)}
+%     \label{fig:prob-gcn-molfreesolv}
+% \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.3, 0.5, 0.7}{0.02}
     \caption{molpcba (GCN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:prob-gcn-molpcba}
 \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{1}
     \caption{molesol (GCN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:prob-gcn-molesol}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{2}
-    \caption{molfreesolv (GCN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/probability_plot_molfreesolv_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{2}
+%     \caption{molfreesolv (GCN Model)}
+%     \label{fig:prob-gcn-molfreesolv}
+% \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{0.2}
     \caption{mollipo (GCN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:prob-gcn-mollipo}
 \end{figure}
 
 % HERE ARE THE DATASETS FOR PROBABiLITY ON GIN 
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molhiv_gin.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}
-    \caption{molhiv (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/probability_plot_molhiv_gin.csv}{probability}{Probability}{ROC-AUC}{0.3, 0.5, 0.7}{0.1}
+%     \caption{molhiv (GIN Model)}
+%     \label{fig:prob-gin-molhiv}
+% \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molpcba_gin.csv}{probability}{Probability}{AP}{0.3, 0.5, 0.7}{0.02}
-    \caption{molpcba (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/probability_plot_molpcba_gin.csv}{probability}{Probability}{AP}{0.3, 0.5, 0.7}{0.02}
+%     \caption{molpcba (GIN Model)}
+%     \label{fig:prob-gin-molpcba}
+% \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_molesol_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{1}
-    \caption{molesol (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/probability_plot_molesol_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{1}
+%     \caption{molesol (GIN Model)}
+%     \label{fig:prob-gin-molesol}
+% \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molfreesolv_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{2}
     \caption{molfreesolv (GIN Model)}
-    \label{fig:gcn-molfreesolv}
+    \label{fig:prob-gin-molfreesolv}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \layerplot{data/probability_plot_mollipo_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{0.2}
-    \caption{mollipo (GIN Model)}
-    \label{fig:gcn-molfreesolv}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \layerplot{data/probability_plot_mollipo_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{0.2}
+%     \caption{mollipo (GIN Model)}
+%     \label{fig:prob-gin-mollipo}
+% \end{figure}
 
 
 % Patterns of variance in datasets 

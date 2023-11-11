@@ -8,31 +8,35 @@
 
 The field of \acs{ml} on graph-structured data has recently become an active topic of research.
 One reason for this is the wide range of domains and problems that are expressible in terms of graphs.
+Regularization techniques are commonly employed in node-level prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues.
+These methods perturb the values and introduce randomness, leading to improved results.
+In graph-level tasks, however, the final output is a readout of aggregated nodes, hypothetically minimizing the impact of over-smoothing as the emphasis shifts from distinguishing individual nodes to capturing collective behavior.
 
 
 \section{Motivation}%
 \label{sec:intro:motivation}
-% replication of results for node level 
-% on two different architectures 
-% Test for Graph Level prediction 
-% Can we trust the good results ? (Node lvl vs. Graph Level)
-% What architecture they used ? 
-% Why gdc especially node level prediction suited ? 
-
-
+% Mention GDC (including citation!)
+Introducing controlled randomness might seem unnecessary for graph-level prediction tasks.
+This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
+Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks.
+Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions.
 
 \section{Research Questions}%
 \label{sec:intro:questions}
-
-
+In this thesis, we will answer the following research questions to assess the relevance of regularization for graph-level prediction tasks:
+\begin{enumerate}
+    \item Is regularization, specifically \ac{gdc}, effective in solving the problem of over-fitting and over-smoothing for graph-level prediction tasks?
+    \item Is there a difference in performance between \ac{gcn} and \ac{gin} architectures regarding performance with regularization techniques?
+    \item Are there similarities and differences between different regularization techniques in terms of performance?
+\end{enumerate}
 \section{Structure}%
 \label{sec:intro:structure}
 
 \paragraph{\Cref{sec:related}: \nameref{sec:related}}
-Some text
+We introduce a number of related studies.
 % Problem Description + Implementation = implement 
 \paragraph{\Cref{sec:implement}: \nameref{sec:implement}}
-Some text
+In this section, we focus on the implementation of regularization. Specifically, we explain, how using TensorFlows \texttt{gather} and \texttt{scatter} operations we implement all four regularization techniques by applying different random masks at different stages.
 % eval contains discussion 
 \paragraph{\Cref{sec:eval}: \nameref{sec:eval}}
 Some text

@@ -72,20 +72,20 @@ The configuration yielding the lowest validation loss was chosen as the optimal 
 The Adam optimizer was employed during the training process.
 
 \subsection{Parameter Grid}
-In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network. The hyperparameter search space was defined through a parameter grid, denoted as param_grid, encompassing various configurations. The param_grid was meticulously designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
+In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network.
+The hyperparameter search space was defined through a parameter grid encompassing various configurations.
+It was designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
 
-This parameter grid contained a number of layers ranging from 1 to 6, representing the depth of the neural network architecture.
-The learning rate alternated between three different values (0.0001, 0.001, 0.01) for the learning rate optimization of the model.
+This parameter grid contained several layers ranging from 1 to 6, representing the depth of the neural network architecture.
+The learning rate alternated between the three different values 0.0001, 0.001, and 0.01 for the learning rate optimization of the model.
 We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks.
 As mentioned previously, we looked at four regularization techniques described in \cref{sec:related:pred:regularization}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance when no regularization was applied.
-
-
-Regularization Technique (regularization): Examining the impact of various regularization methods, including 'None', 'DropOut', 'NodeSampling', 'DropEdge', and 'GDC', to mitigate overfitting and enhance model generalization.
-Dropout Probability (probability): Investigating three dropout probabilities (0.3, 0.5, 0.7) to regulate the dropout rate during training, preventing co-adaptation of feature detectors.
-Activation Function (activation): Considering three activation functions ('relu', 'sigmoid', 'tanh') to introduce non-linearity into the model, capturing complex relationships within the data.
-Number of Units in Hidden Layers (units): Exploring two different configurations (32, 64) for the number of units in the hidden layers, determining the capacity of the neural network.
-Graph Convolution Type (convo_type): Investigating two graph convolution types ('gcn', 'gin') to assess their impact on capturing graph-structured data effectively.
-To comprehensively explore the hyperparameter space, all possible combinations of these parameters were generated, resulting in a list denoted as param_combos. Each configuration within param_combos represented a unique set of hyperparameters for the graph neural network. By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
+The drop probability for each of the performed regularizations was either set to $0.3$, $0.5$, or $0.7$.
+We also considered three activation functions: `relu', `sigmoid', and `tanh'.
+The number of units in the hidden layer units, determining the neural network's capacity, was alternated between $32$ and $64$.
+All this was done for two different network architectures, \ac{gcn} and \ac{gin}.
+All possible combinations of these parameters were generated to comprehensively explore the hyperparameter space, resulting in a list denoted as `param_combos'.
+Each configuration within param_combos represented a unique set of hyperparameters for the graph neural network. By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
 
 \subsection{Finding the Best Set of Hyperparameters}
 \label{sec:implement:setup: gridsearch}
@@ -96,30 +96,22 @@ For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Ya
 \end{enumerate}
 Despite its two major drawbacks,\ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.
 
-
-\section{Some Additional Section}
-%
 \section{Experimental Results}
 \label{sec:eval:results}
 
 % Description of results - Basic overview 
-Some insights we can gather from the results table:
+Our experiments produced the following results:
 % Basic first view insights: 
-The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}. This holds for both datasets -- classification and regression -- indicating that any regularization type is unsuitable for both graph-level prediction tasks independently of the network of choice.
-For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets. \ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions. This high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
+The best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}.
+This holds for both datasets -- classification and regression -- indicating that any regularization type is unsuitable for both graph-level prediction tasks independently of the network of choice.
+For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets.
+\Ac{gcn} and \ac{gin} perform better on classification tasks for graph-level predictions. This high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
 % Patterns Among the datasets 
-Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.\ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks, apart from one exception on the mollipo dataset where the second best performing regularization is \ac{gdc}. However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
+Despite achieving the best result when using no regularization, we can point out a clear second-place `winner' among the different regularization methods on both networks and across all datasets.
+\Ac{de} performs the second best in all cases, with the second place being \ac{gdc} for classification tasks and \ac{ns} for regression tasks, apart from one exception on the mollipo dataset where the second best performing regularization is \ac{gdc}.
+However, as all the results are very close in range, we cannot point out any notable advantages of using \ac{gdc} above other regularization methods, as their performance varies depending on the task and dataset.
 % Other noteworthy things  
 Despite the \ac{gin} network being more powerful than \ac{gcn} and as powerful as the 1-dim\ac{wl} test, the performance on both networks is very similar, with only a significant difference in performance on the molhiv dataset.
-
-% Overall conclusion 
-\section{Conclusion}
-
-Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types. Regularization techniques are commonly employed in node-prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues. These methods perturb the values and introduce randomness, leading to improved results.
-
-In graph-level tasks, the final output is a readout of aggregated nodes, making over-smoothing less problematic as the focus shifts from distinguishing individual nodes to capturing collective behavior. Consequently, introducing controlled randomness might seem unnecessary for such predictive tasks. This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
-
-Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks. Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions. This unconventional approach enabled a rigorous assessment of current methodologies, providing valuable insights into graph-based machine learning.
 
 \newcommand*{\addstd}[4]{
     \addplot[name path=#3upper, draw=none] table[x=#2, y expr=\thisrow{#3Avg}+\thisrow{#3Std}, col sep=semicolon] {#1};
@@ -164,13 +156,11 @@ Despite this counterintuitive aspect, our study aimed to empirically validate th
     \end{tikzpicture}}
 
 
-
-
-\section{Insights from Plots}
+\section{Detailed Investigation of Change in Number of Layers and Probability}
 This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
+We then take a closer look at how a change in the drop probability affects the performance of the networks.
 
 \subsection{Effect of the Number of Layers}
-
 Upon analyzing five distinct datasets, discernible patterns in performance relative to the number of network layers become evident. Except for the molhiv and molfreesolv datasets, a weak positive correlation between increased layers and improved performance is observable. This trend is consistent across both \ac{gcn} and \ac{gin} models. Typically, optimal performance is achieved at the 5th or 6th layer. However, it is noteworthy that the overall differences in performance are marginal.
 
 This observed trend persists across various regularization techniques, including scenarios without regularization. Interestingly, insufficient evidence supports that regularization effectively mitigates over-smoothing for graph-level classification tasks on the \ac{gcn}, specifically concerning these datasets. Additionally, substantial fluctuations are observed in the molhiv dataset, introducing complexity to the observed trends.
@@ -216,9 +206,6 @@ Regarding variance, apart from substantial variance and high fluctuations observ
     \label{fig:gcn-molfreesolv}
 \end{figure}
 
-\subsubsection{Probability Manipulation}
-
-
 % Regression Datasets Insights Num Layers 
 \begin{figure}
     \centering
@@ -255,9 +242,8 @@ Regarding variance, apart from substantial variance and high fluctuations observ
     \caption{mollipo (GIN Model)}
     \label{fig:gcn-molfreesolv}
 \end{figure}
-\section{Insights Regression Datasets}
 
-
+% Here are the regression datasets 
 \subsection{Effect of the probability of regularization}
 Concerning the dropout probability, we found that a lower dropout probability leads to better performance. This makes sense since the best performance is achieved without regularization. This trend can clearly be observed in the regression datasets on the \ac{gcn} and the \ac{gin}network. This trend also holds for the classification dataset molpcba on both networks. On the molhiv dataset, the dropout probability does not lead to any substantial differences in performance.
 \begin{figure}
@@ -340,3 +326,6 @@ Among the datasets, the classification dataset molhiv and the regression dataset
 As mentioned earlier, the results are very close in range, and together with the limited number of datasets- all from the same molecular realm- we cannot draw any general conclusions. However, we can describe some emerging trends from our findings:
 The trends:
 Overall, regularization seems to smoothen the line, i.e., to reduce the differences in performance depending on the number of layers. Also, the performance variance is much higher when we use no regularization.
+
+
+

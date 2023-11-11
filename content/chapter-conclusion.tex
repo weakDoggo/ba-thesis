@@ -3,10 +3,37 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 
+Our study examined the impact of various regularization techniques, particularly \ac{gdc}, on graph-level prediction tasks across two different network types. Regularization techniques are commonly employed in node-prediction tasks across diverse networks to mitigate over-smoothing and overfitting issues.
+These methods perturb the values and introduce randomness, leading to improved results.
+In graph-level tasks, the final output is a readout of aggregated nodes, making over-smoothing less problematic as the focus shifts from distinguishing individual nodes to capturing collective behavior.
+Consequently, introducing controlled randomness might seem unnecessary for such predictive tasks.
+This shift in focus from individual nodes to aggregated outcomes challenges the conventional wisdom of applying regularization methods in graph-level prediction tasks.
+Despite this counterintuitive aspect, our study aimed to empirically validate the effectiveness of regularization techniques in graph-level prediction tasks.
+Our exploration of this uncharted territory was motivated by a desire to challenge existing assumptions and gain a nuanced understanding of the relationship between regularization methods and graph-level predictions.
+This unconventional approach enabled a rigorous assessment of current methodologies, providing valuable insights into graph-based machine learning.
+
+% Here come explicit answers to all the research questions
+We wanted to determine if \ac{gdc} effectively solves over-fitting and over-smoothing for graph-level prediction tasks.
+Specifically, we tried to verify or refute whether any of the four regularization techniques \ac{do}, \ac{ns}, \ac{de}, and \ac{gdc} is effective.
+
+The problem of over
+
+Our examination leads us to the conclusion that regularization does not prove to be effective for graph-level tasks of machine learning.
+The best results for graph-level prediction tasks are always achieved when we use no regularization.
 
 \section{Future Work}
 \label{sec:conclusion:future}
 
+In our study, we found out that, indeed, for graph-level prediction tasks, regularization is not very helpful; we think that several interesting questions arise from there.
 
+First, we looked at two well-known architectures which are commonly used.
+However, we performed our experiments only on a limited number of datasets, leaving the possibility that results could differ on other datasets.
+
+We introduced an interesting metric, which unfortunately fell out of scope in this research.
+We encourage others to pick up where we left...
+
+
+
+And there is the possibility, however small, that there are other types of regularization, that could perform well
 Another proposed regularization technique
 https://arxiv.org/pdf/2106.07971.pdf

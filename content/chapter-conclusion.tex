@@ -37,16 +37,17 @@ In terms of performance, the different regularization techniques are very close.
 \section{Future Work}
 \label{sec:conclusion:future}
 
-In our study, we found out that, indeed, for graph-level prediction tasks, regularization is not very helpful; we think that several interesting questions arise from there.
+Our investigation observed that regularization might not offer significant advantages for graph-level prediction tasks, opening avenues for further exploration, which leads to intriguing questions that warrant deeper investigation.
+While our study focused on two widely employed \ac{gnn}architectures, \ac{gcn} and \ac{gin}, it is crucial to acknowledge the limitations of our experiments, which were conducted on a limited number of datasets.
+The generalizability of our findings to other datasets remains an open question, and we encourage researchers to extend our work to explore potential variations in results across diverse datasets.
 
-First, we looked at two well-known architectures which are commonly used.
-However, we performed our experiments only on a limited number of datasets, leaving the possibility that results could differ on other datasets.
+In our study, we stumbled upon an interesting metric \ac{mad}, which measures the similarity between nodes and allows us to gain deeper insights into how and when over-smoothing occurs.
+Regrettably, due to the expansive nature of this research, we could not comprehensively evaluate \ac{mad} within the scope of this study.
+We advocate for further research to assess the efficacy of \ac{mad} in graph-level prediction tasks.
+Additionally, our exploration hints at alternative regularization techniques that may yield promising results.
+\texttt{Noisy Nodes}, a particularly intriguing regularization approach, in which the input graph is corrupted with noise and a noise-correcting node-level loss is added \cref{God22}.
 
-We introduced an interesting metric, which unfortunately fell out of scope in this research.
-We encourage others to pick up where we left...
-
-
-
-And there is the possibility, however small, that there are other types of regularization, that could perform well
-Another proposed regularization technique
-https://arxiv.org/pdf/2106.07971.pdf
+In conclusion, while our study sheds light on the limited efficacy of traditional regularization methods, it also lays the groundwork for future research directions.
+We hope that our findings stimulate further inquiry into the nuances of graph-level prediction tasks, focusing on evaluating \ac{mad} and exploring alternative regularization techniques, such as \texttt{Noisy Nodes}, to advance the field and deepen our understanding of graph-based machine learning models.
+% Another proposed regularization technique:
+% https://arxiv.org/pdf/2106.07971.pdf

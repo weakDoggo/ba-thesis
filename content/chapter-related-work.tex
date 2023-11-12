@@ -7,22 +7,22 @@
 Before describing the problem, and later on the experimental setup, we first
 \begin{enumerate}
     \item Introduce three common prediction tasks in \acp{gnn}.
-    \item Give a general overview of how \acp{gnn} organize and process graph structured data.
-    \item We further discuss the relation of messasge passing mechanism to the WL-test, an algorithm for
+    \item Give a general overview of how \acp{gnn} organize and process graph-structured data.
+    \item We further discuss the relation of the message-passing mechanism to the WL-test, an algorithm for
           inspecting whether two graphs are isomorph.
     \item Give a formal definition and description of two \ac{gnn}
-          architectures which will be used in our experiments.
-    \item Discuss typical issues which occur in \acp{gnn} and methods for adressing those issues.
+          architectures, which will be used in our experiments.
+    \item Discuss typical issues in \acp{gnn} and methods for addressing those issues.
+    \item Present four regularization techniques, which mitigate issues of over-fitting and over-smoothing in \acp{gnn}.
 \end{enumerate}
-
 
 \section{Prediction Tasks and Typical Problems}
 \label{sec:related:pred}
 
 % Types of prediction tasks (free-by-me) READY
-Graphs naturally appear in numerous application domains, ranging from social analysis, bioinformatics to computer vision.
-A Graph $G = (V,E)$, where $V = \{v_{1},...,v_{n}\}$ is a set of $N =|V|$ nodes and $E \subseteq V\times V$ a set of edges betwen those nodes. The unique capability of graphs enables capturing the structural relations among data, and thus allows to harvest more insights compared to analyzing data in isolation~\cite{Zhang19}. Graphs therefore can be seen as a general language for describing entities and relationships between those entities.
-\Acfp{gnn} then organize graph structured data to tackle various prediction and classification
+Graphs naturally appear in numerous application domains, ranging from social analysis to bioinformatics to computer vision.
+A Graph $G = (V,E)$, where $V = \{v_{1},...,v_{n}\}$ is a set of $N =|V|$ nodes and $E \subseteq V\times V$ a set of edges betwen those nodes. The unique capability of graphs enables capturing the structural relations among data and thus allows the harvesting of more insights compared to analyzing data in isolation~\cite{Zhang19}. Graphs, therefore, can be seen as a general language for describing entities and relationships between those entities.
+\Acfp{gnn} then organize graph-structured data to tackle various prediction and classification
 tasks. Typically, one is interested in one of the following three tasks:
 \begin{enumerate}[label=\textbf{\arabic*.}]
     \item \textbf{Link prediction:}
@@ -30,33 +30,37 @@ tasks. Typically, one is interested in one of the following three tasks:
           e.g., knowledge graph completion.
 
     \item \textbf{Vertex classification \& regression:}
-          Predict a property of a node e.g., categorize online users/items.
+          Predict a property of a node, e.g., categorize online users/items.
 
     \item \textbf{Graph classification \& regression:}
           Here, we are interested in classifying or predicting a continuous value for
           the entire graph, e.g., predicting a property of a molecule.
 \end{enumerate}
 
-In this work the main focus will be on \ac{nc}, \ac{gc} and \ac{gr} for small- as well as medium-sized graphs.
+In this work, the main focus will be on \ac{nc}, \ac{gc}, and \ac{gr} for small- as well as medium-sized graphs.
 
 % Message passing formally
 \section{Passing Messages in \Acsp*{gnn}}
 \label{sec:related:message}
 
 % Intro to GNNs, State-description (free-by-me) READY
-Graphs, by nature, are unstructured. Vertices in graphs have no natural order and can
-contain any type of information. In order for machine learning algorithms to be able
-to make use of graph structured data, a mechanism is needed to organize them in a
+Graphs, by nature, are unstructured.
+Vertices in graphs have no natural order and can contain any type of information.
+In order for machine learning algorithms to be able to make use of graph-structured data, a mechanism is needed to organize them in a
 suitable way~\cite{Zhou2020a,Hamilton2017a,Zhang19}.
 
 
 % Message Passing in general (free-by-me) READY
-Message passing is a mechanism, which embeds into every node information about it's neighbourhood ~\cite{Xu2019,Zhou2020a}. This can be done in several ways. One way of classifying a \ac{gnn} is by looking at the underlying message passing machanism. In this paper we will look at a network, where message passing is done via convolutions (\acf{gcn}). We will however ocasionally use the more general term message passing, as the separation is rather blurred and message passing describes a neighborhood aggregation scheme which is seen as a generalisation of other, more specific mechanisms.
+Message passing is a mechanism that embeds into every node information about its neighborhood ~\cite{Xu2019,Zhou2020a}.
+This can be done in several ways.
+One way of classifying a \ac{gnn} is by looking at the underlying message-passing mechanism.
+This paper will look at a network where message passing is done via convolutions (\acf{gcn}).
+We will, however, occasionally use the more general term message passing, as the separation is rather blurred, and message passing describes a neighborhood aggregation scheme which is seen as a generalization of other, more specific mechanisms.
 
 Formally, message passing in a \ac{gnn} can be described as using two functions:
-AGGREGATE and COMBINE. The expressive and representational power of a \ac{gnn} can
-then be determined by looking at the concrete functions and their properties, used to implement
-aggregation and combination. AGGREGATE mixes the hidden representation of every node's neighborhood in every iteration. COMBINE then combines the mixed representation togheter with the representation of the node. Each node uses the information from its neighbors to update its embeddings, thus a natural extension is to use the information to increase the receptive field by performing AGGREGATE and COMBINE multiple times.
+AGGREGATE and COMBINE.
+The expressive and representational power of a \ac{gnn} can then be determined by looking at the concrete functions and their properties used to implement aggregation and combination.
+AGGREGATE mixes the hidden representation of every node's neighborhood in every iteration. COMBINE then combines the mixed representation togheter with the representation of the node. Each node uses the information from its neighbors to update its embeddings, thus a natural extension is to use the information to increase the receptive field by performing AGGREGATE and COMBINE multiple times.
 
 \begin{align*}
     a_{v}^{k}   & = \mathrm{AGGREGATE}^{(k)}(\{h_{u}^{(k-1)}: u \in \mathcal{N}_{(v)}\}) \\

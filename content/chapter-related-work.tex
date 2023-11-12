@@ -13,7 +13,7 @@ Before describing the problem, and later on the experimental setup, we first
     \item Give a formal definition and description of two \ac{gnn}
           architectures, which will be used in our experiments.
     \item Discuss typical issues in \acp{gnn} and methods for addressing those issues.
-    \item Present four regularization techniques, which mitigate issues of over-fitting and over-smoothing in \acp{gnn}.
+    \item Present four regularization techniques, which mitigate issues of overfitting and over-smoothing in \acp{gnn}.
 \end{enumerate}
 
 \section{Prediction Tasks and Typical Problems}
@@ -55,12 +55,15 @@ Message passing is a mechanism that embeds into every node information about its
 This can be done in several ways.
 One way of classifying a \ac{gnn} is by looking at the underlying message-passing mechanism.
 This paper will look at a network where message passing is done via convolutions (\acf{gcn}).
-We will, however, occasionally use the more general term message passing, as the separation is rather blurred, and message passing describes a neighborhood aggregation scheme which is seen as a generalization of other, more specific mechanisms.
+However, we will occasionally use the more general term message passing, as the separation is rather blurred, and message passing describes a neighborhood aggregation scheme seen as a generalization of other, more specific mechanisms.
 
 Formally, message passing in a \ac{gnn} can be described as using two functions:
 AGGREGATE and COMBINE.
 The expressive and representational power of a \ac{gnn} can then be determined by looking at the concrete functions and their properties used to implement aggregation and combination.
-AGGREGATE mixes the hidden representation of every node's neighborhood in every iteration. COMBINE then combines the mixed representation togheter with the representation of the node. Each node uses the information from its neighbors to update its embeddings, thus a natural extension is to use the information to increase the receptive field by performing AGGREGATE and COMBINE multiple times.
+\texttt{AGGREGATE} mixes the hidden representation of every node's neighborhood in every iteration.
+\texttt{COMBINE} then combines the mixed representation together with the representation of the node.
+Each node uses the information from its neighbors to update its embeddings;
+thus, a natural extension is to use the information to increase the receptive field by performing AGGREGATE and COMBINE multiple times.
 
 \begin{align*}
     a_{v}^{k}   & = \mathrm{AGGREGATE}^{(k)}(\{h_{u}^{(k-1)}: u \in \mathcal{N}_{(v)}\}) \\
@@ -73,14 +76,13 @@ For graph-level predictions, an additional READOUT- operation is used:
 \end{align*}
 
 % Message passing framework and local graph structure (free-by-me) READY
-One useful type of information, which the message passing framework should be able to
-capture, is the local graph structure. This can be done by choosing functions with
-appropriate properties. A more detailed explanation will follow in
-\cref{sec:related:architectures}. In spatial \acp{gnn} we make the assumption of the
-similarity of neighbor nodes. To exploit this spatial similarity, we perform
-composition by stacking multiple layers togheter increasing the receptive field.
+One useful type of information that the message-passing framework should be able to capture is the local graph structure.
+This can be done by choosing functions with appropriate properties.
+A more detailed explanation will follow in \cref{sec:related:architectures}.
+In spatial \acp{gnn}, we make the assumption of the similarity of neighbor nodes.
+To exploit this spatial similarity, we perform a composition by stacking multiple layers together, increasing the receptive field.
 
-% picture of k-hop neighbourhood aggregation (free-by-me) READY
+% picture of k-hop neighborhood aggregation (free-by-me) READY
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.35\linewidth]{gfx/related-work/1hop}\hspace{1cm}
@@ -137,7 +139,7 @@ Algorithmically, this can be expressed as follows:
 The 1-\acs{wl} is a heuristic method that can efficiently distinguish a broad class of non-isomorphic
 graphs~\cite{Babai1979}.
 However, there exist some corner cases, where the algorithm fails to classify
-simple shapes as non-isomorphic. This is the case for non-isomorphic graphs with the same number of nodes and equivalent sets of node-degrees, as shown in \cref*{fig:related:1-wl-indistinguishable}.
+simple shapes as non-isomorphic. This is the case for non-isomorphic graphs with the same number of nodes and equivalent sets of node degrees, as shown in \cref*{fig:related:1-wl-indistinguishable}.
 
 % graphics isomorpc - distinguishable 
 \begin{figure}[H]
@@ -159,22 +161,20 @@ simple shapes as non-isomorphic. This is the case for non-isomorphic graphs with
 
 % Intro and motivation of the choice 
 % Exploration of important properties 
-% Where those networks achieve state of the art results 
+% Where those networks achieve state-of-the-art results 
 
 % --> Convolutional network --> Image Processing 
-% --> GIN, a powerful architecture ---> ecpecially in: 
+% --> GIN, a powerful architecture ---> especially in: 
 % Motivation in Conclusion  
-In the following section we briefly introduce and
-motivate the choice of two types of networks, which we have
-chosen to experiementally verify the efficacy of several regularization techniques, which will be discussed in \cref{sec:related:pred:regularization}.
+In the following section, we briefly introduce and motivate the choice of two types of networks, which we have chosen to experimentally verify the efficacy of several regularization techniques, which will be discussed in \cref{sec:related:pred:regularization}.
 
 % Explain why these architectures are a promising choice 
-Since all \acp{gnn} encorporate message passing in a way, we decided to chose two architectures for our experiments, which are powerful, efficient, scalable and broadly used.
+Since all \acp{gnn} incorporate message passing in a way, we decided to choose two architectures for our experiments, which are powerful, efficient, scalable and broadly used.
 \subsubsection{Graph Convolutional Network (GCN)}
 \label{sec:related:architectures:gcn}
 % History and Motivation 
-\Acf{gcn} was originally proposed by \citet{Kipf2017} to tackle the problem of semi-supervised node classification, where lables are available for a small subset of nodes. \ac{gcn} is a simple, but powerful architecture, that scales linearly in the number of graph
-edges and learns hidden layer representations that encode both local graph structure and features of nodes.
+\Acf{gcn} was originally proposed by \citet{Kipf2017} to tackle the problem of semi-supervised node classification, where labels are available for a small subset of nodes.
+\Ac{gcn} is a simple but powerful architecture that scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of nodes.
 
 % How does it operate formally 
 A \ac{gcn} can formally be expressed via the following layer-wise propagation rule:
@@ -186,9 +186,9 @@ Where $\tilde{A} = A + I_{N}$ is the adjacency matrix of the undirected graph $\
 with added self-connections. $I_{N}$ is the identity matrix. $\tilde{D}_{ii} = \sum_{j}\tilde{A}_{ij}$ and $W^{l}$ is a layer-specific trainable weight-matrix. $\sigma(\cdot)$ denotes an activation function, such as $ReLU(\cdot) = max(0, \cdot)$. $ H^{l}\in  \mathbb^{N \times D}$ is the matrix of activations in the
 $l^{\mathrm{th}}$ layer; $H^{0}= X$.
 
-% How does it operate intuition --> relation to implementation 
-Because we consider every neighbor to be of equal importance and therefore normalization is accomplished
-by dividing by the number of neighbours, one can view this operation as performing an element-wise
+% How does it operate intuition --> relation to the implementation 
+Because we consider every neighbor to be of equal importance, normalization is accomplished
+by dividing by the number of neighbors, one can view this operation as performing an element-wise
 mean-pooling~\cite{Xu2019}.
 \begin{align*}
     h_{v}^{(k)} = \mathrm{ReLU}(\mathrm{W} \cdot\mathrm{MEAN} \{h_{u}^{k-1}\ \mid \ \forall{u} \in \mathcal{N}_{(v)} \cup \{v\}\})
@@ -201,16 +201,16 @@ An application of a two-layer \ac{gcn} is given by:
 where $\hat{A} = \tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}}$
 is calculated in a preprocessing step. The model uses a single weight matrix per layer and
 deals with varying node degrees through an appropriate normalization of the adjacency matrix.
-% Experimental results and where it was expecially useful and why 
-This model consisting of a 2-layer \ac{gcn} performed well in a series of experimental tasks, including semi-supervised document classification, semi-supervised node classification in citation networks and semi-supervised entity classification in a bipartite graph extracted from a knowledge graph.
-The prediction accuracy was evaluated on a set of 1000 examples and additional experiments on deeper models with up to 10 layers have been also provided. Being capable of encoding both graph structure and node features, \ac{gcn} outperformed numerous related methods by a significant margin~\cite{Kipf2017}.
+% Experimental results and where it was especially useful and why 
+This model consisting of a 2-layer \ac{gcn} performed well in a series of experimental tasks, including semi-supervised document classification, semi-supervised node classification in citation networks, and semi-supervised entity classification in a bipartite graph extracted from a knowledge graph.
+The prediction accuracy was evaluated on a set of 1000 examples, and additional experiments on deeper models with up to 10 layers have been also provided. Being capable of encoding both graph structure and node features, \ac{gcn} outperformed numerous related methods by a significant margin~\cite{Kipf2017}.
 
-\Acfp{gcn} are widely and successfully used today in many fiels due to their simplicity and scalability.
+\Acfp{gcn} are widely and successfully used today in many fields due to their simplicity and scalability.
 
 \subsubsection{Graph Isomorphism Network (GIN)}
 \label{sec:related:architectures:gin}
 % Overview 
-To overcome the lack of expressivity of popular GNN architectures,~\citet{Xu2019} designed a new type of \ac{gnn}, \ac{gin}. They prove that \acp{gin} are strictly more expressive than a variety of previous \ac{gnn} architectures and that they are in fact as powerful as the commonly used 1-dimensional \acf{wl}-test.
+To overcome the lack of expressivity of popular GNN architectures,~\citet{Xu2019} designed a new type of \ac{gnn}, \ac{gin}. They prove that \acp{gin} are strictly more expressive than a variety of previous \ac{gnn} architectures and that they are, in fact, as powerful as the commonly used 1-dimensional \acf{wl}-test.
 
 % Requirements and condition 
 Two requirements must be met for a network to have the same expressive and representational
@@ -255,9 +255,10 @@ The following lemma and corollary, proven by~\citet{Xu2019} show the properties 
 
 \begin{cor}
     Assume $\mathcal{X}$ is countable. There exists a function $f:\ \mathcal{X} \rightarrow \mathbb{R}^n$
-    so that for infinetly many choices of $\epsilon$, including all irrational numbers, $h(c,X) = (1+ \epsilon)\cdot f(c) + \sum_{x \in X}f(x)$
+    so that for infinitely many choices of $\epsilon$, including all irrational numbers, $h(c,X) = (1+ \epsilon)\cdot f(c) + \sum_{x \in X}f(x)$
     is unique for each pair (c,X), where $c \in \mathcal{X}$ and $X \subseteq \mathcal{X}$ is a multiset of bounded
-    size. Moreover, any function g over such pairs can be decomposed as $g(c,X) = \varphi(1+\epsilon)\dot f(c) +\sum_{x \in X}f(x)$
+    size.
+    Moreover, any function g over such pairs can be decomposed as $g(c,X) = \varphi(1+\epsilon)\dot f(c) +\sum_{x \in X}f(x)$
     for some function $\varphi$.
 \end{cor}
 
@@ -268,24 +269,23 @@ The following lemma and corollary, proven by~\citet{Xu2019} show the properties 
 \label{sec:related:pred:typical}
 % What are the typical problems in GNNs
 Because of the way \acp{gnn} operate, they tend to suffer from two main obstacles:
-Overfitting and oversmoothing.
+Overfitting and over smoothing.
 
 % Overfitting description and intuition 
-Overfitting hinders the generalization ability of a \acf{nn}, making it perform poorly
-on previously unseen data. This occurs expecially when using small datasets, since the model thends to 'memorize' instead of learn the pattern.
+Overfitting hinders the generalization ability of a \acf{nn}, making it perform poorly on previously unseen data.
+This occurs especially when using small datasets since the model tends to 'memorize' instead of learning the pattern.
 
-% Oversmoothing description and intuition
-Oversmoothing is a condition, where the performance and predictive power of a \ac{nn}
-does not improve or even gets worse when more layers are added. This happens because
-by stacking multiple layers  togheter aggregation is being performed over and over again.
-This way, the representation of a node is being smoothed, i.e., mixed with features of
-very distant, possibly unrelated nodes. Oversmoothing is a problem mainly for node classification tasks. There is a trade-off between the expressiveness of the model (capturing graph structure by applying multiple layers) and oversmoothing, which leads
-to a model where nodes have the same representation, because they all converge to indistinguishable vectors~\cite{Zhou2020,Hasanzadeh2020}.%
+% Over-smoothing description and intuition
+Over-smoothing is a condition where the performance and predictive power of a \ac{nn} do not improve or even get worse when more layers are added.
+This happens because by stacking multiple layers together, aggregation is being performed over and over again.
+This way, the representation of a node is being smoothed, i.e., mixed with features of very distant, possibly unrelated nodes.
+Over-smoothing is a problem mainly for node classification tasks. There is a trade-off between the expressiveness of the model (capturing graph structure by applying multiple layers) and over-smoothing, which leads to a model where nodes have the same representation because they all converge to indistinguishable vectors~\cite{Zhou2020,Hasanzadeh2020}.%
 \footnote{In spatial \acp{gnn} we make the assumption of relatedness by proximity.}
 
 % Why is this happening?
-A closer examination of underlying causes of oversmoothing was conducted by \citet{Chen2020}, who suggested, that not message passing itself, but the type of interacting nodes cause this issue.
-For \acf{nc} tasks, intra-class communication (interaction between two nodes sharing the same class) is useful (signal), whereas inter-class communication (the communication between two nodes sharing different lables) is considered harmful, because it brings interference noise into the feature-representations by mixing unrelated features and therefore making unrelated nodes more similar to each other. Because of that, the the quality of shared information is essential and should therefore be considered as a benchmark for improvement.
+A closer examination of underlying causes of over-smoothing was conducted by \citet{Chen2020}, who suggested that it is not message passing itself, but the type of interaction between nodes that causes this issue.
+For \acf{nc} tasks, intra-class communication (interaction between two nodes sharing the same class) is useful (signal), whereas inter-class communication (the communication between two nodes sharing different labels) is considered harmful because it brings interference noise into the feature-representations by mixing unrelated features and therefore making unrelated nodes more similar to each other.
+Because of that, the the quality of shared information is essential and should, therefore be considered as a benchmark for improvement.
 
 
 \subsection{Regularization Techniques}
@@ -298,10 +298,10 @@ For \acf{nc} tasks, intra-class communication (interaction between two nodes sha
 One subgroup of regularization is via data, where the training set $\mathcal{D}$ is
 transformed into a new set $\mathcal{D}_{R}$ using some stochastic parameter
 $\pi$, which can be used in various ways, including to manipulate the feature space,
-create a new, augmented dataset or to change e.g, thin out the hidden layers of
+create a new, augmented dataset or change e.g, thin out the hidden layers of
 the \ac{nn}.
 
-An example of such a transformation is corruption of inputs by Gaussian noise.
+An example of such a transformation is the corruption of inputs by Gaussian noise.
 \begin{align*}
     \tau_{0}(x) = x + \theta, \theta \backsim \mathcal{N}(0, \Sigma)
 \end{align*}
@@ -309,7 +309,7 @@ An example of such a transformation is corruption of inputs by Gaussian noise.
 % Stochastic regularization techniques, data augmentation
 In this work we focus on stochastic regularization techniques, which perform
 data augmentation in one way or another and whose main benefits lie in the alleviation
-of overfitting and oversmoothing \cite{Hasanzadeh2020}.\
+of overfitting and over-smoothing \cite{Hasanzadeh2020}.\
 We will use the following notation: \
 
 \begin{center}
@@ -379,7 +379,7 @@ corresponding elements in $A$ are non-zero and zero everywhere else. \\
 Message passing in \acp{gnn} happens along the edges between neighbours.
 Randomly removng edges makes the connections more sparse, which
 leads to slower convergence time and thus prevents the
-network from oversmoothing and allows for a deeper architecture.
+network from over-smoothing and allows for a deeper architecture.
 Intuitively this makes sence, since removing an edge means, that the node, previosely connected by that edge stops being a neighbor. Consequently the representation of this former neighbor does not get mixed with the representation of the node.
 
 \Ac{de} also acts like a data augmenter, since by randomly dropping edges we manipulate/change the underlying graph data. Since the data is now augmented with noise, it is harder for the network to overfit the data by ``memorising'' rather than learning complex relationships.
@@ -437,14 +437,14 @@ we can omit the indices of the output elements at layer $l+1$ and rewrite the ab
 % Illustration for GDC 
 %---------------------
 % Recap
-All the methods are somewhat related and share some similarities~\cite{Rong2020}. \acf{do} has been successful in alleviating overfitting by perturbing the feature matrix and setting some entries to zero. The issue of oversmoothing is not affected by this measure.
-\acf{de} achieved great results in reducing both overfitting as well as oversmoothing. Intuitively this makes sense, because smoothing comes from the aggregation of the neighbours of a certain node and by dropping the connections to some neighbours, the feature vectors of those neighbours are no longer aggregated and combined with the hidden representaion of the node.
+All the methods are somewhat related and share some similarities~\cite{Rong2020}. \acf{do} has been successful in alleviating overfitting by perturbing the feature matrix and setting some entries to zero. The issue of over-smoothing is not affected by this measure.
+\acf{de} achieved great results in reducing both overfitting as well as over-smoothing. Intuitively this makes sense, because smoothing comes from the aggregation of the neighbours of a certain node and by dropping the connections to some neighbours, the feature vectors of those neighbours are no longer aggregated and combined with the hidden representaion of the node.
 
 \acf{ns} is a special case of \acf{do}, as all of the output features for a node are either completely kept or dropped while \ac{do} randomly removes some of these related output elements associated with the node. Also, along with the dropped node, the edges of this node are dropped. The method itself, however is node-oriented and the edge-drop is a "side-effect".
 
 % INTUITION WHY GDC IS THE COMBINATION OF ALL OF THE METHODS LISTED ABOVE !!!! 
-\acf{gdc} generalizes existing stochastic regularization methods for training \acp{gnn} and is effective in dealing with overfitting and oversmoothing.
-\ac{gdc} regularizes neighbourhood aggregation in \acp{gnn} at each chanel separately. This prevents connected nodes in graph from having the same learned representations in \ac{gnn} layers; hence better improvement without serious oversmoothing can be achieved~\cite{Hasanzadeh2020}.
+\acf{gdc} generalizes existing stochastic regularization methods for training \acp{gnn} and is effective in dealing with overfitting and over-smoothing.
+\ac{gdc} regularizes neighbourhood aggregation in \acp{gnn} at each chanel separately. This prevents connected nodes in graph from having the same learned representations in \ac{gnn} layers; hence better improvement without serious over-smoothing can be achieved~\cite{Hasanzadeh2020}.
 
 
 
@@ -456,7 +456,7 @@ To make systematic and quantitative statements about the positive effects of ove
 
 \textbf{\Ac{mad}} ~\cite{Chen2020} is a metric for smoothness, the similarity of graph node representations. In that sense, over-smoothness is the similarity of node representations among different classes. While smoothing to some extent is desired (we assume spatial similarity between nodes), mixing features of nodes with different labels over several iterations leads to over-smoothing.
 
-It is therefore important to differentiate between different types of messages between nodes. Signal/information is the messaging of nodes, which share the same class/label, i.e., intra-class communication and noize denotes intra-class comunication. Having too many inter-class edges leads to much noise by encorporating messages from other classes, which results in oversmoothing.
+It is therefore important to differentiate between different types of messages between nodes. Signal/information is the messaging of nodes, which share the same class/label, i.e., intra-class communication and noize denotes intra-class comunication. Having too many inter-class edges leads to much noise by encorporating messages from other classes, which results in over-smoothing.
 
 Because of that it is crucial to have a measure of the quality of the recieved messages. A way to do that is to consider the information-to noise ratio i.e., the fraction of intra-class node pairs and all node pairs that have interaction trough \ac{gnn} model. That way it is possible to differentiate between remote and neihbouring nodes and calculate the \textbf{\ac{madg}}, which is strongly positive correlated with a models accuracy.
 

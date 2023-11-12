@@ -17,8 +17,8 @@ Our study examined the impact of various regularization techniques, particularly
 Specifically, we postulated the following three research questions, which we will now answer.
 
 % Here come explicit answers to all the research questions
-\paragraph{RQ1: Is regularization, specifically \acs*{gdc}, effective in solving the problem of over-fitting and over-smoothing for graph-level prediction tasks?}
-Since both our networks had no problem with over-fitting, even if no regularization was used, we cannot say anything about the effectiveness of regularization in mitigating this problem.
+\paragraph{RQ1: Is regularization, specifically \acs*{gdc}, effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks?}
+Since both our networks had no problem with overfitting, even if no regularization was used, we cannot say anything about the effectiveness of regularization in mitigating this problem.
 We can only say that the model is not negatively affected by regularization in terms of over-smoothing.
 
 \paragraph{RQ2: Is there a difference in performance between \acs*{gcn} and \acs*{gin} architectures regarding performance with regularization techniques?}
@@ -38,14 +38,15 @@ In terms of performance, the different regularization techniques are very close.
 \label{sec:conclusion:future}
 
 Our investigation observed that regularization might not offer significant advantages for graph-level prediction tasks, opening avenues for further exploration, which leads to intriguing questions that warrant deeper investigation.
-While our study focused on two widely employed \ac{gnn}architectures, \ac{gcn} and \ac{gin}, it is crucial to acknowledge the limitations of our experiments, which were conducted on a limited number of datasets.
-The generalizability of our findings to other datasets remains an open question, and we encourage researchers to extend our work to explore potential variations in results across diverse datasets.
+While our study focused on two widely employed \ac{gnn} architectures, \ac{gcn} and \ac{gin}, it is crucial to acknowledge the existence of many other interesting types of \acp{gnn}.
+Furthermore, our experiments were conducted on a limited number of datasets;
+the generalizability of our findings to other datasets remains an open question, and we encourage researchers to extend our work to explore potential variations in results across diverse datasets.
 
 In our study, we stumbled upon an interesting metric \ac{mad}, which measures the similarity between nodes and allows us to gain deeper insights into how and when over-smoothing occurs.
 Regrettably, due to the expansive nature of this research, we could not comprehensively evaluate \ac{mad} within the scope of this study.
 We advocate for further research to assess the efficacy of \ac{mad} in graph-level prediction tasks.
 Additionally, our exploration hints at alternative regularization techniques that may yield promising results.
-\texttt{Noisy Nodes}, a particularly intriguing regularization approach, in which the input graph is corrupted with noise and a noise-correcting node-level loss is added \cref{God22}.
+\texttt{Noisy Nodes}, a particularly intriguing regularization approach, in which the input graph is corrupted with noise and a noise-correcting node-level loss is added~\cite{God22}.
 
 In conclusion, while our study sheds light on the limited efficacy of traditional regularization methods, it also lays the groundwork for future research directions.
 We hope that our findings stimulate further inquiry into the nuances of graph-level prediction tasks, focusing on evaluating \ac{mad} and exploring alternative regularization techniques, such as \texttt{Noisy Nodes}, to advance the field and deepen our understanding of graph-based machine learning models.

@@ -277,7 +277,7 @@ Over-smoothing is a problem mainly for node classification tasks. There is a tra
 \footnote{In spatial \acp{gnn} we make the assumption of relatedness by proximity.}
 
 % Why is this happening?
-A closer examination of underlying causes of over-smoothing was conducted by~\citet{Chen2020}, who suggested that it is not message passing itself but the type of interaction between nodes that causes this issue.
+A closer examination of underlying causes of over-smoothing was conducted by~\citet {Chen2020}, who suggested that it is not message passing itself but the type of interaction between nodes that causes this issue.
 For \acf{nc} tasks, intra-class communication (interaction between two nodes sharing the same class) is useful (signal).
 In contrast, inter-class communication (the communication between two nodes sharing different labels) is considered harmful because it brings interference noise into the feature representations by mixing unrelated features, making unrelated nodes more similar.
 Because of that, the quality of shared information is essential and should, therefore, be considered a benchmark for improvement.
@@ -381,7 +381,7 @@ The combination of \ac{do} and \ac{de} reaches a better performance in terms of 
 
 \subsubsection{\acl*{ns}~(\citeauthor{Chen2018})}
 \label{sec:related:pred:regularization:ns}
-This method of regularization, also known as FastGCN~\cite{Chen2018} was developed to improve the \ac{gcn} \cite{Kipf2017} architecture and to address the bottleneck issues of \acp{gcn} caused by the recursive expansion of neighborhoods.
+This method of regularization, also known as FastGCN~\cite{Chen2018}, was developed to improve the \ac{gcn} \cite{Kipf2017} architecture and to address the bottleneck issues of \acp{gcn} caused by the recursive expansion of neighborhoods.
 It reduces the expensive computation in batch training of \ac{gnn} by relaxing the requirement of simultaneous availability of test data.
 Graphs can be very large and require large computational and processing capacities.
 By randomly dropping out nodes, we reduce the amount of data so that it alleviates the expensiveness of the computation and reduces the bottleneck issue while preserving important relations.
@@ -446,14 +446,20 @@ hence better improvement without serious over-smoothing can be achieved~\cite{Ha
 % Introduction of MAD 
 \section{Assessment of Graph Regularization Approaches}
 \label{sec:related:setup:choice:metrics}
-To make systematic and quantitative statements about the positive effects of over-smoothing by using different regularization techniques, one has to be able to monitor the smoothness of nodes at different execution steps during training. Therefore, choosing a suitable metric is of great importance, as it helps to assess the extent of the effect produced by various regularization techniques and compare them against each other in terms of efficacy.
-% TODO: CITE
+To make systematic and quantitative statements about the positive effects of over-smoothing by using different regularization techniques, one has to be able to monitor the smoothness of nodes at different execution steps during training.
+Therefore, choosing a suitable metric is of great importance, as it helps to assess the extent of the effect produced by various regularization techniques and compare them against each other in terms of efficacy.
 
-\textbf{\Ac{mad}} ~\cite{Chen2020} is a metric for smoothness, the similarity of graph node representations. In that sense, over-smoothness is the similarity of node representations among different classes. While smoothing to some extent is desired (we assume spatial similarity between nodes), mixing features of nodes with different labels over several iterations leads to over-smoothing.
+\textbf{\Ac{mad}} ~\cite{Chen2020} is a metric for smoothness, the similarity of graph node representations.
+In that sense, over-smoothness is the similarity of node representations among different classes.
+While smoothing to some extent is desired (we assume spatial similarity between nodes), mixing features of nodes with different labels over several iterations leads to over-smoothing.
 
-It is therefore important to differentiate between different types of messages between nodes. Signal/information is the messaging of nodes, which share the same class/label, i.e., intra-class communication and noize denotes intra-class comunication. Having too many inter-class edges leads to much noise by encorporating messages from other classes, which results in over-smoothing.
+It is, therefore, important to differentiate between different types of messages between nodes.
+Signal/information is the messaging of nodes sharing the same class/label, i.e., intra-class communication, and noize denotes intra-class communication.
+Having too many inter-class edges leads to much noise by incorporating messages from other classes, which results in over-smoothing.
 
-Because of that it is crucial to have a measure of the quality of the received messages. A way to do that is to consider the information-to noise ratio i.e., the fraction of intra-class node pairs and all node pairs that have interaction trough \ac{gnn} model. That way it is possible to differentiate between remote and neihbouring nodes and calculate the \textbf{\ac{madg}}, which is strongly positive correlated with a models accuracy.
+Because of that, measuring the quality of the received messages is crucial.
+A way to do that is to consider the information-to-noise ratio, i.e., the fraction of intra-class node pairs and all node pairs with interaction through the \ac{gnn} model.
+That way, it is possible to differentiate between remote and neighboring nodes and calculate the \textbf{\ac{madg}}, positively correlating with a model's accuracy.
 
 % Formal definition 
 \ac{mad} is calculated as follows:
@@ -481,4 +487,5 @@ Next we access the average distance $\bar{D}^{tgt}$ for non-zero values along ea
 where where 1(x) = 1 if x > 0 otherwise 0. Finally, the MAD value given the target node pairs is calculated by averaging the non-zero values in tgt
 % Intuition behind all this 
 \Ac{mad} gives access to the smoothness of a node and pairs of nodes throughout iterations, which makes it easy to "track down" over smoothing.
-First, the cosine similarity is calculated, showing how similar the corresponding feature vectors are. By subtracting the cosine similarity from one, we get the cosine distance, which tells us the difference between the nodes.
+First, the cosine similarity is calculated, showing how similar the corresponding feature vectors are.
+By subtracting the cosine similarity from one, we get the cosine distance, which tells us the difference between the nodes.

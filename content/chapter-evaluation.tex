@@ -2,23 +2,25 @@
 %
 \chapter{Evaluation}
 \label{sec:eval}
-
 % Is it necessary to quote all the studies here ?? YES
 In this section, we delve into the critical evaluation of the machine learning experiments conducted as part of this research.
-The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks, as there is already a wide range of conducted studies, which answer the question of various regularization techniques for node level prediction tasks. Other regularization techniques have also been evaluated for this type of task.
+The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks, as there is already a wide range of conducted studies, which answer the question of various regularization techniques for node level prediction tasks.
+Other regularization techniques have also been evaluated for this type of task.
 The investigation encompassed classification and regression tasks, with a comprehensive analysis of two types of neural networks, \ac{gcn} and \ac{gin}.
 The datasets of choice were all molecular datasets.
-In the evaluation, we will mainly focus on two manipulated parameters: the number of layers and the dropout rate, since the number of layers is important in concluding overfitting, especially the issue where additional layers do not make the network perform better. The dropout rate since this parameter indicates the efficacy of various types of dropouts and if higher rates have an impact at all.
-
+In the evaluation, we will mainly focus on two manipulated parameters: the number of layers and the dropout rate, since the number of layers is important in concluding overfitting, especially the issue where additional layers do not make the network perform better.
+The dropout rate since this parameter indicates the efficacy of various types of dropouts and if higher rates have an impact at all.
 
 \section{Datasets and Metrics Overview}
 \label{sec:eval:overvies}
 
-Before proceeding to the experimental findings, we present a quick overview of the used datasets and metrics to ensure a better understanding of the subject matter. We have used five datasets, all from the molecular realm. Molhiv and molpcba are small and medium-size classification datasets, respectively.
-The other three, OGB-molesol, -mollipo and -molfreesolv are regression datasets. They contain 1128, 4200, and 642
-molecular structure graphs, respectively. The regression task is to predict the solubility
-of a molecule in different substances.
-To evaluate the performance of molhiv, we used ROC-AUC, for molpcba AP was used and we used MAE for all the regression datasets.
+Before proceeding to the experimental findings, we present a quick overview of the datasets and metrics.
+We have used five datasets, all from the molecular realm.
+Molhiv and molpcba are small and medium-size classification datasets, respectively.
+The other three, OGB-molesol, -mollipo, and -molfreesolv are regression datasets.
+They contain 1128, 4200, and 642 molecular structure graphs, respectively.
+The regression task is to predict the solubility of a molecule in different substances.
+To evaluate the performance of molhiv, we used ROC-AUC for molpcba \ac{ap} was used, and we used \ac{mae} for all the regression datasets.
 
 \section{Experimental Setup}
 \label{sec:eval:setup}
@@ -28,10 +30,12 @@ This section outlines the experimental setup for training the \ac{gcn} and the \
 We did not have to deal with data preprocessing steps and data preparation techniques because we use the \ac{ogb} datasets~\cite{Hu2020}.
 
 % General training methodology 
-The training of the \ac{gnn} models followed a systematic methodology to ensure the robustness and reliability of the results. The following key parameters were considered:
+The training of the \ac{gnn} models followed a systematic methodology to ensure the robustness and reliability of the results.
+The following key parameters were considered:
 The training process spanned  $N_{epochs}= 200$ to ensure the model can learn the underlying patterns within the data.
 Training with each configuration was repeated three times to account for variability in the training process.
-Early stopping was used to prevent overfitting and enhance the generalization ability of the models. The training process monitored the validation loss, and the training was halted if the validation loss did not improve for a consecutive number of epochs.
+Early stopping was used to prevent overfitting and enhance the generalization ability of the models.
+The training process monitored the validation loss, and the training was halted if the validation loss did not improve for a consecutive number of epochs.
 The `patience' parameter was set to 50, indicating that the training process was terminated early if the validation loss did not decrease over 50 consecutive epochs.
 The selection of the best hyperparameter configuration was based on the validation loss.
 The configuration yielding the lowest validation loss was chosen as the optimal setting among the evaluated hyperparameter combinations.
@@ -46,17 +50,19 @@ This parameter grid contained several layers ranging from 1 to 6, representing t
 The learning rate alternated between the three different values $0.0001$, $0.001$, and $0.01$ for the optimization of the model.
 We chose the Adam optimizer exclusively for its robust performance in optimizing complex neural networks.
 As mentioned previously, we looked at four regularization techniques described in \cref{sec:related:pred:regularization}, \ac{do}, \ac{ns}, \ac{de}, \ac{gdc}, and also looked at the performance when no regularization was applied.
-The drop probability for each of the performed regularizations was either set to $0.3$, $0.5$, or $0.7$.
+The drop probability for each performed regularization was set to $0.3$, $0.5$, or $0.7$.
 We also considered three activation functions: `relu', `sigmoid', and `tanh'.
 The number of units in the hidden layer units, determining the neural network's capacity, was alternated between $32$ and $64$.
 All this was done for two different network architectures, \ac{gcn} and \ac{gin}.
 All possible combinations of these parameters were generated to comprehensively explore the hyperparameter space, resulting in a list denoted as \texttt{param_combos}.
-Each configuration within \texttt{param_combos} represented a unique set of hyperparameters for the graph neural network. By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
+Each configuration within \texttt{param_combos} represented a unique set of hyperparameters for the graph neural network.
+By exhaustively evaluating these combinations, this study aimed to identify the most suitable hyperparameter configuration, providing valuable insights into the optimal setup for graph-based machine learning tasks.
 
 \subsection{Finding the Best Set of Hyperparameters}
 \label{sec:implement:setup: gridsearch}
-For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space performing an exhaustive search.
-Grid search has tow major drawbacks:
+For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Yang2020,Zoeller2021}.
+\Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space by performing an exhaustive search.
+Grid search has two major drawbacks:
 \begin{enumerate}
     \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$.
     \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
@@ -105,8 +111,9 @@ Despite its two major drawbacks, \ac{gs} is well-suitable for small search space
 % Our experiments produced the following results:
 % Basic first view insights: 
 As seen in \cref{tbl:eval:results}, the best results are achieved using no regularization techniques for graph-level prediction tasks on both types of networks \ac{gcn} and \ac{gin}.
-This holds for both datasets -- classification and regression -- indicating that any regularization type is unsuitable for both graph-level prediction tasks independently of the network of choice.
-For both classification datasets, the variance is very small; the network performance is stable. Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets.
+This holds for both datasets- classification, and regression- indicating that any regularization type is unsuitable for both graph-level prediction tasks independent of the network of choice.
+For both classification datasets, the variance is very small; the network performance is stable.
+Out of the three regression datasets, only the mollipo dataset has low variance in performance for both types of \acp{gnn}, and we have rather a high variance on the remaining datasets.
 The high variance of molesol and mollipo is an interesting trend, which would be nice to investigate further.
 % Patterns Among the datasets 
 Despite achieving the best result when using no regularization, we can point out a clear second-place winner among the different regularization methods on both networks and across all datasets.

@@ -4,12 +4,12 @@
 \label{sec:eval}
 % Is it necessary to quote all the studies here ?? YES
 In this section, we delve into the critical evaluation of the machine learning experiments conducted as part of this research.
-The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks, as there is already a wide range of conducted studies, which answer the question of various regularization techniques for node level prediction tasks.
+The main postulated question of this study was to determine whether \ac{gdc} is effective in solving the problem of overfitting and over-smoothing for graph-level prediction tasks, as there is already a wide range of conducted studies that answer the question of regularization techniques for node level prediction tasks.
 Other regularization techniques have also been evaluated for this type of task.
 The investigation encompassed classification and regression tasks, with a comprehensive analysis of two types of neural networks, \ac{gcn} and \ac{gin}.
 The datasets of choice were all molecular datasets.
 In the evaluation, we will mainly focus on two manipulated parameters: the number of layers and the dropout rate, since the number of layers is important in concluding overfitting, especially the issue where additional layers do not make the network perform better.
-The dropout rate since this parameter indicates the efficacy of various types of dropouts and if higher rates have an impact at all.
+The dropout rate since this parameter indicates the efficacy of different types of dropouts and if higher rates have an impact at all.
 
 \section{Datasets and Metrics Overview}
 \label{sec:eval:overvies}
@@ -43,7 +43,7 @@ The Adam optimizer was employed during the training process.
 
 \subsection{Parameter Grid}
 In this study, a comprehensive exploration of the model's hyperparameters was conducted to optimize the performance of the graph neural network.
-The hyperparameter search space was defined through a parameter grid encompassing various configurations.
+The hyperparameter search space was defined through a parameter grid encompassing multiple configurations.
 It was designed to contain many possibilities, enabling a systematic investigation of the model's behavior under different settings.
 
 This parameter grid contained several layers ranging from 1 to 6, representing the depth of the neural network architecture.
@@ -64,7 +64,8 @@ For hyperparameter optimization, we use grid search \ac{gs}~\cite{Lorenzo2017,Ya
 \Ac{gs} is a model-free method of automated hyperparameter selection, which systematically explores the configuration space by performing an exhaustive search.
 Grid search has two major drawbacks:
 \begin{enumerate}
-    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values. Assuming that there are k parameters, and each of them has n distinct values, its computational complexity is $O(n^{k})$.
+    \item Poor scalability for large configuration spaces due to its exponential complexity in the number of hyperparameters and corresponding values.
+          Assuming that there are k parameters, each of them has n distinct values, its computational complexity is $O(n^{k})$.
     \item Lack of consideration of the hierarchical hyperparameter structure leads to many redundant configurations.
 \end{enumerate}
 Despite its two major drawbacks, \ac{gs} is well-suitable for small search spaces and can easily be implemented and parallelized.
@@ -74,7 +75,8 @@ Despite its two major drawbacks, \ac{gs} is well-suitable for small search space
 
 \begin{table*}[ht]
     \caption{
-        Experimental results for graph-level prediction tasks. With ROC-AUC metric for OGB-molhiv, AP for -molpcba and MSE for the three remaining regression datasets.
+        Experimental results for graph-level prediction tasks.
+        With ROC-AUC metric for OGB-molhiv, AP for -molpcba, and MSE for the three remaining regression datasets.
     }\label{tbl:eval:results}
     \centering
     {\small%\scriptsize%
@@ -166,21 +168,22 @@ Despite the \ac{gin} network being more powerful than \ac{gcn} and as powerful a
 
 
 \section{Detailed Investigation of Change in Number of Layers and Probability}
-Since we could not detect any benefits of using regularization for graph-level prediction tasks, indicating that the potential reduction of over-smoothing shown by \citep{Hasanzadeh2020} is not relevant for graph-level prediction tasks.
+Since we could not detect any benefits of regularization for graph-level prediction tasks, indicating that the potential reduction of over-smoothing shown by \citep{Hasanzadeh2020} is irrelevant for graph-level prediction tasks.
 Therefore, we focus on overfitting and investigate how the model performance changes when we increase the number of layers.
-Also, we want to make sure that our findings are consistent with and can be attributed to the use of regularization, which is why we take a look at the change of performance with regards to drop probability.
+Also, we want to ensure that our findings are consistent with and can be attributed to regularization, so we look at the performance change regarding drop probability.
 
 \subsection{Effect of the Number of Layers}
 This analysis aims to gain insights into the phenomenon of over-smoothing. To achieve this, we investigate the variations in performance corresponding to changes in the number of layers within the network architecture.
 Upon analyzing five distinct datasets, discernible patterns in performance relative to the number of network layers become evident. Except for the molhiv and molfreesolv datasets, a weak positive correlation between increased layers and improved performance is observable. This trend is consistent across both \ac{gcn} and \ac{gin} models. Typically, optimal performance is achieved at the 5th or 6th layer. However, it is noteworthy that the overall differences in performance are marginal.
 
-This observed trend persists across various regularization techniques, including scenarios without regularization.
+This observed trend persists across all four regularization techniques, including scenarios without regularization.
 Interestingly, there is insufficient evidence for the hypothesis that regularization effectively mitigates over-smoothing for graph-level classification tasks on \acp{gcn}, specifically concerning these datasets.
-Additionally, substantial fluctuations are observed in the molhiv dataset, so no clear trends could be found.
+Additionally, substantial fluctuations are observed in the molhiv dataset, so no clear trends can be found.
 
 In regression datasets, the molfreesolv dataset presents a unique case where optimal performance is attained with a single layer, contrary to the general trend where 5-6 layers yield high performance. Importantly, consistent trends emerge across all regularization techniques and without regularization, suggesting that regularization does not induce unexpected network behavior.
 
-Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization, we can observe somewhat clear trends most of the time.
+Regarding variance, apart from substantial variance and high fluctuations observed in the molhiv dataset, across both networks and all types of regularization, including scenarios without any regularization, we can watch somewhat clear trends most of the time.
+
 Overall, higher variance is evident in instances without regularization, whereas regularization techniques tend to stabilize performance, resulting in lower variance. This finding underscores the stabilizing influence of regularization techniques on model performance in graph-level classification tasks.
 
 % Classification Datasets Num Layers

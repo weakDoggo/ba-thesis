@@ -22,8 +22,8 @@ Before describing the problem, and later on the experimental setup, we first
 % Types of prediction tasks (free-by-me) READY
 Graphs naturally appear in numerous application domains, ranging from social analysis to bioinformatics to computer vision.
 A Graph $G = (V,E)$, where $V = \{v_{1},...,v_{n}\}$ is a set of $N =|V|$ nodes and $E \subseteq V\times V$ a set of edges betwen those nodes. The unique capability of graphs enables capturing the structural relations among data and thus allows the harvesting of more insights compared to analyzing data in isolation~\cite{Zhang19}. Graphs, therefore, can be seen as a general language for describing entities and relationships between those entities.
-\Acfp{gnn} then organize graph-structured data to tackle various prediction and classification
-tasks. Typically, one is interested in one of the following three tasks:
+\Acfp{gnn} then organize graph-structured data to tackle prediction and classification tasks.
+Typically, one is interested in one of the following three tasks:
 \begin{enumerate}[label=\textbf{\arabic*.}]
     \item \textbf{Link prediction:}
           Predict whether there are missing links between two nodes
@@ -286,10 +286,10 @@ Because of that, the quality of shared information is essential and should, ther
 \label{sec:related:pred:regularization}
 
 % What is Ragularization generally? 
-\citet{Kukacka2017} define regularization as any supplementary technique that aims at making the model generalize better, i.e., produce better results on the test set, which can include various properties of the loss function, the loss optimization algorithm, or other techniques.
+\citet{Kukacka2017} define regularization as any supplementary technique that aims at making the model generalize better, i.e., produce better results on the test set, which can include different properties of the loss function, the loss optimization algorithm, or other techniques.
 
 % Classification of reg.t -> stochastic regularization 
-One subgroup of regularization is via data, where the training set $\mathcal{D}$ is transformed into a new set $\mathcal{D}_{R}$ using some stochastic parameter $\pi$, which can be used in various ways, including to manipulate the feature space,
+One subgroup of regularization is via data, where the training set $\mathcal{D}$ is transformed into a new set $\mathcal{D}_{R}$ using some stochastic parameter $\pi$, which can be used in several ways, including to manipulate the feature space,
 create a new, augmented dataset or change, e.g., thin out the hidden layers of the \ac{nn}.
 
 An example of such a transformation is the corruption of inputs by Gaussian noise.
@@ -447,7 +447,7 @@ hence better improvement without serious over-smoothing can be achieved~\cite{Ha
 \section{Assessment of Graph Regularization Approaches}
 \label{sec:related:setup:choice:metrics}
 To make systematic and quantitative statements about the positive effects of over-smoothing by using different regularization techniques, one has to be able to monitor the smoothness of nodes at different execution steps during training.
-Therefore, choosing a suitable metric is of great importance, as it helps to assess the extent of the effect produced by various regularization techniques and compare them against each other in terms of efficacy.
+Therefore, choosing a suitable metric is of great importance, as it helps to assess the extent of the effect produced by different regularization techniques and compare them against each other in terms of efficacy.
 
 \textbf{\Ac{mad}} ~\cite{Chen2020} is a metric for smoothness, the similarity of graph node representations.
 In that sense, over-smoothness is the similarity of node representations among different classes.

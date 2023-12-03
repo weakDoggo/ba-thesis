@@ -1,7 +1,7 @@
 % Implementation 
 \chapter{Implementation}
 \label{sec:implement}
-This section overviews the implementation and aims to motivate the choice of libraries and frameworks.
+This section gives an overview of the implementation and aims to motivate the choice of libraries and frameworks.
 We also deliver an in-depth explanation of the implementation of \ac{gdc}, as it is the main focus of our work.
 \section{Scope and Limitations}
 \label{sec:implement:scope}
@@ -151,13 +151,13 @@ As stated previously in \cref{sec:related:pred:regularization:gdc}, this version
 \begin{figure}[ht]
     \centering
     \includegraphics[width= 0.90\linewidth]{gfx/implementation/GDC-eq5.pdf}
-    \caption{Originally proposed \ac{gdc}Note: self connection are assumed}\label{fig:implementaion:GDC-eq5}
+    \caption{\Ac{gdc} as described in \cref{eq:related:gdc-hard}}\label{fig:implementaion:GDC-eq5}
 \end{figure}
 % Description and Intuition for GDC-eq4
 Here, we calculate the new feature matrix $H^{(l+1)}$ by stacking the column vectors of each iteration. One can think of the calculations that are being performed as a $4$-dimensional matrix with the dimensions $n\times n\times f_{l}\times f_{l+1}$
 
 To understand what is being done, we can look at what is being performed when calculating one column of the resulting matrix. First, a random mask is applied to the connection from the $i$-th to the $j$-th node. Regarding node features communicating with each other, we look at the edge between the $i$-th and $j$-th features between connected nodes. By applying the random mask, we drop those connections selectively. Because we sample the random binary mask $Z$ $f_{l+1}$ times, one time for every feature in the $l+1$-th iteration, we differentiate between the connection $i \rightarrow j$ between two nodes and the connection $j \rightarrow i$ between the same two nodes. Thus, the same edge can be dropped as a connection and remain as a connection in the opposite direction. The masked adjacency is then multiplied by the corresponding column and weight.
-One may think of it as performing a random sampling across each channel since in each iteration from $i=1$ to $f_{l+1}$, we perform multiplication with the $i-th$ column of $H$.
+One may think of it as performing a random sampling across each channel since in each iteration from $i=1$ to $f_{l+1}$, we perform multiplication with the $i$-th column of $H$.
 
 As for the implementation of \ac{gdc}, we decided to implement the less complex version, as shown below, since this implementation reduces the runtime completely and is also the one that was originally implemented for testing the efficacy of \ac{gdc}.
 
@@ -167,7 +167,7 @@ As for the implementation of \ac{gdc}, we decided to implement the less complex 
 \begin{figure}[ht]
     \centering
     \includegraphics[width= 0.90\linewidth]{gfx/implementation/GDC-eq4.pdf}
-    \caption{\Ac{gdc}Note: self connection are assumed}\label{fig:implementaion:GDC-eq4}
+    \caption{\Ac{gdc} as described in \cref{eq:related:gdc-relaxed}}\label{fig:implementaion:GDC-eq4}
 \end{figure}
 Here, we compute the new feature matrix in one go instead of doing $f_{l}$ iterations for all $f_{l}$ columns.
 

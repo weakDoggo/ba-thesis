@@ -197,7 +197,7 @@ Overall, higher variance is evident in instances without regularization, whereas
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molpcba_gcn.csv}{numLayers}{Number of Layers}{AP}{1,2,3,4,5,6}{0.02}
-    \caption{molpcba (GCN Model)}
+    \caption{Average precision with respect to the number of layers on the molpcba dataset using \ac{gcn}}
     \label{fig:layers-prob-gcn-molpcba}
 \end{figure}
 
@@ -205,7 +205,7 @@ Overall, higher variance is evident in instances without regularization, whereas
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molesol_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{1}
-    \caption{molesol (GCN Model)}
+    \caption{MSE with respect to the number of layers on the molesol dataset using \ac{gcn}}
     \label{fig:layers-gcn-molesol}
 \end{figure}
 
@@ -219,7 +219,7 @@ Overall, higher variance is evident in instances without regularization, whereas
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_mollipo_gcn.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{0.2}
-    \caption{mollipo (GCN Model)}
+    \caption{MSE with respect to the number of layers on the mollipo dataset using \ac{gcn}}
     \label{fig:layers-gcn-mollipo}
 \end{figure}
 
@@ -249,7 +249,7 @@ Overall, higher variance is evident in instances without regularization, whereas
 \begin{figure}
     \centering
     \layerplot{data/num_layers_plot_molfreesolv_gin.csv}{numLayers}{Number of Layers}{MSE}{1,2,3,4,5,6}{5}
-    \caption{molfreesolv (GIN Model)}
+    \caption{MSE with respect to the number of layers on the molfreesolv dataset using \ac{gin}}
     \label{fig:layers-gin-molfreesolv}
 \end{figure}
 
@@ -278,14 +278,14 @@ This trend can be observed in the regression datasets on the \ac{gcn} and the \a
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molpcba_gcn.csv}{probability}{Probability}{AP}{0.3, 0.5, 0.7}{0.02}
-    \caption{molpcba (GCN Model)}
+    \caption{AP with respect to the dropout probability on the molpcba dataset using \ac{gcn}}
     \label{fig:prob-gcn-molpcba}
 \end{figure}
 
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molesol_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{1}
-    \caption{molesol (GCN Model)}
+    \caption{MSE with respect to the dropout probability on the molesol dataset using \ac{gcn}}
     \label{fig:prob-gcn-molesol}
 \end{figure}
 
@@ -299,7 +299,7 @@ This trend can be observed in the regression datasets on the \ac{gcn} and the \a
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_mollipo_gcn.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{0.2}
-    \caption{mollipo (GCN Model)}
+    \caption{MSE with respect to the dropout probability on the mollipo dataset using \ac{gcn}}
     \label{fig:prob-gcn-mollipo}
 \end{figure}
 
@@ -328,7 +328,7 @@ This trend can be observed in the regression datasets on the \ac{gcn} and the \a
 \begin{figure}
     \centering
     \layerplot{data/probability_plot_molfreesolv_gin.csv}{probability}{Probability}{MSE}{0.3, 0.5, 0.7}{2}
-    \caption{molfreesolv (GIN Model)}
+    \caption{MSE with respect to the dropout probability on the molfreesolv dataset using \ac{gin}}
     \label{fig:prob-gin-molfreesolv}
 \end{figure}
 
@@ -342,7 +342,7 @@ This trend can be observed in the regression datasets on the \ac{gcn} and the \a
 
 % Patterns of variance in datasets 
 
-Among the datasets, the classification dataset molhiv and the regression dataset molfreesoolv
+Among the datasets, the classification dataset molhiv fluctuates the most, making it difficult to draw clear conclusions.
 
 % Overall Conclusion for the number of layers/ regularization 
 As mentioned earlier, the results are very close in range, and together with the limited number of datasets- all from the same molecular realm- we cannot draw any general conclusions. However, we can describe some emerging trends from our findings:

@@ -4,12 +4,12 @@
 \label{sec:related}
 
 % feedback-appl
-Before describing the problem, and later on the experimental setup, we first
+Before describing the problem, and later on the experimental setup, we first give an introduction to the concepts and problems which we will build upon in this thesis.
+This is done as follows:
 \begin{enumerate}
     \item Introduce three common prediction tasks in \acp{gnn}.
-    \item Give a general overview of how \acp{gnn} organize and process graph-structured data.
-    \item We further discuss the relation of the message-passing mechanism to the WL-test, an algorithm for
-          inspecting whether two graphs are isomorphic.
+    \item Give a general overview of how \acp{gnn} process graph-structured data.
+    \item We further discuss the relation of the message-passing mechanism to the WL-test, an algorithm for deciding whether two graphs are isomorphic.
     \item Give a formal definition and description of two \ac{gnn}
           architectures, which will be used in our experiments.
     \item Discuss typical issues in \acp{gnn} and methods for addressing those issues.
@@ -30,14 +30,14 @@ Typically, one is interested in one of the following three tasks:
           e.g., knowledge graph completion.
 
     \item \textbf{Vertex classification \& regression:}
-          Predict a property of a node, e.g., categorize online users/items.
+          Predict a property of a node, e.g., categorizing online users/items.
 
     \item \textbf{Graph classification \& regression:}
           Here, we are interested in classifying or predicting a continuous value for
           the entire graph, e.g., predicting a property of a molecule.
 \end{enumerate}
 
-In this work, the main focus will be on \ac{nc}, \ac{gc}, and \ac{gr} for small- as well as medium-sized graphs.
+In this work, the main focus will be on \ac{gc}, and \ac{gr} for small- and medium-sized graphs.
 
 % Message passing formally
 \section{Passing Messages in \Acsp*{gnn}}
@@ -54,7 +54,7 @@ suitable way~\cite{Zhou2020a,Hamilton2017a,Zhang19}.
 Message passing is a mechanism that embeds information about its neighborhood into every node ~\cite{Xu2019,Zhou2020a}.
 This can be done in several ways.
 One way of classifying a \ac{gnn} is by looking at the underlying message-passing mechanism.
-This paper will look at a network where message passing is done via convolutions (\acf{gcn}).
+This thesis will look at a network where message passing is done via convolutions (\acf{gcn}).
 However, we will occasionally use the more general term message passing, as the separation is rather blurred, and message passing describes a neighborhood aggregation scheme seen as a generalization of other, more specific mechanisms.
 
 Formally, message passing in a \ac{gnn} can be described as using two functions:
@@ -96,11 +96,11 @@ To exploit this spatial similarity, we perform a composition by stacking multipl
 \label{sec:related:character:wl}
 % What is the Weisfeiler Lehman test 
 % Definition and relation to neural networks (free-by-me) READY
-The Message passing mechanism is closely related to how the \acf{wl} test ~\cite{Weisfeiler1968,Damke2020,Huang2022} works, an algorithm for deciding if two graphs are isomorphic.
+The Message passing mechanism is closely related to how the \acf{wl} test ~\cite{Weisfeiler1968,Damke2020,Huang2022} works, an algorithm for deciding whether two graphs are isomorphic.
 Before describing the algorithm, we introduce notations and preliminaries.\\
 % Intro of Notations 
 % Graph definition --> Your neighbors are communicating 
-Let $G = (V,E, X)$ denote an undirected graph, where $V =\{v_{1},...,v_{n}\}$ is a set of $ N = |V|$ nodes and $E \subseteq V\times V $ a set of edges between those nodes. For simplicity, we represent an edge $\{v,u\} \in E$ by $(v,u) \in E$ or $(u,v)\in E$. $X= [x_{1},...,x_{n}]^{T} \in \mathbb{R}^{n \times d}$ is the node feature matrix, where $n = |V|$ is the number of nodes and $x_{v} \in \mathbb{R}^{d}$ represents the \textit{d}-dimensional feature of node $v$. $\mathcal{N}_{v}= \{u \in V\ \mid \ (v,u) \in E\}$ is the set of neighboring nodes of node $v$. A multiset is denoted
+Let $G = (V,E, X)$ denote an undirected graph, where $V =\{v_{1},...,v_{n}\}$ is a set of $ N = |V|$ nodes and $E \subseteq V\times V $ a set of edges between those nodes. For simplicity, we represent an undirected edge $\{v,u\} \in E$ by $(v,u) \in E$ or $(u,v)\in E$. $X= [x_{1},...,x_{n}]^{T} \in \mathbb{R}^{n \times d}$ is the node feature matrix, where $n = |V|$ is the number of nodes and $x_{v} \in \mathbb{R}^{d}$ represents the \textit{d}-dimensional feature of node $v$. $\mathcal{N}_{v}= \{u \in V\ \mid \ (v,u) \in E\}$ is the set of neighboring nodes of node $v$. A multiset is denoted
 as $\ldblbrace...\rdblbrace$ and formally defined as follows.
 % Multiset --> Your neighbors are communicating 
 \begin{defn}[Multiset]
@@ -112,7 +112,7 @@ as $\ldblbrace...\rdblbrace$ and formally defined as follows.
 \end{defn}
 % Isomorphism --> Your neighbors are communicating 
 \begin{defn}[Isomorphism]
-    Two Graphs $\mathcal{G}= (V,E,X)$ and $\mathcal{H}= (P,F,Y)$ are \textit{isomorphic}, denoted as $\mathcal{G} \simeq \mathcal{H}$, if there exists a \textit{bijective} mapping $g: V \rightarrow P$ such that $x_{v}= y_{g(v)}$, $\forall v \in V$ and $(v,u) \in E$ iff $(g(v),g(u)) \in F$.
+    Two graphs $\mathcal{G}= (V,E,X)$ and $\mathcal{H}= (P,F,Y)$ are \textit{isomorphic}, denoted as $\mathcal{G} \simeq \mathcal{H}$, if there exists a \textit{bijective} mapping $g: V \rightarrow P$ such that $x_{v}= y_{g(v)}$, $\forall v \in V$ and $(v,u) \in E$ iff $(g(v),g(u)) \in F$.
 \end{defn}
 % The 1-WL in its one-dimensional form (free-by-me)
 \subsubsection{The 1-dimensional \acs*{wl} Algorithm (Color Refinement)}
@@ -128,6 +128,7 @@ Algorithmically, this can be expressed as follows:
 % 1-WL algorithm 
 \begin{algorithm}[H]
     \caption{1-dim.\ \ac{wl} (color refinement)}
+    \label{alg:related:wl}
     \begin{algorithmic}[1]
         \Require $G = (V,E,X_{V})$
         \State $c_{v}^{0} \gets \mathit{hash}(X_{v})$ for all $v \in V$
@@ -146,7 +147,7 @@ This is the case for non-isomorphic graphs with the same number of nodes and equ
 \begin{figure}[H]
     \centering
     \includegraphics[width= 0.90\linewidth]{gfx/related-work/1wl-isomorph}
-    \caption{Two isomorphic graphs. 1-\ac{wl}assigns the same representation to those graphs.}\label{fig:related:1-wl-indistinguishable}
+    \caption{Two isomorphic graphs. 1-\ac{wl} assigns the same representation to those graphs.}\label{fig:related:1-wl-indistinguishable}
 \end{figure}
 
 % graphics isomorphic - indistinguishable 
@@ -166,7 +167,7 @@ Since all \acp{gnn} incorporate message passing in a way, we decided to choose t
 \subsubsection{Graph Convolutional Network (GCN)}
 \label{sec:related:architectures:gcn}
 % History and Motivation 
-\Acf{gcn} was originally proposed by \citet{Kipf2017} to tackle the problem of semi-supervised node classification, where labels are available for a small subset of nodes.
+The \acf{gcn} architecture was originally proposed by \citet{Kipf2017} to tackle the problem of semi-supervised node classification, where labels are available for a small subset of nodes.
 \Ac{gcn} is a simple but powerful architecture that scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of nodes.
 
 % How does it operate formally 
@@ -194,14 +195,14 @@ An application of a two-layer \ac{gcn} is given by:
 where $\hat{A} = \tilde{D}^{-\frac{1}{2}}\tilde{A}\tilde{D}^{-\frac{1}{2}}$ is calculated in a preprocessing step.
 The model uses a single weight matrix per layer and deals with varying node degrees by appropriately normalizing the adjacency matrix.
 % Experimental results and where it was especially useful and why 
-This model consisting of a 2-layer \ac{gcn} performed well in a series of experimental tasks, including semi-supervised document classification, semi-supervised node classification in citation networks, and semi-supervised entity classification in a bipartite graph extracted from a knowledge graph.
+This model consisting of a 2-layer \ac{gcn} performed well in a number of experimental tasks, including semi-supervised document classification, semi-supervised node classification in citation networks, and semi-supervised entity classification in a bipartite graph extracted from a knowledge graph.
 The prediction accuracy was evaluated on a set of 1000 examples, and additional experiments on deeper models with up to 10 layers have also been provided. Being capable of encoding both graph structure and node features, \ac{gcn} outperformed numerous related methods by a significant margin~\cite{Kipf2017}.
 \Acfp{gcn} are widely and successfully used today in many fields due to their simplicity and scalability.
 
 \subsubsection{Graph Isomorphism Network (GIN)}
 \label{sec:related:architectures:gin}
 % Overview 
-To overcome the lack of expressivity of popular GNN architectures,~\citet{Xu2019} designed a new type of \ac{gnn}, \ac{gin}. They prove that \acp{gin} are strictly more expressive than a variety of previous \ac{gnn} architectures and that they are, in fact, as powerful as the commonly used 1-dimensional \acf{wl}-test.
+To overcome the lack of expressivity of popular GNN architectures,~\citet{Xu2019} designed a new type of \ac{gnn}, \acf{gin}. They prove that \acp{gin} are strictly more expressive than a variety of previous \ac{gnn} architectures and that they are, in fact, as powerful as the commonly used 1-dimensional \acf{wl}-test.
 
 % Requirements and condition 
 Two requirements must be met for a network to have the same expressive and representational
@@ -226,7 +227,8 @@ The following lemma and corollary, proven by~\citet{Xu2019}, show the properties
 
 % Theorem 3 + Lem + Cor 
 \begin{thm}
-    Let $A: G:\rightarrow \mathbb{R}^{d}$ be a \ac{gnn}. With a sufficient number of \ac{gnn} layers, A maps any grphs $G_{1}$ and $G_{2}$ to different embeddings, the \ac{wl}-test of isomorphism decides as non-isomorphic, to different embeddings if the following conditions hold:
+    \label{thm:related:wl}
+    Let $A: G:\rightarrow \mathbb{R}^{d}$ be a \ac{gnn}. With a sufficient number of \ac{gnn} layers, A maps any graphs $G_{1}$ and $G_{2}$ to different embeddings, the \ac{wl}-test of isomorphism decides as non-isomorphic, to different embeddings if the following conditions hold:
     \begin{enumerate}[label=(\alph*)]
         \item A aggregates and updates node features iteratively with
               \begin{align*}
@@ -253,11 +255,11 @@ The following lemma and corollary, proven by~\citet{Xu2019}, show the properties
     for some function $\varphi$.
 \end{cor}
 
-\subsubsection{\acl*{gin} is as powerful as 1-dimensional \acs*{wl}}
+\subsubsection{Graph Isomorphism Network is as powerful as 1-dimensional \acs*{wl}}
 % NEW AND UNAPPROVED
 \Ac{gin} is a neural network-based approach designed to handle graph data and detect graph isomorphisms.
 It operates on each vertex and updates its representation based on its features and the aggregated features of its neighbors.
-A fundamental similarity exists between the \ac{gin} and how the 1-\ac{wl} algorithm works.
+A fundamental similarity in the update rule exists between the \ac{gin} and how the 1-\ac{wl} algorithm works (see \cref{alg:related:wl}). Because of this similarity, \citet{Xu2019} have shown that \ac{gin} has the same expressive power as 1-\ac{wl} (this is what \cref{thm:related:wl} Theorem 2.3 intuitively means).
 
 \subsection{Weaknesses and Obstacles in \acsp*{gnn}}
 \label{sec:related:pred:typical}
@@ -270,7 +272,7 @@ Overfitting hinders the generalization ability of a \acf{nn}, making it perform 
 This occurs especially when using small datasets since the model tends to 'memorize' instead of learning the pattern.
 
 % Over-smoothing description and intuition
-Over-smoothing is a condition where the performance and predictive power of a \ac{nn} do not improve or even get worse when more layers are added.
+Over-smoothing is a condition where the performance and predictive power of a \ac{nn} does not improve or even gets worse when more layers are added.
 This happens because by stacking multiple layers together, aggregation is being performed repeatedly.
 This way, the representation of a node is being smoothed, i.e., mixed with features of very distant, possibly unrelated nodes.
 Over-smoothing is a problem mainly for node classification tasks. There is a trade-off between the expressiveness of the model (capturing graph structure by applying multiple layers) and over-smoothing, which leads to a model where nodes have the same representation because they all converge to indistinguishable vectors~\cite{Zhou2020,Hasanzadeh2020}.%
@@ -402,10 +404,11 @@ This is a special case of \ac{do} since all of the output features are either ke
 Finally, \ac{gdc} \cite{Hasanzadeh2020}, which can be seen as a generalization of all the above-proposed methods, is a stochastic regularization approach, which is~\cite{Hasanzadeh2020} the most effective among all the above and even more effective than the combination of \ac{do} and \ac{de}.
 The regularization is done via adaptive connection sampling and can be interpreted as an approximation of Bayesian \acp{gnn}.
 
-\begin{align*}
+\begin{align}
     H^{(l+1)}[:,j] & = \sigma \left(\sum_{i=1}^{f_{l}}\mathfrak{R}\left(A \odot Z_{i,j}^{(l)}\right)H^{(l)}[:,i]W^{(l)}[i,j]\right) \\
     \text{for } j  & = 1,..., f_{l+1}
-\end{align*}
+    \label{eq:related:gdc-hard}
+\end{align}
 
 where $f_{l}$ and $f_{l+1}$ are the number of features at layers \textit{l} and \textit{l}+1, respectively, and
 $Z_{i,j}^{(l)}$ is a sparse random matrix (with the same sparsity as A) whose non-zero
@@ -414,9 +417,10 @@ elements are randomly drawn from Bernoulli($\pi_{l}$), where $\pi_{l}$ can be di
 \Ac{gdc}, as it is expressed in the formula above, has not been implemented and evaluated yet. Instead, a special case of \ac{gdc} has been implemented:
 
 Under the assumption that $Z_{i,j}^{(l)}$ are the same for all $j \in \{1,2,\dots, f_{l+1}\}$, we can omit the indices of the output elements at layer $l+1$ and rewrite the above formula as follows:
-\begin{align*}
+\begin{align}
     H^{(l+1)} = \sigma(\sum_{i= 1}^{f_{l}}\mathfrak{N}(A \odot Z_{i}^{(l)})H^{(l)}[:,i] W^{(l)}[i,:])
-\end{align*}
+    \label{eq:related:gdc-relaxed}
+\end{align}
 \begin{figure}[H]
     \centering
     \includegraphics[width= 0.90\linewidth]{gfx/related-work/GDC}
@@ -426,7 +430,7 @@ Under the assumption that $Z_{i,j}^{(l)}$ are the same for all $j \in \{1,2,\dot
 % Illustration for GDC 
 %---------------------
 % Recap
-All the methods are somewhat related and share some similarities~\cite{Rong2020}.
+All the methods are related and share some similarities~\cite{Rong2020}.
 \Acf{do} has been shown to be successful in alleviating overfitting by perturbing the feature matrix and setting some entries to zero.
 The issue of over-smoothing is not affected by this measure.
 \Acf{de} achieved great results in reducing overfitting and over-smoothing.
@@ -454,7 +458,7 @@ In that sense, over-smoothness is the similarity of node representations among d
 While smoothing to some extent is desired (we assume spatial similarity between nodes), mixing features of nodes with different labels over several iterations leads to over-smoothing.
 
 It is, therefore, important to differentiate between different types of messages between nodes.
-Signal/information is the messaging of nodes sharing the same class/label, i.e., intra-class communication, and noize denotes intra-class communication.
+Signal/information is the messaging of nodes sharing the same class/label, i.e., intra-class communication, and noise denotes intra-class communication.
 Having too many inter-class edges leads to much noise by incorporating messages from other classes, which results in over-smoothing.
 
 Because of that, measuring the quality of the received messages is crucial.
@@ -484,7 +488,7 @@ Next we access the average distance $\bar{D}^{tgt}$ for non-zero values along ea
 \begin{align*}
     \bar{D}_{t}^{tgt} = \frac{\sum_{j=0}^{n}D_{i,j}^{tgt}}{\sum_{j=0}^{n}\mathds{1}(D_{i,j}^{tgt})}
 \end{align*}
-where where 1(x) = 1 if x > 0 otherwise 0. Finally, the MAD value given the target node pairs is calculated by averaging the non-zero values in tgt
+where where 1(x) = 1 if x > 0 otherwise 0. Finally, the MAD value given to the target node pairs is calculated by averaging the non-zero values in $\mathit{tgt}$.
 % Intuition behind all this 
 \Ac{mad} gives access to the smoothness of a node and pairs of nodes throughout iterations, which makes it easy to "track down" over smoothing.
 First, the cosine similarity is calculated, showing how similar the corresponding feature vectors are.
